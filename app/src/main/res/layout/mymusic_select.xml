@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="6dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/mymusic_select">
+    <TextView
+        android:id="@+id/downloadmusic_text"
+        android:layout_width="125dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/drak"
+        android:text="下载管理" />
+    <TextView
+        android:id="@+id/localmusic_text"
+        android:layout_width="125dp"
+        android:layout_height="30dp"
+        android:textSize="16dp"
+        android:layout_marginLeft="155dp"
+        android:textStyle="bold"
+        android:textColor="@color/drak"
+        android:text="本地音乐" />
+    <TextView
+        android:id="@+id/historymusic_text"
+        android:layout_width="125dp"
+        android:layout_height="30dp"
+        android:textSize="16dp"
+        android:layout_marginLeft="280dp"
+        android:textStyle="bold"
+        android:textColor="@color/drak"
+        android:text="最近播放" />
+</RelativeLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/up"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal">
+<TextView
+    android:gravity="center"
+    android:id="@+id/hot_music_Id"
+    android:layout_width="40dp"
+    android:layout_height="55dp"
+    android:textSize="20dp">
+</TextView>
+    <LinearLayout
+        android:layout_toRightOf="@+id/hot_music_Id"
+        android:id="@+id/hot_music_information"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/hotmusic_music_name"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/hotmusic_music_instruction"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:textSize="15dp"
+            android:text="instruction"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/hot_music_number"
+        android:layout_toRightOf="@+id/hot_music_information"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:textColor="@color/Red"
+        android:textSize="15dp"/>
+    </RelativeLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/up"/>
+</RelativeLayout>

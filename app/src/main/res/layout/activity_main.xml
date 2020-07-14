@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mdrawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
+    tools:context=".MainActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/background_picture"
+            android:layout_width="match_parent"
+            android:layout_height="650dp"
+            android:layout_marginTop="50dp"
+            android:scaleType="fitXY"/>
+        <ImageView
+            android:id="@+id/mymusic_head_pic"
+            android:layout_width="match_parent"
+            android:alpha="0.4"
+            android:scaleType="fitXY"
+            android:layout_height="240dp"/>
+        <RelativeLayout
+            android:id="@+id/titles"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="vertical">
+            <include layout="@layout/title_layout" />
+        </RelativeLayout>
+            <RelativeLayout
+                android:layout_below="@+id/titles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <include layout="@layout/content_main" />
+            </RelativeLayout>
+    </RelativeLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/mNavigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer">
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <Space
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+    <RelativeLayout
+        android:layout_below="@+id/space"
+        android:id="@+id/search_head_relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+    <include  layout="@layout/search_music_head"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@+id/search_head_relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <include  layout="@layout/background_pic" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/search_head_relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/history_search_view"
+        >
+        <TextView
+            android:id="@+id/history_text"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:gravity="left"
+            android:text="历史记录"
+            android:textSize="12dp"/>
+        <TextView
+            android:layout_toRightOf="@+id/history_text"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:gravity="right"
+            android:text="删除"
+            android:textSize="12dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/history_search_relativelayout"
+        android:layout_below="@id/history_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <include  layout="@layout/history_search"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/history_search_relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/hot_music_text">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:text="热搜榜"
+            android:textSize="12dp"
+            android:layout_marginLeft="15dp"
+            ></TextView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/hot_music_text"
+        android:id="@+id/hot_music_relativelayout">
+        <include layout="@layout/hot_music_text"/>
+    </RelativeLayout>
+</RelativeLayout>

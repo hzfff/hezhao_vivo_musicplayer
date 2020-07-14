@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/my_favorite_music_text"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:text="我的音乐"
+        android:textSize="15dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_below="@+id/my_favorite_music_text">
+
+        <com.example.musicplayer_hezhao.util.ChangeImageView
+            android:id="@+id/favorite_image_view1"
+            android:layout_width="110dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:alpha="0.5"
+            android:src="@mipmap/pic4"
+            app:piv_enablePanoramaMode="true"
+            app:piv_invertScrollDirection="false"
+            app:piv_show_scrollbar="true" />
+
+        <com.example.musicplayer_hezhao.util.ChangeImageView
+            android:id="@+id/favorite_image_view2"
+            android:layout_width="110dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/favorite_image_view1"
+            android:alpha="0.5"
+            android:src="@mipmap/pic3"
+            app:piv_enablePanoramaMode="true"
+            app:piv_invertScrollDirection="false"
+            app:piv_show_scrollbar="true" />
+
+        <com.example.musicplayer_hezhao.util.ChangeImageView
+            android:id="@+id/favorite_image_view3"
+            android:layout_width="110dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/favorite_image_view2"
+            android:alpha="0.5"
+            android:src="@mipmap/pic1"
+            app:piv_enablePanoramaMode="true"
+            app:piv_invertScrollDirection="false"
+            app:piv_show_scrollbar="true" />
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginTop="60dp"
+            android:text="我喜欢的音乐"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="160dp"
+            android:layout_marginTop="60dp"
+            android:text="私人FM"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="270dp"
+            android:layout_marginTop="60dp"
+            android:text="ACG专区"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,18 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/hot_music_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:background="@drawable/shap"
+        android:textSize="12dp">
+    </TextView>
+    <Space
+        android:layout_toRightOf="@+id/hot_music_text"
+        android:layout_width="10dp"
+        android:layout_height="30dp"/>
+</RelativeLayout>

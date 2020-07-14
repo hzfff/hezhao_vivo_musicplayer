@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/mymusic_up"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <RelativeLayout
+            android:id="@+id/MyMusic_Title"
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+            <include layout="@layout/mymusic_title_layout" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/MyMusic_Select"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/MyMusic_Title">
+
+            <include layout="@layout/mymusic_select" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/my_music_middle"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/mymusic_up">
+        <include layout="@layout/mymusic_middle_layout"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@id/my_music_middle"
+        android:id="@+id/my_music_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <include  layout="@layout/my_music_bottom"/>
+    </RelativeLayout>
+</RelativeLayout>

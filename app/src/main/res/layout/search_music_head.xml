@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:id="@+id/search_head">
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/search_toolbar"
+    android:layout_width="50dp"
+    android:layout_height="50dp"/>
+
+    <EditText
+        android:layout_toRightOf="@id/search_toolbar"
+        android:id="@+id/input_music"
+        android:layout_width="260dp"
+        android:layout_height="50dp"
+        android:hint="输入查询的音乐"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:textSize="20dp"
+        android:textStyle="normal" />
+<TextView
+    android:layout_toRightOf="@+id/input_music"
+    android:gravity="center"
+    android:textSize="15dp"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:id="@+id/search_music"
+    android:text="搜索"/>
+
+
+
+</RelativeLayout>
