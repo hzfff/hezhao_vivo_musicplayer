@@ -1,19 +1,17 @@
 package com.example.musicplayer_hezhao;
 
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.View;
 import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.musicplayer_hezhao.adapter.DownLoadAdapter;
-import com.example.musicplayer_hezhao.fragment.local_music_album_fragment;
+import com.example.musicplayer_hezhao.fragment.local_music_collect;
 import com.example.musicplayer_hezhao.fragment.local_music_fragment;
 import com.example.musicplayer_hezhao.fragment.local_singer_fragment;
 import com.google.android.material.tabs.TabLayout;
@@ -53,7 +51,7 @@ public class LocalMusic extends AppCompatActivity {
         list_title.add("专辑");
         fragmentList.add(new local_music_fragment());
         fragmentList.add(new local_singer_fragment());
-        fragmentList.add(new local_music_album_fragment());
+        fragmentList.add(new local_music_collect());
         downLoadAdapter=new DownLoadAdapter(getSupportFragmentManager(),list_title,fragmentList);
         viewPager.setAdapter(downLoadAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

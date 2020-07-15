@@ -22,7 +22,7 @@ public class local_singer_fragment_adapter extends RecyclerView.Adapter<local_si
     private Context mcontext;
     private List<String> name_list;
     private List<String> num_list;
-
+    private OnItemClickListener onItemClickListener;
     public local_singer_fragment_adapter(Context mcontext, List<String> name_list, List<String> num_list) {
         this.mcontext = mcontext;
         this.name_list = name_list;
@@ -37,9 +37,20 @@ public class local_singer_fragment_adapter extends RecyclerView.Adapter<local_si
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final myViewHolder holder, int position) {
         holder.music_num.setText(num_list.get(position));
         holder.singer_name.setText(name_list.get(position));
+        if(onItemClickListener!=null)
+        {
+            holder.singer_name.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(holder.singer_name,position);
+                }
+            });
+        }
     }
 
     @Override
@@ -56,5 +67,13 @@ public class local_singer_fragment_adapter extends RecyclerView.Adapter<local_si
             music_num = itemView.findViewById(R.id.music_num);
             singer_name = itemView.findViewById(R.id.singer_name);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener  onItemClickListener)
+    {
+        this.onItemClickListener=onItemClickListener;
     }
 }

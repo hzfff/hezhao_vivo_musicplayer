@@ -59,8 +59,7 @@ public class downmusic_downloading extends Fragment  implements AppBarLayout.OnO
 
             @Override
             public void onItemClick(View view, int position) {
-                ShowDialog bottomDialogFr = new ShowDialog();
-                bottomDialogFr.show(getFragmentManager(), "hezhao");
+
             }
         });
     }

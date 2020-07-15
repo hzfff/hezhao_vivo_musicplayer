@@ -10,14 +10,16 @@
         android:layout_height="50dp">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/title_toolbar"
-            android:layout_width="50dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         <TextView
             android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="19dp"
+            android:layout_marginLeft="12dp"
             android:textSize="20dp"
             android:gravity="center|left"
             android:textColor="@color/White"

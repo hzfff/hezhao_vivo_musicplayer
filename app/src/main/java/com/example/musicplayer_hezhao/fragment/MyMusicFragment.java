@@ -58,7 +58,8 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
     private TextView loadmusic;
     private TextView local_music;
     private TextView recent_listen;
-
+    private TextView My_favorite_music;
+    private TextView Personal_FM;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mymusic_layout, null);
@@ -75,6 +76,8 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle bundle) {
+        My_favorite_music=view.findViewById(R.id.text1);
+        Personal_FM=view.findViewById(R.id.text2);
         loadmusic=view.findViewById(R.id.downloadmusic_text);
         local_music=view.findViewById(R.id.localmusic_text);
         recent_listen=view.findViewById(R.id.historymusic_text);
@@ -110,6 +113,8 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
         recent_listen.setOnClickListener(this);
         selectmusic_text.setOnClickListener(this);
         helpmusic_text.setOnClickListener(this);
+        My_favorite_music.setOnClickListener(this);
+        Personal_FM.setOnClickListener(this);
         login_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,6 +181,14 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
             case R.id.historymusic_text:
                 Intent intent3=new Intent(getActivity(), HistoryMusic.class);
                 startActivity(intent3);
+                break;
+            case R.id.text1:
+                Intent intent4=new Intent(getActivity(),My_Favorite_Music.class);
+                startActivity(intent4);
+                break;
+            case R.id.text2:
+                Intent intent5=new Intent(getActivity(),Personal_FM.class);
+                startActivity(intent5);
                 break;
             default:
                 break;
