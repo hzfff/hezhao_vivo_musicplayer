@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.adapter.downmusicrecycleradapter;
+import com.example.musicplayer_hezhao.util.ShowDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,13 +56,8 @@ public class downmusic_downloaded  extends Fragment {
 
             @Override
             public void onItemClick(View view, int position) {
-                // TODO
-                AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                        .setTitle("title").setMessage("message").create();
-                Window window = dialog.getWindow();
-                window.setGravity(Gravity.BOTTOM);
-                window.setWindowAnimations(R.style.mystyle);
-                dialog.show();
+                ShowDialog bottomDialogFr = new ShowDialog();
+                bottomDialogFr.show(getFragmentManager(), "DF");
             }
         });
     }

@@ -24,6 +24,7 @@
             android:alpha="0.4"
             android:scaleType="fitXY"
             android:layout_height="240dp"/>
+
         <RelativeLayout
             android:id="@+id/titles"
             android:layout_width="match_parent"
@@ -31,6 +32,11 @@
             android:orientation="vertical">
             <include layout="@layout/title_layout" />
         </RelativeLayout>
+        <View
+            android:layout_below="@+id/titles"
+            android:layout_width="match_parent"
+            android:background="@color/drak"
+            android:layout_height="1dp"/>
             <RelativeLayout
                 android:layout_below="@+id/titles"
                 android:layout_width="match_parent"

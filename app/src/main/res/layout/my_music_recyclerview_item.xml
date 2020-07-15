@@ -14,7 +14,9 @@
         android:layout_toRightOf="@+id/my_music_img"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="70dp"
+        android:textColor="@color/drak"
         android:id="@+id/my_music_text"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="17dp"/>

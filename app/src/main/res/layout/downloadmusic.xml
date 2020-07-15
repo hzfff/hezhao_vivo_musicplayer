@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
+        android:background="@color/Red"
         android:id="@+id/downloadmusic_title"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -19,14 +21,16 @@
             android:layout_marginLeft="20dp"
             android:textSize="20dp"
             android:gravity="center|left"
-            android:textColor="@color/drak"
+            android:textColor="@color/White"
             android:text="下载管理"/>
     </RelativeLayout>
     <com.google.android.material.tabs.TabLayout
+        android:background="@color/Red"
         android:id="@+id/downloadmusic_tablelayout"
         android:layout_below="@+id/downloadmusic_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp"
+        app:tabTextAppearance="@style/MyTabLayoutTextAppearance"/>
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"

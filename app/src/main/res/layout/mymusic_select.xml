@@ -10,6 +10,7 @@
         android:id="@+id/downloadmusic_text"
         android:layout_width="125dp"
         android:layout_height="30dp"
+        android:gravity="bottom"
         android:layout_marginLeft="10dp"
         android:textSize="16dp"
         android:textStyle="bold"
@@ -17,6 +18,7 @@
         android:text="下载管理" />
     <TextView
         android:id="@+id/localmusic_text"
+        android:gravity="bottom"
         android:layout_width="125dp"
         android:layout_height="30dp"
         android:textSize="16dp"
@@ -26,6 +28,7 @@
         android:text="本地音乐" />
     <TextView
         android:id="@+id/historymusic_text"
+        android:gravity="bottom"
         android:layout_width="125dp"
         android:layout_height="30dp"
         android:textSize="16dp"

@@ -41,6 +41,7 @@ public class LoginMainActivity  extends AppCompatActivity  implements View.OnCli
         getSupportActionBar().setHomeButtonEnabled(true);
         viewPager=findViewById(R.id.login_viewpager);
         tableLayout=findViewById(R.id.login_tablelayout);
+        tableLayout.setSelectedTabIndicatorHeight(0);
         initdata();
         loginadapter=new loginadapter(getSupportFragmentManager(),TitleList,fragmentList);
         viewPager.setAdapter(loginadapter);
