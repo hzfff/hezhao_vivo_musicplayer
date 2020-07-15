@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +36,7 @@
         <activity android:name=".DownLoadMusic"></activity>
         <activity android:name=".HistoryMusic"></activity>
         <activity android:name=".LocalMusic"></activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

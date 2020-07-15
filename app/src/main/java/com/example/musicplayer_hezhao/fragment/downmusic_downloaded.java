@@ -63,33 +63,11 @@ public class downmusic_downloaded  extends Fragment {
     }
 
     public void initData() {
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
+        for(int i=0;i<14;i++){
+            list_name.add("棋子");
+        }
+        for(int i=0;i<14;i++){
+            list_singer.add("王菲");
+        }
     }
 }

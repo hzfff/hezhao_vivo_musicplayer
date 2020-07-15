@@ -30,13 +30,13 @@ public class ShowDialog   extends DialogFragment {
     public void onStart(){
         super.onStart();
         window = getDialog().getWindow();
-        // 消除弹框就会与四边的距离
+        // 消除弹框与四边的距离
         window.setBackgroundDrawableResource(android.R.color.transparent);
         // 设置动画
         window.setWindowAnimations(R.style.bottomDialog);
         WindowManager.LayoutParams params = window.getAttributes();
         params.gravity = Gravity.BOTTOM;
-        // 如果不设置宽度,那么即使你在布局中设置宽度为 match_parent 也不会起作用
+        // 设置宽度
         params.width = getResources().getDisplayMetrics().widthPixels;
         window.setAttributes(params);
     }

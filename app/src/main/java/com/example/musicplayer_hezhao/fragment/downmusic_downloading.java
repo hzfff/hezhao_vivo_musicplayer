@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.adapter.downmusicrecycleradapter;
+import com.example.musicplayer_hezhao.util.ShowDialog;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
@@ -58,46 +59,19 @@ public class downmusic_downloading extends Fragment  implements AppBarLayout.OnO
 
             @Override
             public void onItemClick(View view, int position) {
-                // TODO
-                AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                        .setTitle("title").setMessage("message").create();
-                Window window = dialog.getWindow();
-                window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
-                window.setWindowAnimations(R.style.mystyle);  //添加动画
-                dialog.show();
+                ShowDialog bottomDialogFr = new ShowDialog();
+                bottomDialogFr.show(getFragmentManager(), "hezhao");
             }
         });
     }
 
     public void initData() {
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_name.add("棋子");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
-        list_singer.add("王菲");
+        for(int i=0;i<14;i++){
+            list_name.add("棋子");
+        }
+        for(int i=0;i<14;i++){
+            list_singer.add("王菲");
+        }
 
     }
 

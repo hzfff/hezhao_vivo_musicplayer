@@ -4,14 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White">
+    <RelativeLayout
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+    <com.example.musicplayer_hezhao.util.RoundImageView
+        android:id="@+id/test_img"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/pic7"/>
+        <TextView
+            android:id="@+id/test_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/test_img"
+            android:text="明年今日"
+            android:textColor="@color/drak"
+            android:layout_marginTop="40dp"
+            android:textSize="15dp"/>
+        <TextView
+            android:id="@+id/test_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/test_song"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/test_img"
+            android:text="陈奕迅"
+            android:textColor="@color/drak"
+            android:layout_marginTop="6dp"
+            android:textSize="11dp"/>
+
+</RelativeLayout>
 <TextView
     android:id="@+id/test1"
+    android:layout_below="@+id/test"
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:textColor="@color/drak"
     android:text="下一首播放"
-    android:textSize="20dp"
+    android:textSize="15dp"
     android:textStyle="normal"/>
     <View
         android:layout_below="@+id/test1"
@@ -26,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="收藏"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="normal"/>
     <View
         android:layout_below="@+id/test2"
@@ -40,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="分享"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textColor="@color/drak"
         android:textStyle="normal"/>
     <View
@@ -56,7 +93,7 @@
         android:layout_height="50dp"
         android:textColor="@color/drak"
         android:text="歌手信息"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="normal"/>
     <View
         android:layout_below="@+id/test4"
@@ -71,7 +108,7 @@
         android:layout_height="50dp"
         android:text="删除"
         android:textColor="@color/drak"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="normal"/>
     <Space
         android:layout_width="match_parent"
