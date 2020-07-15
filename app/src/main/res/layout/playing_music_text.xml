@@ -28,10 +28,18 @@
 <ImageView
     android:id="@+id/play_music_buttom"
     android:layout_toRightOf="@+id/play_music_text"
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:layout_marginLeft="40dp"
+    android:layout_width="25dp"
+    android:layout_height="25dp"
+    android:layout_marginLeft="15dp"
     android:src="@mipmap/play_music_play"
-    android:layout_marginTop="30dp"/>
+    android:layout_marginTop="32dp"/>
+    <ImageView
+        android:id="@+id/play_music"
+        android:layout_toRightOf="@+id/play_music_buttom"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/begin"
+        android:layout_marginTop="32dp"/>
 
 </RelativeLayout>

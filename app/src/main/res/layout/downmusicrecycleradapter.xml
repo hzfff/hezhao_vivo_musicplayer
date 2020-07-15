@@ -29,11 +29,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_toRightOf="@+id/music_body">
+        android:layout_toRightOf="@+id/music_body"
+        android:gravity="center|right">
         <ImageView
             android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right"/>
+            android:src="@mipmap/more"
+            android:layout_width="11dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="17dp"/>
     </RelativeLayout>
 </RelativeLayout>
