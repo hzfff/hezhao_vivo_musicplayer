@@ -1,5 +1,6 @@
 package com.example.musicplayer_hezhao.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.Song_Show;
 import com.example.musicplayer_hezhao.adapter.MyMusicBottomAdapter;
+import com.example.musicplayer_hezhao.util.ShowDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,20 @@ public class MySelectFragment extends Fragment {
         initdata();
         myMusicBottomAdapter=new MyMusicBottomAdapter(list_img,list_induction,list_number,getContext());
         recyclerView.setAdapter(myMusicBottomAdapter);
+        myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(View view, int position) {
+                Bundle bundle=new Bundle();
+                System.out.println(position);
+                bundle.putInt("list_image",list_img.get(position));
+                bundle.putStringArray("list_song",new String[]{"下雨天","微风细雨","Man At Arms","夏天的风","你在烦恼什么","一直很安静","月黑风高","幸福额度","绿色","透明世界","起风了"});
+                bundle.putStringArray("list_name",new String[]{"王菲","周杰伦","陈奕迅","蔡琴","温岚","阿桑","陈奕迅","苏打绿","陈雪凝","火影忍者","吴青峰"});
+                Intent intent=new Intent(getContext(), Song_Show.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     public void initdata() {

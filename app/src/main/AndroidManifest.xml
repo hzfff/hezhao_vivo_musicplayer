@@ -38,6 +38,7 @@
         <activity android:name=".LocalMusic"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".fragment.My_Favorite_Music"></activity>
+        <activity android:name=".Song_Show"></activity>
         <activity android:name=".fragment.Personal_FM"></activity>
     </application>
 

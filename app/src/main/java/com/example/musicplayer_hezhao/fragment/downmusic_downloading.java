@@ -56,7 +56,6 @@ public class downmusic_downloading extends Fragment  implements AppBarLayout.OnO
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new downmusicrecycleradapter.OnItemClickListener(){
-
             @Override
             public void onItemClick(View view, int position) {
 
