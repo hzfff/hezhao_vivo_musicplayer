@@ -16,14 +16,14 @@
         <RelativeLayout
             android:id="@+id/MyMusic_Title"
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="100dp">
 
             <include layout="@layout/mymusic_title_layout" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/MyMusic_Select"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:layout_below="@+id/MyMusic_Title">
 
             <include layout="@layout/mymusic_select" />

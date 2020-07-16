@@ -22,24 +22,24 @@
         android:focusableInTouchMode="true"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="15dp"
-        android:layout_width="190dp"
+        android:layout_width="180dp"
         android:layout_height="35dp"/>
 
 <ImageView
     android:id="@+id/play_music_buttom"
     android:layout_toRightOf="@+id/play_music_text"
-    android:layout_width="25dp"
-    android:layout_height="25dp"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
     android:layout_marginLeft="15dp"
-    android:src="@mipmap/play_music_play"
-    android:layout_marginTop="32dp"/>
+    android:src="@mipmap/play_music"
+    android:layout_marginTop="25dp"/>
     <ImageView
         android:id="@+id/play_music"
         android:layout_toRightOf="@+id/play_music_buttom"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="15dp"
-        android:src="@mipmap/begin"
-        android:layout_marginTop="32dp"/>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/play_music_copy"
+        android:layout_marginTop="25dp"/>
 
 </RelativeLayout>

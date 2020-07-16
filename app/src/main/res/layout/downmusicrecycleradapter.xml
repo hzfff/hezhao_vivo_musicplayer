@@ -33,9 +33,9 @@
         android:gravity="center|right">
         <ImageView
             android:id="@+id/image"
-            android:src="@mipmap/more"
-            android:layout_width="11dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="17dp"/>
+            android:src="@mipmap/detail"
+            android:layout_width="17dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"/>
     </RelativeLayout>
 </RelativeLayout>
