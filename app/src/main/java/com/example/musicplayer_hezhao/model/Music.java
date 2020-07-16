@@ -20,18 +20,14 @@ public class Music {
     //歌曲播放进度
     private long PlayedTime;
     //歌曲图片
-    private Bitmap MusicImage;
+    public Bitmap MusicImage;
     //歌曲时长
     private long Duration;
 
-    public Music(String name, String artist, Uri musicUri, String album, Uri albumUri, long playedTime, Bitmap musicImage, long duration) {
+    public Music(String name,  Uri musicUri,  Uri albumUri,  long duration) {
         Name = name;
-        Artist = artist;
         MusicUri = musicUri;
-        Album = album;
         this.albumUri = albumUri;
-        PlayedTime = playedTime;
-        MusicImage = musicImage;
         Duration = duration;
     }
 

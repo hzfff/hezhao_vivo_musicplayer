@@ -2,14 +2,20 @@ package com.example.musicplayer_hezhao;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -44,6 +50,7 @@ import com.example.musicplayer_hezhao.menu_work.nav_price_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_show_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_stop_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_store_activity;
+import com.example.musicplayer_hezhao.model.Music;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.google.android.material.navigation.NavigationView;
@@ -55,6 +62,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import javax.xml.transform.Result;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -147,8 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mymusic_text.setTextSize(16);
                 find_music.setTextSize(16);
                 find_vedio.setTextSize(16);
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         mymusic_text.setTextSize(20);
                         break;
@@ -168,17 +176,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         Intent intent = this.getIntent();
         username = intent.getStringExtra("username");
-        if(username!=null)
-        {
+        if (username != null) {
             login_text.setText(username);
         }
     }
 
     public void initView() {
-        mymusic_text=findViewById(R.id.mymusic_text);
+        mymusic_text = findViewById(R.id.mymusic_text);
         mymusic_text.setTextSize(20);
-        find_music=findViewById(R.id.find_music);
-        find_vedio=findViewById(R.id.find_vedio);
+        find_music = findViewById(R.id.find_music);
+        find_vedio = findViewById(R.id.find_vedio);
         navigationView = findViewById(R.id.mNavigationView);
         View view = navigationView.getHeaderView(0);
         login_textview = view.findViewById(R.id.login_information);
@@ -374,5 +381,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    //开始处理后台任务
+    //新建一个AsyncTask
+    private   class MusicUpdateTask extends AsyncTask<Object, Music, Void> {
+        List<Music> musicList = new ArrayList<>();
+        @Override
+        protected Void doInBackground(Object... objects) {
+            Uri uri= MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            String[]searchKey=new String[]{
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DURATION
+            };
+            String where=MediaStore.Audio.Media.DATA+"like\"%"+"/music"+"%\"";
+            ContentResolver  resolver=getContentResolver();
+            Cursor cursor=resolver.query(
+                    uri,searchKey,where,null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+            if(cursor!=null)
+            {
+                while(cursor.moveToNext()&&!isCancelled())
+                {
+                    String path=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                    String id=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                    Uri musicuri=Uri.withAppendedPath(uri,id);
+                    String name=cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                    long duration=cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                    int albumId=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID));
+                    Uri albumUri= ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),albumId);
+                    Music data=new Music(name,musicuri,albumUri,duration);
+                    //查询封面图片
+                    if(uri!=null)
+                    {
+                        ContentResolver  res=getContentResolver();
+                        data.MusicImage=Util.CreateBitmap(res,albumUri);
+                    }
+                    publishProgress(data);
+                }
+                cursor.close();
+            }
+            return null;
+        }
+        @Override
+        protected  void onProgressUpdate(Music... music)
+        {
+            //TODO
+        }
+    }
+
 
 }
