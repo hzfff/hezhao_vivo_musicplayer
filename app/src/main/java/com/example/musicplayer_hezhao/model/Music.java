@@ -8,29 +8,36 @@ import android.net.Uri;
  */
 public class Music {
     //音乐名
-    private String Name;
+    public  String Name;
     //歌手名
-    private String Artist;
+    public  String Artist;
     //歌曲链接
-    private Uri MusicUri;
+    public  Uri MusicUri;
     //歌曲专辑
-    private String Album;
+    public  String Album;
     //歌曲封面Uri
-    private Uri albumUri;
+    public Uri AlbumUri;
     //歌曲播放进度
-    private long PlayedTime;
+    public  long PlayedTime;
     //歌曲图片
     public Bitmap MusicImage;
     //歌曲时长
-    private long Duration;
+    public long Duration;
 
     public Music(String name,  Uri musicUri,  Uri albumUri,  long duration) {
         Name = name;
         MusicUri = musicUri;
-        this.albumUri = albumUri;
+        this.AlbumUri = albumUri;
         Duration = duration;
     }
+    public Music(Uri musicUri,Uri albumUri,String name,long duration,long playedTime) {
+        MusicUri=musicUri;
+        AlbumUri=albumUri;
+        Name=name;
+        Duration=duration;
+        PlayedTime=playedTime;
 
+    }
     public String getName() {
         return Name;
     }
@@ -64,11 +71,11 @@ public class Music {
     }
 
     public Uri getAlbumUri() {
-        return albumUri;
+        return AlbumUri;
     }
 
     public void setAlbumUri(Uri albumUri) {
-        this.albumUri = albumUri;
+        this.AlbumUri = albumUri;
     }
 
     public long getPlayedTime() {
