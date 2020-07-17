@@ -26,7 +26,7 @@ import java.util.List;
  * Created by 11120555 on 2020/7/16 15:23
  */
 public class MusicService extends Service {
-    private static final String ACTION_PLAY_MUSIC_PRE = "com.example.musicplayer_hezhao.playpre";
+    public static final String ACTION_PLAY_MUSIC_PRE = "com.example.musicplayer_hezhao.playpre";
     public static final String ACTION_PLAY_MUSIC_NEXT = "com.example.musicplayer_hezhao.playnext";
     public static final String ACTION_PLAY_MUSIC_TOGGLE = "com.example.musicplayer_hezhao.playtoggle";
     public static final String ACTION_PLAY_MUSIC_UPDATE = "com.example.musicplayer_hezhao.playupdate";

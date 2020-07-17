@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.RemoteViews;
 
+import com.example.musicplayer_hezhao.Service.MusicService;
+
 public class MusicWeight extends AppWidgetProvider {
 
     private static int [] sAppWidgetIds;

@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StartActivity">
+        <activity android:name=".PlayMusicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,6 +40,9 @@
         <activity android:name=".fragment.My_Favorite_Music"></activity>
         <activity android:name=".Song_Show"></activity>
         <activity android:name=".fragment.Personal_FM"></activity>
+        <activity android:name=".StartActivity"></activity>
+<!--        <activity android:name=".PlayMusicActivity"></activity>-->
+
     </application>
 
 </manifest>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/play_music_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/pic23"
+        android:scaleType="fitXY" />
+<RelativeLayout
+    android:id="@+id/title"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <com.example.musicplayer_hezhao.util.MyTextView
+        android:id="@+id/text1"
+        android:layout_width="240dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:text="月黑风高ssssssssssssssssssssssss"
+        android:textColor="@color/White"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:textSize="20dp"
+        android:layout_toRightOf="@+id/toolbar"/>
+ <TextView
+     android:id="@+id/text2"
+     android:layout_width="240dp"
+     android:layout_height="30dp"
+     android:layout_marginLeft="10dp"
+     android:layout_toRightOf="@+id/toolbar"
+     android:layout_below="@+id/text1"
+     android:textColor="@color/White"
+     android:text="陈奕迅"/>
+<ImageView
+    android:id="@+id/share"
+    android:layout_width="30dp"
+    android:layout_marginTop="17dp"
+    android:layout_height="30dp"
+    android:layout_marginLeft="10dp"
+    android:layout_toRightOf="@id/text1"
+    android:background="@mipmap/share"/>
+</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/play_music_pager"
+        android:layout_below="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="540dp">
+
+        <RelativeLayout
+            android:id="@+id/play_music_pager_up"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:gravity="center">
+
+            <com.example.musicplayer_hezhao.tool.CircleImageView
+                android:id="@+id/image"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                android:src="@mipmap/pic7" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/play_music_pager_down"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/play_music_pager_up">
+            <com.example.musicplayer_hezhao.tool.LrcView
+                android:id="@+id/lyric"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="600dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/music_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/played_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="00:00"
+                android:textColor="#FFF" />
+
+            <SeekBar
+                android:id="@+id/seek_music"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5" />
+
+            <TextView
+                android:id="@+id/duration_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="--:--"
+                android:textColor="#FFF" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/play_btn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/stop"
+                android:onClick="onClick"
+                android:text="" />
+
+            <Button
+                android:id="@+id/pre_btn"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:layout_toLeftOf="@id/play_btn"
+                android:background="@mipmap/pre"
+                android:onClick="onClick"
+                android:text="" />
+
+            <Button
+                android:id="@+id/next_btn"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50dp"
+                android:layout_toRightOf="@id/play_btn"
+                android:background="@mipmap/next"
+                android:onClick="onClick"
+                android:text="" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout >
