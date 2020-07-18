@@ -56,6 +56,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private CircleImageView profile_pic;
     private TextView begin_time;
     private TextView end_time;
+    private TextView singer_name;
     private MyTextView music_title;
     private ImageView share_img;
     private Toolbar toolbar;
@@ -72,6 +73,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private int state = 1;
     private List<Music> musicList = new ArrayList<>();
     private MusicUpdateTask musicUpdateTask;
+    private boolean index = true;
+    private boolean temp = true;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -83,6 +86,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
 
     public void initView() {
         music_title = findViewById(R.id.text1);
+        singer_name=findViewById(R.id.text2);
         image1 = findViewById(R.id.img1);
         image3 = findViewById(R.id.img3);
         share_img = findViewById(R.id.share);
@@ -158,6 +162,11 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
             case R.id.next_btn:
                 break;
             case R.id.play_btn:
+                if(index)
+                {
+                    mMusicService.addPlayList(musicList.get(0));
+                    index=false;
+                }
                 if (isStart) {
                     mMusicService.play();
                     start_button.setBackground(getDrawable(R.mipmap.play));
@@ -165,13 +174,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                     animator.setCurrentPlayTime(currentPlayTime);
                     isStart = false;
                 } else {
+                    mMusicService.pause();
                     start_button.setBackground(getDrawable(R.mipmap.stop));
                     currentPlayTime = animator.getCurrentPlayTime();
                     animator.pause();
                     isStart = true;
                 }
-                System.out.println(musicList.size());
-                mMusicService.addPlayList(musicList.get(0));
                 break;
             case R.id.pre_btn:
                 break;
@@ -230,7 +238,15 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         begin_time.setText(times);
         seekBar.setMax((int) music.Duration);
         seekBar.setProgress((int) music.PlayedTime);
-        music_title.setText(music.Name);
+        if(temp) {
+            temp=false;
+            music_title.setText(music.Name);
+            singer_name.setText(music.Artist);
+            profile_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), music.AlbumUri));
+            Glide.with(this).load(Util.CreateBitmap(getContentResolver(), music.AlbumUri)).
+                    apply(RequestOptions.
+                            bitmapTransform(new BlurTransformation(18, 6))).into(background_pic);
+        }
     }
 
     private void enableControlPanel(boolean enabled) {
@@ -293,16 +309,18 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private void showPlayList() {
 
     }
+
     private AdapterView.OnItemClickListener mOnMusicItemClickListener = new AdapterView.OnItemClickListener() {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if(mMusicService != null) {
+            if (mMusicService != null) {
                 mMusicService.addPlayList(musicList.get(position));
             }
         }
     };
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //TODO
