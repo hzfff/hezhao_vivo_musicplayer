@@ -36,7 +36,7 @@ public class LrcUtil {
                 String text = lrc.substring(lrc.indexOf("]") + 1);
                 //如果当前行没有歌词进行初始化
                 if (text == null || "".equals(text)) {
-                    text = "music";
+                    text = "raw";
                 }
                 LrcBean lrcBean = new LrcBean();
                 lrcBean.setStart(startTime);

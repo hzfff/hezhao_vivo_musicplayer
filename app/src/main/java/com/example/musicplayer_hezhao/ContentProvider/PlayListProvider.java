@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
 import com.example.musicplayer_hezhao.DB.DBHelper;
+import com.example.musicplayer_hezhao.R;
 
 /**
  * Created by 11120555 on 2020/7/16 11:23
@@ -23,11 +24,11 @@ public class PlayListProvider extends ContentProvider {
     private static final int MATCH_SECOND = 2;
     public static final String AUTHORITY = "com.example.musicplayer_hezhao.ContentProvider";
     //后期随着数据库表的增加继续增加
-    public static final Uri CONTENT_URI_SONG_FIRST = Uri.parse("content://" + AUTHORITY + "/first");
+    public static final Uri CONTENT_URI_SONG_FIRST = Uri.parse("content://" + AUTHORITY + "/playlist_table");
 
     //建立一个代码块用于初始化
     static {
-        matcher.addURI(AUTHORITY, "first", MATCH_FIRST);
+        matcher.addURI(AUTHORITY, "playlist_table", MATCH_FIRST);
         //后续继续初始化
     }
 
@@ -45,11 +46,14 @@ public class PlayListProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("ID",1);
+        contentValues.put("SONG_URI","\"android.resource://\"+getPackageName()+\"/raw/\"+\"music\"+i);");
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
-                cursor = db.query(dbHelper.PLAYLIST_TABLE_NAME, strings, s, strings1, null, null, s1);
+                cursor = db.query(DBHelper.PLAYLIST_TABLE_NAME, strings, s, strings1, null, null, s1);
                 break;
         }
         return cursor;
@@ -62,7 +66,7 @@ public class PlayListProvider extends ContentProvider {
         long id = 0;
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
-                id = db.insert(dbHelper.PLAYLIST_TABLE_NAME, null, contentValues);
+                id = db.insert(DBHelper.PLAYLIST_TABLE_NAME, null, contentValues);
                 if (id > 0) {
                     cursor = ContentUris.withAppendedId(CONTENT_URI_SONG_FIRST, id);
                 }
@@ -77,7 +81,7 @@ public class PlayListProvider extends ContentProvider {
         int count = 0;
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
-                count = db.delete(dbHelper.PLAYLIST_TABLE_NAME, s, strings);
+                count = db.delete(DBHelper.PLAYLIST_TABLE_NAME, s, strings);
                 break;
 
         }
@@ -90,7 +94,7 @@ public class PlayListProvider extends ContentProvider {
         int count = 0;
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
-                count = db.update(dbHelper.PLAYLIST_TABLE_NAME, contentValues, s, strings);
+                count = db.update(DBHelper.PLAYLIST_TABLE_NAME, contentValues, s, strings);
                 break;
         }
         return count;

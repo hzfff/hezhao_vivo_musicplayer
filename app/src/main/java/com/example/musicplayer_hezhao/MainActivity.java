@@ -1,22 +1,15 @@
 package com.example.musicplayer_hezhao;
 
-import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -40,7 +33,6 @@ import com.example.musicplayer_hezhao.adapter.MainAdapter;
 import com.example.musicplayer_hezhao.fragment.FindMusicFragment;
 import com.example.musicplayer_hezhao.fragment.FindVedioFragment;
 import com.example.musicplayer_hezhao.fragment.MyMusicFragment;
-import com.example.musicplayer_hezhao.fragment.MySelectFragment;
 import com.example.musicplayer_hezhao.menu_work.change_background_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_developer_msg_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_listening_activity;
@@ -51,19 +43,10 @@ import com.example.musicplayer_hezhao.menu_work.nav_show_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_stop_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_store_activity;
 import com.example.musicplayer_hezhao.model.Music;
-import com.gjiazhe.panoramaimageview.GyroscopeObserver;
-import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import javax.xml.transform.Result;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -396,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.DURATION
             };
-            String where=MediaStore.Audio.Media.DATA+"like\"%"+"/music"+"%\"";
+            String where=MediaStore.Audio.Media.DATA+"like\"%"+ "/raw" +"%\"";
             ContentResolver  resolver=getContentResolver();
             Cursor cursor=resolver.query(
                     uri,searchKey,where,null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);

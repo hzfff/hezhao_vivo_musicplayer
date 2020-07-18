@@ -1,17 +1,26 @@
 package com.example.musicplayer_hezhao;
 
 import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
+import com.example.musicplayer_hezhao.model.Music;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 11120555 on 2020/7/16 11:34
@@ -40,4 +49,6 @@ public class Util {
         }
         return  bmp;
     }
+
+
 }

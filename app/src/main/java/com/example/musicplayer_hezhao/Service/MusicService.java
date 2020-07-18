@@ -31,7 +31,7 @@ public class MusicService extends Service {
     public static final String ACTION_PLAY_MUSIC_TOGGLE = "com.example.musicplayer_hezhao.playtoggle";
     public static final String ACTION_PLAY_MUSIC_UPDATE = "com.example.musicplayer_hezhao.playupdate";
     private final int MSG_PROGRESS_UPDATE = 0;
-    private List<OnStateChangeListener> listenerList;
+    private List<OnStateChangeListener> listenerList=new ArrayList<>();
     private List<Music> musicList;
     private Music mcurrentmusic;
     private MediaPlayer mediaPlayer;
@@ -229,6 +229,7 @@ public class MusicService extends Service {
         contentValues.put(DBHelper.DURATION, music.Duration);
         contentValues.put(DBHelper.LAST_PLAY_TIME, music.PlayedTime);
         String SongUri = music.MusicUri.toString();
+        String uri=DBHelper.SONG_URI;
         contentResolver.update(PlayListProvider.CONTENT_URI_SONG_FIRST, contentValues, DBHelper.SONG_URI + "=\"" + SongUri + "\"", null);
     }
 
@@ -260,7 +261,41 @@ public class MusicService extends Service {
             MusicWeight.performUpdates(MusicService.this, music.Name, isPlayingInner(), music.MusicImage);
         }
     }
+    private void addPlayListInner(List<Music> items) {
+
+        contentResolver.delete(PlayListProvider.CONTENT_URI_SONG_FIRST, null, null);
+        musicList.clear();
+
+        for (Music item : items) {
+            addPlayListInner(item, false);
+        }
+
+        mcurrentmusic = musicList.get(0);
+        playInner();
+    }
+
+    private void addPlayListInner(Music item, boolean needPlay) {
+
+        if(musicList.contains(item)) {
+            return;
+        }
+
+        musicList.add(0, item);
+
+        insertMusicItemToContentProvider(item);
+
+        if(needPlay) {
+            mcurrentmusic = musicList.get(0);
+            playInner();
+        }
+    }
     public class MusicServiceIBinder extends Binder {
+        public void addPlayList(Music item) {
+            addPlayListInner(item, true);
+        }
+        public void addPlayList(List<Music> items) {
+            addPlayListInner(items);
+        }
         public void play() {
             playInner();
         }

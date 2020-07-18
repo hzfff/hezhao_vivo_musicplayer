@@ -28,12 +28,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String PLAYLIST_TABLE_DB = "CREATE TABLE  " + PLAYLIST_TABLE_NAME
                 + "("
-                + ID + "INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + NAME + "VERCHAR(256),"
-                + LAST_PLAY_TIME + "LONG,"
-                + SONG_URI + "VERCHAR(128),"
-                + ALBUM_URI + "VERCHAR(128),"
-                + DURATION + "LONG"
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + NAME + " VERCHAR(256),"
+                + LAST_PLAY_TIME +" LONG,"
+                + SONG_URI + " VERCHAR(128),"
+                + ALBUM_URI + " VERCHAR(128),"
+                + DURATION + " LONG"
                 + ");";
         sqLiteDatabase.execSQL(PLAYLIST_TABLE_DB);
     }
