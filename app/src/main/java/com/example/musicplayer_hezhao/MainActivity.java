@@ -84,24 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView find_vedio;
     private NavigationView navigationView;
     private String username = null;
-
-    private static Bitmap getAlphaBitmap(Bitmap mBitmap, int mColor) {
-        Bitmap mAlphaBitmap = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
-        int mBitmapWidth = mAlphaBitmap.getWidth();
-        int mBitmapHeight = mAlphaBitmap.getHeight();
-
-        for (int i = 0; i < mBitmapHeight; i++) {
-            for (int j = 0; j < mBitmapWidth; j++) {
-                int color = mBitmap.getPixel(j, i);
-                if (color != mColor) {
-                    mAlphaBitmap.setPixel(j, i, color);
-                }
-            }
-        }
-        return mAlphaBitmap;
-    }
-
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -367,52 +349,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //开始处理后台任务
     //新建一个AsyncTask
-    private   class MusicUpdateTask extends AsyncTask<Object, Music, Void> {
-        List<Music> musicList = new ArrayList<>();
-        @Override
-        protected Void doInBackground(Object... objects) {
-            Uri uri= MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-            String[]searchKey=new String[]{
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ALBUM_ID,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DURATION
-            };
-            String where=MediaStore.Audio.Media.DATA+"like\"%"+ "/raw" +"%\"";
-            ContentResolver  resolver=getContentResolver();
-            Cursor cursor=resolver.query(
-                    uri,searchKey,where,null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-            if(cursor!=null)
-            {
-                while(cursor.moveToNext()&&!isCancelled())
-                {
-                    String path=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                    String id=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                    Uri musicuri=Uri.withAppendedPath(uri,id);
-                    String name=cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                    long duration=cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                    int albumId=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID));
-                    Uri albumUri= ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),albumId);
-                    Music data=new Music(name,musicuri,albumUri,duration);
-                    //查询封面图片
-                    if(uri!=null)
-                    {
-                        ContentResolver  res=getContentResolver();
-                        data.MusicImage=Util.CreateBitmap(res,albumUri);
-                    }
-                    publishProgress(data);
-                }
-                cursor.close();
-            }
-            return null;
-        }
-        @Override
-        protected  void onProgressUpdate(Music... music)
-        {
-            //TODO
-        }
-    }
+    //TODO
 
 
 }

@@ -1,4 +1,6 @@
 package com.example.musicplayer_hezhao.Service;
+
+import android.Manifest;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -6,21 +8,29 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+
 import com.example.musicplayer_hezhao.ContentProvider.PlayListProvider;
 import com.example.musicplayer_hezhao.DB.DBHelper;
 import com.example.musicplayer_hezhao.MusicWeight;
 import com.example.musicplayer_hezhao.Util;
 import com.example.musicplayer_hezhao.model.Music;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static androidx.core.app.ActivityCompat.requestPermissions;
+import static com.example.musicplayer_hezhao.DB.DBHelper.SONG_URI;
+
 
 /**
  * Created by 11120555 on 2020/7/16 15:23
@@ -31,7 +41,7 @@ public class MusicService extends Service {
     public static final String ACTION_PLAY_MUSIC_TOGGLE = "com.example.musicplayer_hezhao.playtoggle";
     public static final String ACTION_PLAY_MUSIC_UPDATE = "com.example.musicplayer_hezhao.playupdate";
     private final int MSG_PROGRESS_UPDATE = 0;
-    private List<OnStateChangeListener> listenerList=new ArrayList<>();
+    private List<OnStateChangeListener> listenerList = new ArrayList<>();
     private List<Music> musicList;
     private Music mcurrentmusic;
     private MediaPlayer mediaPlayer;
@@ -41,7 +51,9 @@ public class MusicService extends Service {
 
     public interface OnStateChangeListener {
         void onPlayProgressChange(Music music);
+
         void onPlay(Music music);
+
         void onPause(Music music);
     }
 
@@ -56,17 +68,17 @@ public class MusicService extends Service {
         IntentFilter commandFilter = new IntentFilter();
         commandFilter.addAction(ACTION_PLAY_MUSIC_UPDATE);
         registerReceiver(broadcastReceiver, commandFilter);
-        initplaylist();
-        if (mcurrentmusic != null) {
-            preparToPlay(mcurrentmusic);
-        }
-        updateAppWidget(mcurrentmusic);
+        //initplaylist();
+//        if (mcurrentmusic != null) {
+//            preparToPlay(mcurrentmusic);
+//        }
+//        updateAppWidget(mcurrentmusic);
     }
 
     private void preparToPlay(Music mcurrentmusic) {
         try {
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(MusicService.this, mcurrentmusic.MusicUri);
+            mediaPlayer.setDataSource(MusicService.this, Uri.parse(mcurrentmusic.MusicUri));
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,7 +96,7 @@ public class MusicService extends Service {
                         onStateChangeListener.onPlayProgressChange(mcurrentmusic);
                     }
                     updateMusicItem(mcurrentmusic);
-                    sendEmptyMessageDelayed(MSG_PROGRESS_UPDATE, 1000);
+                    sendEmptyMessageDelayed(MSG_PROGRESS_UPDATE, 1);
                     break;
             }
 
@@ -127,7 +139,11 @@ public class MusicService extends Service {
         if (currentindex - 1 >= 0) {
             mcurrentmusic = musicList.get(currentindex - 1);
             playMusicItem(mcurrentmusic, true);
+        } else {
+            mcurrentmusic = musicList.get(musicList.size() - 1);
+            playMusicItem(mcurrentmusic, true);
         }
+        addRecentMusic(mcurrentmusic);
     }
 
     //播放下一首歌曲
@@ -137,7 +153,11 @@ public class MusicService extends Service {
         if (currentindex + 1 < musicList.size()) {
             mcurrentmusic = musicList.get(currentindex + 1);
             playMusicItem(mcurrentmusic, true);
+        } else {
+            mcurrentmusic = musicList.get(0);
+            playMusicItem(mcurrentmusic, true);
         }
+        addRecentMusic(mcurrentmusic);
     }
 
     //暂停
@@ -161,6 +181,33 @@ public class MusicService extends Service {
         } else {
             playMusicItem(mcurrentmusic, true);
         }
+        addRecentMusic(mcurrentmusic);
+    }
+
+    public void addRecentMusic(Music music) {
+        ContentValues contentView = new ContentValues();
+        contentView.put(DBHelper.NAME, music.Name);
+        contentView.put(DBHelper.DURATION, music.Duration);
+        contentView.put(DBHelper.LAST_PLAY_TIME, music.PlayedTime);
+        contentView.put(SONG_URI, music.MusicUri);
+        contentView.put(DBHelper.ALBUM_URI, music.AlbumUri);
+        contentView.put(DBHelper.ARTIST, music.Artist);
+        String[] SongUri =new String[]{ music.getMusicUri()};
+        Cursor cursor = contentResolver.query(
+                PlayListProvider.CONTENT_URI_SONG_THIRD,
+                null,
+                SONG_URI + " =?" ,
+                SongUri,
+                null);
+        if (cursor.moveToNext()) {
+            ContentResolver resolver = getContentResolver();
+            String where = "song_uri=?";
+            String[] Args = new String[]{music.getMusicUri()};
+            int index=resolver.delete(PlayListProvider.CONTENT_URI_SONG_THIRD, where, Args);
+            System.out.println(index);
+        }
+            contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_THIRD, contentView);
+
     }
 
     public void seekToInner(int position) {
@@ -183,28 +230,28 @@ public class MusicService extends Service {
         return mediaPlayer.isPlaying();
     }
 
-    private void initplaylist() {
-        musicList.clear();
-        Cursor cursor = contentResolver.query(
-                PlayListProvider.CONTENT_URI_SONG_FIRST,
-                null,
-                null,
-                null,
-                null);
-        while (cursor.moveToNext()) {
-            String songUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.SONG_URI));
-            String albumUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ALBUM_URI));
-            String name = cursor.getString(cursor.getColumnIndex(DBHelper.NAME));
-            long playedtime = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.LAST_PLAY_TIME));
-            long duration = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.DURATION));
-            Music music = new Music(Uri.parse(songUri), Uri.parse(albumUri), name, duration, playedtime);
-            musicList.add(music);
-        }
-        cursor.close();
-        if (musicList.size() > 0) {
-            mcurrentmusic = musicList.get(0);
-        }
-    }
+//    private void initplaylist() {
+//        musicList.clear();
+//        Cursor cursor = contentResolver.query(
+//                PlayListProvider.CONTENT_URI_SONG_FIRST,
+//                null,
+//                null,
+//                null,
+//                null);
+//        while (cursor.moveToNext()) {
+//            String songUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.SONG_URI));
+//            String albumUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ALBUM_URI));
+//            String name = cursor.getString(cursor.getColumnIndex(DBHelper.NAME));
+//            long playedtime = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.LAST_PLAY_TIME));
+//            long duration = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.DURATION));
+//            Music music = new Music(songUri, albumUri, name, duration, playedtime);
+//            musicList.add(music);
+//        }
+//        cursor.close();
+//        if (musicList.size() > 0) {
+//            mcurrentmusic = musicList.get(0);
+//        }
+//    }
 
     public void playMusicItem(Music music, boolean isload) {
         if (music == null) {
@@ -229,7 +276,7 @@ public class MusicService extends Service {
         contentValues.put(DBHelper.DURATION, music.Duration);
         contentValues.put(DBHelper.LAST_PLAY_TIME, music.PlayedTime);
         String SongUri = music.MusicUri.toString();
-        String uri=DBHelper.SONG_URI;
+        String uri = DBHelper.SONG_URI;
         contentResolver.update(PlayListProvider.CONTENT_URI_SONG_FIRST, contentValues, DBHelper.SONG_URI + "=\"" + SongUri + "\"", null);
     }
 
@@ -256,11 +303,12 @@ public class MusicService extends Service {
         if (music != null) {
             if (music.MusicImage == null) {
                 ContentResolver contentResolver = getContentResolver();
-                music.MusicImage = Util.CreateBitmap(contentResolver, music.AlbumUri);
+                music.MusicImage = music.AlbumUri;
             }
-            MusicWeight.performUpdates(MusicService.this, music.Name, isPlayingInner(), music.MusicImage);
+            MusicWeight.performUpdates(MusicService.this, music.Name, isPlayingInner(), Util.CreateBitmap(getContentResolver(), Uri.parse(music.MusicImage)));
         }
     }
+
     private void addPlayListInner(List<Music> items) {
 
         contentResolver.delete(PlayListProvider.CONTENT_URI_SONG_FIRST, null, null);
@@ -276,7 +324,7 @@ public class MusicService extends Service {
 
     private void addPlayListInner(Music item, boolean needPlay) {
 
-        if(musicList.contains(item)) {
+        if (musicList.contains(item)) {
             return;
         }
 
@@ -284,28 +332,42 @@ public class MusicService extends Service {
 
         insertMusicItemToContentProvider(item);
 
-        if(needPlay) {
-            mcurrentmusic = musicList.get(0);
+        if (needPlay) {
+
+            //测试---------------------------------------------------------------------------------------------------------------
+            mcurrentmusic = item;
             playInner();
         }
     }
+
+    private void addPlayListInner(List<Music> item, int position) {
+        musicList = item;
+        mcurrentmusic = musicList.get(position);
+    }
+
     public class MusicServiceIBinder extends Binder {
         public void addPlayList(Music item) {
             addPlayListInner(item, true);
         }
+
         public void addPlayList(List<Music> items) {
             addPlayListInner(items);
         }
+
+        public void addPlayList(List<Music> items, int position) {
+            addPlayListInner(items, position);
+        }
+
         public void play() {
             playInner();
         }
 
-        public void playNextInner() {
+        public void playNext() {
             playNextInner();
         }
 
         public void playPre() {
-            playPre();
+            playPreInnner();
         }
 
         public void pause() {
@@ -355,7 +417,7 @@ public class MusicService extends Service {
         listenerList.clear();
         for (Music music : musicList) {
             if (music.MusicImage != null) {
-                music.MusicImage.recycle();
+                Util.CreateBitmap(getContentResolver(), Uri.parse(music.MusicImage)).recycle();
             }
         }
         musicList.clear();

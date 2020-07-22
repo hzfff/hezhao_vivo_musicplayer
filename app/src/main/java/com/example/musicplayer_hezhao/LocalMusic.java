@@ -48,10 +48,8 @@ public class LocalMusic extends AppCompatActivity {
     public void initdata(){
         list_title.add("单曲");
         list_title.add("歌手");
-        list_title.add("专辑");
         fragmentList.add(new local_music_fragment());
         fragmentList.add(new local_singer_fragment());
-        fragmentList.add(new local_music_collect());
         downLoadAdapter=new DownLoadAdapter(getSupportFragmentManager(),list_title,fragmentList);
         viewPager.setAdapter(downLoadAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

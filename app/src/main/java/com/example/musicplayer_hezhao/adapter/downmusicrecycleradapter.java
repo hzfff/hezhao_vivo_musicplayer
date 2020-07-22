@@ -27,7 +27,7 @@ public class downmusicrecycleradapter extends RecyclerView.Adapter<downmusicrecy
     private Context context;
     private OnItemClickListener onItemClickListener;
     public downmusicrecycleradapter(List<String> list_name, List<String> list_singer, Context context) {
-        this.list_name = list_name;
+
         this.list_singer = list_singer;
         this.context = context;
     }

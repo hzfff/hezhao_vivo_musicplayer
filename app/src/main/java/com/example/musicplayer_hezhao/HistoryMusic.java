@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.musicplayer_hezhao.adapter.DownLoadAdapter;
+import com.example.musicplayer_hezhao.fragment.Histroy_Music_Fragment;
 import com.example.musicplayer_hezhao.fragment.history_vedio_fragment;
 import com.example.musicplayer_hezhao.fragment.local_music_fragment;
 import com.google.android.material.tabs.TabLayout;
@@ -56,7 +57,7 @@ public class HistoryMusic extends AppCompatActivity {
     public void initdata() {
         titleList.add("歌曲");
         titleList.add("视频");
-        fragmentList.add(new local_music_fragment());
+        fragmentList.add(new Histroy_Music_Fragment());
         fragmentList.add(new history_vedio_fragment());
         downLoadAdapter=new DownLoadAdapter(getSupportFragmentManager(),titleList,fragmentList);
         viewPager.setAdapter(downLoadAdapter);

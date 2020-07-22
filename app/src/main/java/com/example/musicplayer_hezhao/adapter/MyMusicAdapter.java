@@ -58,7 +58,7 @@ public class MyMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public NormalHolder(View itemView) {
                 super(itemView);
 
-                mTV = (TextView) itemView.findViewById(R.id.my_favorite_music_text);
+//                mTV = (TextView) itemView.findViewById(R.id.my_favorite_music_text);
                 mImg = (ImageView)itemView.findViewById(R.id.favorite_image_view1);
 
             }

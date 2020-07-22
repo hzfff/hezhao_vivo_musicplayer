@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -25,12 +26,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer_hezhao.DownLoadMusic;
 import com.example.musicplayer_hezhao.HistoryMusic;
 import com.example.musicplayer_hezhao.LocalMusic;
 import com.example.musicplayer_hezhao.LoginMainActivity;
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.adapter.MyMusicBottomAdapter;
+import com.example.musicplayer_hezhao.util.MusicListDialog;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -38,12 +42,13 @@ import com.google.android.material.appbar.AppBarLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 /**
  * Created by 11120555 on 2020/7/7 17:01
  */
-public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
+public class MyMusicFragment extends Fragment implements  View.OnClickListener {
     private GyroscopeObserver gyroscopeObserver;
-    private Toolbar my_music_toolbar;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private TextView creatmusic_text;
@@ -60,7 +65,9 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
     private TextView local_music;
     private TextView recent_listen;
     private TextView My_favorite_music;
-    private TextView Personal_FM;
+    private ImageView imageView;
+    private ImageView detail_img;
+    private final String TAG="HeZhao";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mymusic_layout, null);
@@ -72,13 +79,16 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
         super.onActivityCreated(bundle);
         setHasOptionsMenu(true);
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        appCompatActivity.setSupportActionBar(my_music_toolbar);
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle bundle) {
+        imageView=view.findViewById(R.id.image2);
+        Glide.with(this).load(R.mipmap.pic5).
+                apply(RequestOptions.
+                        bitmapTransform(new BlurTransformation(18, 3))).into(imageView);
+        detail_img=view.findViewById(R.id.image_title);
         My_favorite_music=view.findViewById(R.id.text1);
-        Personal_FM=view.findViewById(R.id.text2);
         loadmusic=view.findViewById(R.id.downloadmusic_text);
         Drawable drawable=getResources().getDrawable(R.mipmap.download);
         drawable.setBounds(0,0,100,100);
@@ -107,15 +117,14 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
         creatmusic_text = view.findViewById(R.id.create_music_text);
         selectmusic_text = view.findViewById(R.id.collect_music_text);
         helpmusic_text = view.findViewById(R.id.help_music_text);
-        my_music_toolbar = view.findViewById(R.id.my_music_toolbar);
         gyroscopeObserver = new GyroscopeObserver();
         gyroscopeObserver.setMaxRotateRadian(Math.PI / 9);
         PanoramaImageView panoramaImageView = view.findViewById(R.id.favorite_image_view1);
-        PanoramaImageView panoramaImageView1 = view.findViewById(R.id.favorite_image_view2);
-        PanoramaImageView panoramaImageView2 = view.findViewById(R.id.favorite_image_view3);
-        panoramaImageView1.setGyroscopeObserver(gyroscopeObserver);
+//        PanoramaImageView panoramaImageView1 = view.findViewById(R.id.favorite_image_view2);
+//        PanoramaImageView panoramaImageView2 = view.findViewById(R.id.favorite_image_view3);
+  //      panoramaImageView1.setGyroscopeObserver(gyroscopeObserver);
         panoramaImageView.setGyroscopeObserver(gyroscopeObserver);
-        panoramaImageView2.setGyroscopeObserver(gyroscopeObserver);
+//        panoramaImageView2.setGyroscopeObserver(gyroscopeObserver);
         creatmusic_text.setOnClickListener(this);
         creatmusic_text.setSelected(true);
         local_music.setOnClickListener(this);
@@ -124,11 +133,21 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
         selectmusic_text.setOnClickListener(this);
         helpmusic_text.setOnClickListener(this);
         My_favorite_music.setOnClickListener(this);
-        Personal_FM.setOnClickListener(this);
+        panoramaImageView.setOnClickListener(this);
+        detail_img.setOnClickListener(this);
+       // Personal_FM.setOnClickListener(this);
         login_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), LoginMainActivity.class));
+            }
+        });
+        detail_img.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                MusicListDialog musicListDialog=new MusicListDialog();
+                musicListDialog.show(getFragmentManager(),TAG);
             }
         });
     }
@@ -146,11 +165,6 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
         gyroscopeObserver.unregister();
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        my_music_toolbar.setVisibility(View.VISIBLE);
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -192,7 +206,7 @@ public class MyMusicFragment extends Fragment implements AppBarLayout.OnOffsetCh
                 Intent intent3=new Intent(getActivity(), HistoryMusic.class);
                 startActivity(intent3);
                 break;
-            case R.id.text1:
+            case R.id.favorite_image_view1:
                 Intent intent4=new Intent(getActivity(),My_Favorite_Music.class);
                 startActivity(intent4);
                 break;

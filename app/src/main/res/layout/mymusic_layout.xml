@@ -1,53 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
-    <View
-        android:layout_marginTop="190dp"
-        android:layout_width="match_parent"
-        android:background="@color/drak"
-        android:layout_height="1dp"/>
+    android:layout_height="match_parent">
+
     <RelativeLayout
-        android:id="@+id/mymusic_up"
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-        <RelativeLayout
-            android:id="@+id/MyMusic_Title"
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
+        android:layout_height="160dp">
 
-            <include layout="@layout/mymusic_title_layout" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/MyMusic_Select"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@+id/MyMusic_Title">
+            android:layout_height="1dp"
+            android:layout_marginTop="190dp"
+            android:background="@color/drak" />
 
-            <include layout="@layout/mymusic_select" />
+        <RelativeLayout
+            android:id="@+id/mymusic_up"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <RelativeLayout
+                android:id="@+id/MyMusic_Title"
+                android:layout_width="match_parent"
+                android:layout_height="85dp">
+
+                <include layout="@layout/mymusic_title_layout" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/MyMusic_Select"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/MyMusic_Title">
+
+                <include layout="@layout/mymusic_select" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/my_music_middle"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/mymusic_up">
-        <include layout="@layout/mymusic_middle_layout"/>
-    </RelativeLayout>
-    <View
-        android:layout_below="@+id/my_music_middle"
-        android:layout_width="match_parent"
-        android:layout_marginTop="2dp"
-        android:background="@color/drak"
-        android:layout_height="1dp"/>
-    <RelativeLayout
-        android:layout_below="@id/my_music_middle"
-        android:id="@+id/my_music_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <include  layout="@layout/my_music_bottom"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_below="@+id/mymusic_up">
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:title=""
+                    app:titleEnabled="false">
+                    <ImageView
+                        android:id="@+id/image2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/pic5" />
+                    <include
+                        layout="@layout/mymusic_middle_layout" />
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <RelativeLayout
+                android:id="@+id/my_music_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/app_bar"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                <include layout="@layout/my_music_bottom" />
+            </RelativeLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </RelativeLayout>
 </RelativeLayout>

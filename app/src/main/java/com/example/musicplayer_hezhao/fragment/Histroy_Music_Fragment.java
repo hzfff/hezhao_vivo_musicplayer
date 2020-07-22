@@ -5,8 +5,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,28 +17,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.musicplayer_hezhao.ContentProvider.PlayListProvider;
+import com.example.musicplayer_hezhao.DB.DBHelper;
 import com.example.musicplayer_hezhao.PlayMusicActivity;
 import com.example.musicplayer_hezhao.R;
-import com.example.musicplayer_hezhao.Util;
 import com.example.musicplayer_hezhao.adapter.MusicShowAdapter;
-import com.example.musicplayer_hezhao.adapter.downmusicrecycleradapter;
-import com.example.musicplayer_hezhao.adapter.local_music_collect_adapter;
 import com.example.musicplayer_hezhao.model.Music;
 import com.example.musicplayer_hezhao.util.ShowDialog;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by 11120555 on 2020/7/15 9:46
+ * Created by 11120555 on 2020/7/22 14:07
  */
-public class local_music_fragment extends Fragment {
+public class Histroy_Music_Fragment   extends Fragment {
     private RecyclerView recyclerView;
     private MusicShowAdapter adapters;
     private View view;
@@ -95,50 +91,35 @@ public class local_music_fragment extends Fragment {
         });
     }
     private class MusicUpdateTask extends AsyncTask<Object, Music, Void> {
+
         @Override
         protected Void doInBackground(Object... objects) {
-            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-            String[] strs = new String[]{
-                    MediaStore.Audio.Media._ID,
-                    MediaStore.Audio.Media.TITLE,
-                    MediaStore.Audio.Media.ALBUM_ID,
-                    MediaStore.Audio.Media.DATA,
-                    MediaStore.Audio.Media.ARTIST,
-                    MediaStore.Audio.Media.DURATION
-            };
-            String where = MediaStore.Audio.Media.DATA + " like \"%" + "/raw" + "%\"";
-            String[] keywords = null;
-            String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
-            ContentResolver contentResolver = getActivity().getContentResolver();
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            Cursor cursor = contentResolver.query(uri, strs, where, keywords, sortOrder);
-            if (cursor != null) {
-                while (cursor.moveToNext() && !isCancelled()) {
-                    String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                    String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                    Uri musicUri = Uri.withAppendedPath(uri, id);
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                    int albumId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID));
-                    Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-                    String Artist=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-                    Music music = new Music(String.valueOf(musicUri), String.valueOf(albumUri), name, duration, Artist,0);
-                    if (uri != null) {
-                        ContentResolver resolver = getActivity().getContentResolver();
-                        music.MusicImage = String.valueOf(albumUri);
-                    }
-                    publishProgress(music);
-                }
-                cursor.close();
-
+            musicList.clear();
+            Cursor cursor = getActivity().getContentResolver().query(
+                    PlayListProvider.CONTENT_URI_SONG_THIRD,
+                    null,
+                    null,
+                    null,
+                    null);
+            StringBuilder sb=new StringBuilder();
+            while (cursor.moveToNext()) {
+                String songUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.SONG_URI));
+                String albumUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ALBUM_URI));
+                String name = cursor.getString(cursor.getColumnIndex(DBHelper.NAME));
+                long playedtime = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.LAST_PLAY_TIME));
+                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.DURATION));
+                String artist = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ARTIST));
+                Music music = new Music(songUri, albumUri, name, duration, playedtime,artist);
+                musicList.add(music);
             }
+            Collections.reverse(musicList);
+            cursor.close();
+            publishProgress();
             return null;
         }
 
         @Override
         protected void onProgressUpdate(Music... musiclists) {
-            Music music = musiclists[0];
-            musicList.add(music);
             MusicShowAdapter adapter = (MusicShowAdapter) recyclerView.getAdapter();
             adapter.notifyDataSetChanged();
         }

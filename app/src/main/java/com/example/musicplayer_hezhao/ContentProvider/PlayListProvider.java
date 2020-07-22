@@ -22,13 +22,21 @@ public class PlayListProvider extends ContentProvider {
     private DBHelper dbHelper;
     private static final int MATCH_FIRST = 1;
     private static final int MATCH_SECOND = 2;
-    public static final String AUTHORITY = "com.example.musicplayer_hezhao.ContentProvider";
+    private static final int MATCH_THIRD = 3;
+    private static final int MATCH_FOURTH = 4;
+    public static final String AUTHORITY = "com.example.musicplayer_hezhao.ContentProvider.PlayListProvider";
     //后期随着数据库表的增加继续增加
     public static final Uri CONTENT_URI_SONG_FIRST = Uri.parse("content://" + AUTHORITY + "/playlist_table");
+    public static final Uri CONTENT_URI_SONG_SECOND = Uri.parse("content://" + AUTHORITY + "/favoritelist_table");
+    public static final Uri CONTENT_URI_SONG_THIRD = Uri.parse("content://" + AUTHORITY + "/recentlist_table");
+    public static final Uri CONTENT_URI_SONG_FOURTH = Uri.parse("content://" + AUTHORITY + "/songlist_table");
 
     //建立一个代码块用于初始化
     static {
         matcher.addURI(AUTHORITY, "playlist_table", MATCH_FIRST);
+        matcher.addURI(AUTHORITY, "favoritelist_table", MATCH_SECOND);
+        matcher.addURI(AUTHORITY, "recentlist_table", MATCH_THIRD);
+        matcher.addURI(AUTHORITY, "songlist_table", MATCH_FOURTH);
         //后续继续初始化
     }
 
@@ -46,14 +54,20 @@ public class PlayListProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
-        ContentValues contentValues=new ContentValues();
-        contentValues.put("ID",1);
-        contentValues.put("SONG_URI","\"android.resource://\"+getPackageName()+\"/raw/\"+\"music\"+i);");
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
                 cursor = db.query(DBHelper.PLAYLIST_TABLE_NAME, strings, s, strings1, null, null, s1);
+                break;
+            case  MATCH_SECOND:
+                cursor=db.query(DBHelper.FAVORITE_TABLE_NAME,strings,s,strings1,null,null,s1);
+                break;
+            case  MATCH_THIRD:
+                cursor=db.query(DBHelper.RECENT_TABLE_NAME,strings,s,strings1,null,null,s1);
+                break;
+            case  MATCH_FOURTH:
+                cursor=db.query(DBHelper.SONG_LIST_TABLE_NAME,strings,s,strings1,null,null,s1);
                 break;
         }
         return cursor;
@@ -71,6 +85,24 @@ public class PlayListProvider extends ContentProvider {
                     cursor = ContentUris.withAppendedId(CONTENT_URI_SONG_FIRST, id);
                 }
                 break;
+            case MATCH_SECOND:
+                id = db.insert(DBHelper.FAVORITE_TABLE_NAME, null, contentValues);
+                if (id > 0) {
+                    cursor = ContentUris.withAppendedId(CONTENT_URI_SONG_SECOND, id);
+                }
+                break;
+            case MATCH_THIRD:
+                id = db.insert(DBHelper.RECENT_TABLE_NAME, null, contentValues);
+                if (id > 0) {
+                    cursor = ContentUris.withAppendedId(CONTENT_URI_SONG_THIRD, id);
+                }
+                break;
+            case MATCH_FOURTH:
+                id = db.insert(DBHelper.SONG_LIST_TABLE_NAME, null, contentValues);
+                if (id > 0) {
+                    cursor = ContentUris.withAppendedId(CONTENT_URI_SONG_FOURTH, id);
+                }
+                break;
         }
         return cursor;
     }
@@ -82,6 +114,15 @@ public class PlayListProvider extends ContentProvider {
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
                 count = db.delete(DBHelper.PLAYLIST_TABLE_NAME, s, strings);
+                break;
+            case MATCH_SECOND:
+                count=db.delete(DBHelper.FAVORITE_TABLE_NAME,s,strings);
+                break;
+            case MATCH_THIRD:
+                count=db.delete(DBHelper.RECENT_TABLE_NAME,s,strings);
+                break;
+            case MATCH_FOURTH:
+                count=db.delete(DBHelper.SONG_LIST_TABLE_NAME,s,strings);
                 break;
 
         }
@@ -95,6 +136,15 @@ public class PlayListProvider extends ContentProvider {
         switch (matcher.match(uri)) {
             case MATCH_FIRST:
                 count = db.update(DBHelper.PLAYLIST_TABLE_NAME, contentValues, s, strings);
+                break;
+            case MATCH_SECOND:
+                count=db.update(DBHelper.FAVORITE_TABLE_NAME,contentValues,s,strings);
+                break;
+            case MATCH_THIRD:
+                count=db.update(DBHelper.RECENT_TABLE_NAME,contentValues,s,strings);
+                break;
+            case MATCH_FOURTH:
+                count=db.update(DBHelper.SONG_LIST_TABLE_NAME,contentValues,s,strings);
                 break;
         }
         return count;

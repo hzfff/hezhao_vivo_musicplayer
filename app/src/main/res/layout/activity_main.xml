@@ -22,8 +22,8 @@
             android:id="@+id/mymusic_head_pic"
             android:layout_width="match_parent"
             android:alpha="0.4"
-            android:scaleType="fitXY"
-            android:layout_height="240dp"/>
+            android:scaleType="centerCrop"
+            android:layout_height="210dp"/>
 
         <RelativeLayout
             android:id="@+id/titles"

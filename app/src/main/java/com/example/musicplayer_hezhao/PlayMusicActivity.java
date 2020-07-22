@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.view.Menu;
@@ -38,10 +39,13 @@ import com.example.musicplayer_hezhao.tool.CircleImageView;
 import com.example.musicplayer_hezhao.tool.LrcView;
 import com.example.musicplayer_hezhao.util.MyTextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.internal.Utils;
 
 /**
  * Created by 11120555 on 2020/7/17 15:38
@@ -72,9 +76,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     //表示image的三种状态
     private int state = 1;
     private List<Music> musicList = new ArrayList<>();
-    private MusicUpdateTask musicUpdateTask;
     private boolean index = true;
+    private boolean indexs = true;
+    private boolean indexss = true;
     private boolean temp = true;
+    private Intent intent;
+    private int position;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -85,8 +92,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void initView() {
+        intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        musicList = (List<Music>) bundle.getSerializable("MusicList");
+        position = intent.getIntExtra("position", 0);
         music_title = findViewById(R.id.text1);
-        singer_name=findViewById(R.id.text2);
+        singer_name = findViewById(R.id.text2);
         image1 = findViewById(R.id.img1);
         image3 = findViewById(R.id.img3);
         share_img = findViewById(R.id.share);
@@ -115,16 +126,17 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         animator.setDuration(10000);//动画旋转一周的时间为10秒
         animator.setInterpolator(new LinearInterpolator());//匀速
         animator.setRepeatCount(-1);
-        musicUpdateTask = new MusicUpdateTask();
-        musicUpdateTask.execute();
         seekBar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);//设置滑块颜色、样式
         seekBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);//设置进度条颜色、样式
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        Glide.with(this).load(R.mipmap.pic17).
-                apply(RequestOptions.
-                        bitmapTransform(new BlurTransformation(18, 6))).into(background_pic);
+        background_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(musicList.get(position).getAlbumUri())));
+        profile_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(musicList.get(position).getAlbumUri())));
+        String times = Util.ConverSecondsToTime(musicList.get(position).Duration);
+        end_time.setText(times);
+        singer_name.setText(musicList.get(position).getArtist());
+        music_title.setText(musicList.get(position).getName());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,12 +172,22 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
             case R.id.share:
                 break;
             case R.id.next_btn:
+                if (indexs && index && indexss) {
+                    mMusicService.addPlayList(musicList, position);
+                    indexs = false;
+                }
+                start_button.setBackground(getDrawable(R.mipmap.play));
+                animator.start();
+                animator.setCurrentPlayTime(currentPlayTime);
+                isStart = false;
+                temp = true;
+                mMusicService.playNext();
                 break;
             case R.id.play_btn:
-                if(index)
-                {
-                    mMusicService.addPlayList(musicList.get(0));
-                    index=false;
+
+                if (index && indexs && indexss) {
+                    mMusicService.addPlayList(musicList, position);
+                    index = false;
                 }
                 if (isStart) {
                     mMusicService.play();
@@ -182,6 +204,17 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 }
                 break;
             case R.id.pre_btn:
+
+                if (indexss && indexs && index) {
+                    mMusicService.addPlayList(musicList, position);
+                    indexs = false;
+                }
+                start_button.setBackground(getDrawable(R.mipmap.play));
+                animator.start();
+                animator.setCurrentPlayTime(currentPlayTime);
+                isStart = false;
+                temp = true;
+                mMusicService.playPre();
                 break;
             case R.id.img1:
                 if (state == 1) {
@@ -238,14 +271,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         begin_time.setText(times);
         seekBar.setMax((int) music.Duration);
         seekBar.setProgress((int) music.PlayedTime);
-        if(temp) {
-            temp=false;
+        if (temp) {
+            temp = false;
             music_title.setText(music.Name);
             singer_name.setText(music.Artist);
-            profile_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), music.AlbumUri));
-            Glide.with(this).load(Util.CreateBitmap(getContentResolver(), music.AlbumUri)).
-                    apply(RequestOptions.
-                            bitmapTransform(new BlurTransformation(18, 6))).into(background_pic);
+            profile_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(music.AlbumUri)));
+            background_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(music.AlbumUri)));
         }
     }
 
@@ -256,55 +287,6 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         seekBar.setEnabled(enabled);
     }
 
-    private class MusicUpdateTask extends AsyncTask<Object, Music, Void> {
-
-        List<Music> list = new ArrayList<>();
-
-        @Override
-        protected Void doInBackground(Object... objects) {
-            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-            String[] strs = new String[]{
-                    MediaStore.Audio.Media._ID,
-                    MediaStore.Audio.Media.TITLE,
-                    MediaStore.Audio.Media.ALBUM_ID,
-                    MediaStore.Audio.Media.DATA,
-                    MediaStore.Audio.Media.DURATION
-            };
-            String where = MediaStore.Audio.Media.DATA + " like \"%" + "/raw" + "%\"";
-            String[] keywords = null;
-            String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
-            ContentResolver contentResolver = getContentResolver();
-            ActivityCompat.requestPermissions(PlayMusicActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            Cursor cursor = contentResolver.query(uri, strs, where, keywords, sortOrder);
-            if (cursor != null) {
-                while (cursor.moveToNext() && !isCancelled()) {
-                    String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                    String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                    Uri musicUri = Uri.withAppendedPath(uri, id);
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                    int albumId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID));
-                    Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-                    Music music = new Music(musicUri, albumUri, name, duration, 0);
-                    if (uri != null) {
-                        ContentResolver resolver = getContentResolver();
-                        music.MusicImage = Util.CreateBitmap(resolver, albumUri);
-                    }
-                    publishProgress(music);
-                }
-                cursor.close();
-
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Music... musiclists) {
-            Music music = musiclists[0];
-            musicList.add(music);
-            //TODO
-        }
-    }
 
     private void showPlayList() {
 

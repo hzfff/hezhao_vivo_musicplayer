@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/my_music_div"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -81,11 +80,13 @@
                 android:layout_weight="1"
                 android:onClick="onClick">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/my_music_toolbar"
+                <ImageView
+                    android:id="@+id/image_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fitsSystemWindows="true" />
+                    android:src="@mipmap/detail"
+                    android:layout_marginLeft="40dp"/>
+
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

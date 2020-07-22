@@ -19,6 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/music_main_viewpager">
-<include  layout="@layout/playing_music_text"/>
+      <include  layout="@layout/playing_music_text"/>
     </RelativeLayout>
 </RelativeLayout>
