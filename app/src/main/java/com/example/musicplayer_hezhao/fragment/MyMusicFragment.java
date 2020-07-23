@@ -113,7 +113,7 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
         }
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new MyCreateMusicFragment());
+        fragmentTransaction.add(R.id.fragment_container, new MySelectFragment());
         fragmentTransaction.commit();
 //        myMusicBottomAdapter = new MyMusicBottomAdapter(list_img, list_induction, list_number, getContext());
 //        recyclerView = view.findViewById(R.id.my_music_recyclerview);
@@ -194,7 +194,7 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
         fragmentTransaction = fragmentManager.beginTransaction();
         switch (view.getId()) {
             case R.id.create_music_text:
-                fragmentTransaction.replace(R.id.fragment_container, new MyCreateMusicFragment());
+                fragmentTransaction.replace(R.id.fragment_container, new MySelectFragment());
                 creatmusic_text.setSelected(true);
                 selectmusic_text.setSelected(false);
                 break;

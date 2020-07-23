@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +25,7 @@ import java.util.List;
 public class MyMusicBottomAdapter extends RecyclerView.Adapter<MyMusicBottomAdapter.MyMusicHolder> {
     private List<MusicListModel> musicListModels;
     private Context mContext;
-    private OnItemClickListener onItemClickListener;
+    private OnItemClickListener OnItemClickListener;
 
     public MyMusicBottomAdapter(List<MusicListModel> listModels, Context mContext) {
         this.musicListModels = listModels;
@@ -40,22 +41,33 @@ public class MyMusicBottomAdapter extends RecyclerView.Adapter<MyMusicBottomAdap
 
     @Override
     public void onBindViewHolder(@NonNull final MyMusicHolder holder, int position) {
-
         holder.mymusic_induction.setText(musicListModels.get(position).getMusicListName());
-        holder.mymusic_number.setText(""+musicListModels.get(position).getMusicName().size());
-        if (musicListModels.get(position).getMusicName().size() == 0) {
+        holder.mymusic_number.setText((musicListModels.get(position).getMusicName().size()) + "首");
+        if (musicListModels.get(position).getMusicName().size() > 0) {
             holder.mymusic_image.setImageBitmap(Util.CreateBitmap(mContext.getContentResolver(),
                     Uri.parse(musicListModels.get(position).getMusicName().get(0).getAlbumUri())));
         } else {
             holder.mymusic_image.setImageResource(R.mipmap.pic12);
         }
-        if (onItemClickListener != null) {
-            holder.mymusic_image.setOnClickListener(new View.OnClickListener() {
+        holder.mymusic_induction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
+        if (OnItemClickListener != null) {
+            holder.mymusic_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = holder.getLayoutPosition();
-                    onItemClickListener.onItemClick(holder.mymusic_image, position);
+                    OnItemClickListener.onItemClick(holder.mymusic_image, position);
+                }
+            });
+            holder.mymusic_induction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = holder.getLayoutPosition();
+                    OnItemClickListener.onItemClick(holder.mymusic_induction, position);
                 }
             });
         }
@@ -84,7 +96,7 @@ public class MyMusicBottomAdapter extends RecyclerView.Adapter<MyMusicBottomAdap
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        this.OnItemClickListener = onItemClickListener;
     }
 
 }

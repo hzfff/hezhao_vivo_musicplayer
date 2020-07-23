@@ -77,7 +77,7 @@ public class EditNameDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 initdata();
                 if(TextUtils.isEmpty(MusicListName)){
-                    Toast.makeText(getActivity(), "歌单名为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "歌单名不能为空", Toast.LENGTH_SHORT).show();
 
                 }else{
                     musicServiceIBinder.CreateMusicList(MusicListName);

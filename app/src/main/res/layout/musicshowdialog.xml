@@ -86,6 +86,21 @@
         android:textColor="@color/drak"
         android:textSize="15dp"
         android:textStyle="normal"/>
+    <View
+        android:layout_below="@+id/test4"
+        android:layout_width="match_parent"
+        android:background="#F7F7F7"
+        android:layout_height="1dp"/>
+    <TextView
+        android:id="@+id/test5"
+        android:gravity="center"
+        android:layout_below="@+id/test4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="添加到歌单"
+        android:textColor="@color/drak"
+        android:textSize="15dp"
+        android:textStyle="normal"/>
     <Space
         android:layout_width="match_parent"
         android:layout_height="3dp"/>

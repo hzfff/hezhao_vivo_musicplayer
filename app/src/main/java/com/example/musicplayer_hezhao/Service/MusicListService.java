@@ -133,14 +133,16 @@ public class MusicListService extends Service {
             long playedtime = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.LAST_PLAY_TIME));
             long duration = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.DURATION));
             String artist=cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ARTIST));
-            Music music = new Music(songUri, albumUri, name, duration, playedtime,artist);
+            Music music=null;
+            if(null!=songUri) {
+                music = new Music(songUri, albumUri, name, duration, playedtime, artist);
+            }
             if(map.containsKey(musiclistname)){
                int key=map.get(musiclistname);
                musicListModels.get(key).getMusicName().add(music);
-            }else{
+            }else {
                 map.put(musiclistname,musicListModels.size());
                 List<Music>list=new ArrayList<>();
-                list.add(music);
                 MusicListModel musicListModel=new MusicListModel(musiclistname,list);
                 musicListModels.add(musicListModel);
             }

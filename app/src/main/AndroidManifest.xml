@@ -60,6 +60,10 @@
 
         <activity android:name=".ManagerMusicListActivity"/>
 
+        <activity android:name=".ShowMusicActivity"/>
+
+        <activity android:name=".AddMusicToList"/>
+
         <provider
             android:exported="true"
             android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProvider"

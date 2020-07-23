@@ -21,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.musicplayer_hezhao.AddMusicToList;
+import com.example.musicplayer_hezhao.PlayMusicActivity;
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.Service.MyFavoriteMusic_Service;
 import com.example.musicplayer_hezhao.Util;
@@ -29,6 +31,7 @@ import com.example.musicplayer_hezhao.model.Music;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -44,6 +47,7 @@ public class ShowDialog extends DialogFragment {
     private TextView collect;
     private TextView delete;
     private TextView share;
+    private TextView addlist;
     private Music music;
     private Bundle bundle;
     private MyFavoriteMusic_Service.MusicServiceIBinder musicControl;
@@ -73,6 +77,7 @@ public class ShowDialog extends DialogFragment {
         collect = view.findViewById(R.id.test2);
         delete = view.findViewById(R.id.test4);
         share = view.findViewById(R.id.test3);
+        addlist=view.findViewById(R.id.test5);
         imageView = view.findViewById(R.id.test_img);
         text1 = view.findViewById(R.id.test_song);
         text2 = view.findViewById(R.id.test_name);
@@ -106,6 +111,18 @@ public class ShowDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+        //将音乐添加到歌单中
+        addlist.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddMusicToList.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("music", (Serializable) music);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
