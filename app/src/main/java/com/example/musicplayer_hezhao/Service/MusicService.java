@@ -204,7 +204,6 @@ public class MusicService extends Service {
             String where = "song_uri=?";
             String[] Args = new String[]{music.getMusicUri()};
             int index=resolver.delete(PlayListProvider.CONTENT_URI_SONG_THIRD, where, Args);
-            System.out.println(index);
         }
             contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_THIRD, contentView);
 

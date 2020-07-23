@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.musicplayer_hezhao.AddMusicListActivity;
 import com.example.musicplayer_hezhao.ManagerMusicListActivity;
 import com.example.musicplayer_hezhao.R;
 

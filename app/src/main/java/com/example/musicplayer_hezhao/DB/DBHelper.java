@@ -15,9 +15,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public final static String PLAYLIST_TABLE_NAME = "playlist_table";//播放列表
     public final static String FAVORITE_TABLE_NAME = "favoritelist_table";//最喜欢的音乐列表
     public final static String RECENT_TABLE_NAME = "recentlist_table";//最近播放列表
-    public final static String SONG_LIST_TABLE_NAME = "songlist_table";//最近播放列表
+    public final static String SONG_LIST_TABLE_NAME = "songlist_table";//歌单表
     public final static String ID = "id";
-    public final static String MUSIC_ID = "music_id";//作为歌单的外键
+    public final static String MUSIC_LIST_NAME = "musiclist_name";
     public final static String NAME = "name";
     public final static String LAST_PLAY_TIME = "last_play_time";
     public final static String SONG_URI = "song_uri";
@@ -63,14 +63,13 @@ public class DBHelper extends SQLiteOpenHelper {
         String SONG_LIST_TABLE = "CREATE TABLE  " + SONG_LIST_TABLE_NAME
                 + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + MUSIC_ID + " INTEGER ,"
+                + MUSIC_LIST_NAME + " VERCHAR(256) NOT NULL UNIQUE ,"
                 + NAME + " VERCHAR(256),"
                 + LAST_PLAY_TIME + " LONG,"
                 + SONG_URI + " VERCHAR(128),"
                 + ALBUM_URI + " VERCHAR(128),"
                 + DURATION + " LONG,"
-                + ARTIST + " VERCHAR(256),"
-                + "FOREIGN_KEY music_id REFERENCES playlist_table (id) "
+                + ARTIST + " VERCHAR(256)"
                 + ");";
         sqLiteDatabase.execSQL(PLAYLIST_TABLE_DB);
         sqLiteDatabase.execSQL(FAVORITE_TABLE_DB);

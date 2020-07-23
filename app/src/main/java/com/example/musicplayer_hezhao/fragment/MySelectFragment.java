@@ -1,7 +1,11 @@
 package com.example.musicplayer_hezhao.fragment;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,75 +16,70 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.Service.MusicListService;
+import com.example.musicplayer_hezhao.Service.MyFavoriteMusic_Service;
 import com.example.musicplayer_hezhao.Song_Show;
 import com.example.musicplayer_hezhao.adapter.MyMusicBottomAdapter;
+import com.example.musicplayer_hezhao.model.MusicListModel;
 import com.example.musicplayer_hezhao.util.ShowDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.BIND_AUTO_CREATE;
+
 /**
  * Created by 11120555 on 2020/7/10 14:31
  */
 public class MySelectFragment extends Fragment {
-    private List<String> list_induction=new ArrayList<>();
-    private List<String> list_number=new ArrayList<>();
-    private List<Integer> list_img=new ArrayList<>();
     private RecyclerView recyclerView;
     private MyMusicBottomAdapter myMusicBottomAdapter;
-
+    private List<MusicListModel> musiclistModel=new ArrayList<>() ;
+    private MyServiceConn myServiceConn;
+    private MusicListService.MusicServiceIBinder musicControl;
+    private View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.my_music_recyclerview,null);
+         view = inflater.inflate(R.layout.my_music_recyclerview, null);
         return view;
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle bundle) {
+        Intent intent=new Intent(getActivity().getApplicationContext(),MusicListService.class);
+        myServiceConn=new MyServiceConn();
+        boolean flag= getActivity().getApplicationContext().bindService(intent,myServiceConn,BIND_AUTO_CREATE);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView=view.findViewById(R.id.my_music_recyclerview);
+        recyclerView = view.findViewById(R.id.my_music_recyclerview);
         recyclerView.setLayoutManager(linearLayoutManager);
-        initdata();
-        myMusicBottomAdapter=new MyMusicBottomAdapter(list_img,list_induction,list_number,getContext());
+        myMusicBottomAdapter = new MyMusicBottomAdapter(musiclistModel, getContext());
         recyclerView.setAdapter(myMusicBottomAdapter);
-        myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener(){
-
+        myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Bundle bundle=new Bundle();
-                System.out.println(position);
-                bundle.putInt("list_image",list_img.get(position));
-                bundle.putStringArray("list_song",new String[]{"下雨天","微风细雨","Man At Arms","夏天的风","你在烦恼什么","一直很安静","月黑风高","幸福额度","绿色","透明世界","起风了"});
-                bundle.putStringArray("list_name",new String[]{"王菲","周杰伦","陈奕迅","蔡琴","温岚","阿桑","陈奕迅","苏打绿","陈雪凝","火影忍者","吴青峰"});
-                Intent intent=new Intent(getContext(), Song_Show.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
             }
         });
     }
 
+    //初始化歌单列表
     public void initdata() {
-        list_img.add(R.mipmap.pic12);
-        list_img.add(R.mipmap.pic6);
-        list_img.add(R.mipmap.pic10);
-        list_img.add(R.mipmap.pic9);
-        list_img.add(R.mipmap.pic8);
-        list_img.add(R.mipmap.pic7);
-        list_img.add(R.mipmap.pic11);
-        list_induction.add("苏打绿年度歌单");
-        list_induction.add("陈奕迅年度歌单");
-        list_induction.add("睡前必听歌单");
-        list_induction.add("陈奕迅年度歌单");
-        list_induction.add("薛之谦年度歌单");
-        list_induction.add("王菲年度歌单");
-        list_induction.add("王菲年度歌单");
-        list_number.add("10首");
-        list_number.add("62首");
-        list_number.add("18首");
-        list_number.add("37首");
-        list_number.add("13首");
-        list_number.add("133首");
-        list_number.add("133首");
+        musiclistModel=musicControl.QueryMusicList();
+    }
+
+    class MyServiceConn implements ServiceConnection {//用于实现连接服务
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            musicControl = (MusicListService.MusicServiceIBinder) service;
+            initdata();
+            myMusicBottomAdapter = new MyMusicBottomAdapter(musiclistModel, getContext());
+            recyclerView.setAdapter(myMusicBottomAdapter);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
     }
 }

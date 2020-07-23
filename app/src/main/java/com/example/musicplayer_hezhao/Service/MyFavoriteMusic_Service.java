@@ -78,7 +78,6 @@ public class MyFavoriteMusic_Service extends Service {
             contentView.put(SONG_URI, music.MusicUri);
             contentView.put(DBHelper.ALBUM_URI, music.AlbumUri);
             contentView.put(DBHelper.ARTIST, music.Artist);
-            System.out.println("haha");
             contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_SECOND, contentView);
         }
 

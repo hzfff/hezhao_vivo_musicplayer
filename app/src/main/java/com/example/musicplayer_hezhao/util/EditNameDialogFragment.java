@@ -1,7 +1,12 @@
 package com.example.musicplayer_hezhao.util;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,17 +23,22 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.Service.MusicListService;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * Created by 11120555 on 2020/7/22 17:47
  */
+//创建歌单，歌单管理
 public class EditNameDialogFragment extends DialogFragment {
     private EditText editText;
     private Button submit;
     private Button cancel;
     private Window window;
     private String MusicListName;
-
+    private MyServiceConn myServiceConn;
+    private MusicListService.MusicServiceIBinder musicServiceIBinder;
     public EditNameDialogFragment() {
     }
 
@@ -50,6 +60,9 @@ public class EditNameDialogFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Intent intent=new Intent(getActivity(),MusicListService.class);
+        myServiceConn=new MyServiceConn();
+        boolean flag=getActivity().bindService(intent,myServiceConn,BIND_AUTO_CREATE);
         editText = view.findViewById(R.id.music_list_name);
         cancel = view.findViewById(R.id.button1);
         submit = view.findViewById(R.id.button2);
@@ -64,11 +77,11 @@ public class EditNameDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 initdata();
                 if(TextUtils.isEmpty(MusicListName)){
-                    Toast.makeText(getActivity(), "请输入歌单名", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "歌单名为空", Toast.LENGTH_SHORT).show();
 
                 }else{
+                    musicServiceIBinder.CreateMusicList(MusicListName);
                     Toast.makeText(getActivity(), "创建歌单成功", Toast.LENGTH_SHORT).show();
-
                     getDialog().dismiss();
                     return;
                 }
@@ -93,5 +106,18 @@ public class EditNameDialogFragment extends DialogFragment {
 
     public void initdata() {
         MusicListName = editText.getText().toString().trim();
+    }
+
+    class MyServiceConn implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            musicServiceIBinder= (MusicListService.MusicServiceIBinder) iBinder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
     }
 }

@@ -32,6 +32,7 @@ dependencies {
     implementation 'com.gjiazhe:PanoramaImageView:1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     //实现高斯模糊
     implementation 'jp.wasabeef:glide-transformations:4.1.0'

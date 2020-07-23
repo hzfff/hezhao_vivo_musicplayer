@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.mymusic_text:
-                Log.d("hezhao", "MYMuSIC");
+                Log.d("hezhao", "MYMUSIC");
                 mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic4));
                 MusicPlayerViewPager.setCurrentItem(Num_MyMusic, true);
                 break;

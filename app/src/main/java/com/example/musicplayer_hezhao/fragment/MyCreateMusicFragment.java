@@ -44,22 +44,22 @@ public class MyCreateMusicFragment extends Fragment {
         mrecyclerView.setLayoutManager(linearLayoutManager);
         initdata();
         mrecyclerView.setLayoutManager(linearLayoutManager);
-        myMusicBottomAdapter=new MyMusicBottomAdapter(list_img,list_induction,list_number,getContext());
+      //  myMusicBottomAdapter=new MyMusicBottomAdapter(list_img,list_induction,list_number,getContext());
         mrecyclerView.setAdapter(myMusicBottomAdapter);
-        myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(View view, int position) {
-                Bundle bundle=new Bundle();
-                System.out.println(position);
-                bundle.putInt("list_image",list_img.get(position));
-                bundle.putStringArray("list_song",new String[]{"下雨天","微风细雨","Man At Arms","夏天的风","你在烦恼什么","一直很安静","月黑风高","幸福额度","绿色","透明世界","起风了"});
-                bundle.putStringArray("list_name",new String[]{"王菲","周杰伦","陈奕迅","蔡琴","温岚","阿桑","陈奕迅","苏打绿","陈雪凝","火影忍者","吴青峰"});
-                Intent intent=new Intent(getContext(), Song_Show.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+//        myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener(){
+//
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                Bundle bundle=new Bundle();
+//                System.out.println(position);
+//                bundle.putInt("list_image",list_img.get(position));
+//                bundle.putStringArray("list_song",new String[]{"下雨天","微风细雨","Man At Arms","夏天的风","你在烦恼什么","一直很安静","月黑风高","幸福额度","绿色","透明世界","起风了"});
+//                bundle.putStringArray("list_name",new String[]{"王菲","周杰伦","陈奕迅","蔡琴","温岚","阿桑","陈奕迅","苏打绿","陈雪凝","火影忍者","吴青峰"});
+//                Intent intent=new Intent(getContext(), Song_Show.class);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
+//        });
     }
     public void initdata(){
         list_img.add(R.mipmap.favorite_music_pic1);

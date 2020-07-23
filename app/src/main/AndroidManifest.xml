@@ -54,13 +54,9 @@
 
         <activity android:name=".Song_Show"/>
 
-        <activity android:name=".fragment.Personal_FM"/>
-
         <activity android:name=".PlayMusicActivity"/>
 
         <activity android:name=".Local_Singer_Show_Activity"/>
-
-        <activity android:name=".AddMusicListActivity"/>
 
         <activity android:name=".ManagerMusicListActivity"/>
 
@@ -71,6 +67,8 @@
 
         <service android:name=".Service.MusicService" />
         <service android:name=".Service.MyFavoriteMusic_Service" />
+        <service android:name=".Service.MusicListService" />
+
     </application>
 
 </manifest>

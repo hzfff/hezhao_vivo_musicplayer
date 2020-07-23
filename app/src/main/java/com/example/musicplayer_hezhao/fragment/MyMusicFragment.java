@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -47,13 +49,12 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 /**
  * Created by 11120555 on 2020/7/7 17:01
  */
-public class MyMusicFragment extends Fragment implements  View.OnClickListener {
+public class MyMusicFragment extends Fragment implements View.OnClickListener {
     private GyroscopeObserver gyroscopeObserver;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private TextView creatmusic_text;
     private TextView selectmusic_text;
-    private TextView helpmusic_text;
     private List<String> list_induction = new ArrayList<>();
     private List<String> list_number = new ArrayList<>();
     private List<Integer> list_img = new ArrayList<>();
@@ -67,7 +68,9 @@ public class MyMusicFragment extends Fragment implements  View.OnClickListener {
     private TextView My_favorite_music;
     private ImageView imageView;
     private ImageView detail_img;
-    private final String TAG="HeZhao";
+    private final String TAG = "HeZhao";
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mymusic_layout, null);
@@ -83,24 +86,25 @@ public class MyMusicFragment extends Fragment implements  View.OnClickListener {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle bundle) {
-        imageView=view.findViewById(R.id.image2);
+        swipeRefreshLayout = view.findViewById(R.id.swiprefreshlayout);
+        imageView = view.findViewById(R.id.image2);
         Glide.with(this).load(R.mipmap.pic5).
                 apply(RequestOptions.
                         bitmapTransform(new BlurTransformation(18, 3))).into(imageView);
-        detail_img=view.findViewById(R.id.image_title);
-        My_favorite_music=view.findViewById(R.id.text1);
-        loadmusic=view.findViewById(R.id.downloadmusic_text);
-        Drawable drawable=getResources().getDrawable(R.mipmap.download);
-        drawable.setBounds(0,0,100,100);
-        loadmusic.setCompoundDrawables(null,drawable,null,null);
-        local_music=view.findViewById(R.id.localmusic_text);
-        Drawable drawable1=getResources().getDrawable(R.mipmap.localmusic);
-        drawable1.setBounds(0,0,100,100);
-        local_music.setCompoundDrawables(null,drawable1,null,null);
-        recent_listen=view.findViewById(R.id.historymusic_text);
-        Drawable drawable2=getResources().getDrawable(R.mipmap.historymusic);
-        drawable2.setBounds(0,0,100,100);
-        recent_listen.setCompoundDrawables(null,drawable2,null,null);
+        detail_img = view.findViewById(R.id.image_title);
+        My_favorite_music = view.findViewById(R.id.text1);
+        loadmusic = view.findViewById(R.id.downloadmusic_text);
+        Drawable drawable = getResources().getDrawable(R.mipmap.download);
+        drawable.setBounds(0, 0, 100, 100);
+        loadmusic.setCompoundDrawables(null, drawable, null, null);
+        local_music = view.findViewById(R.id.localmusic_text);
+        Drawable drawable1 = getResources().getDrawable(R.mipmap.localmusic);
+        drawable1.setBounds(0, 0, 100, 100);
+        local_music.setCompoundDrawables(null, drawable1, null, null);
+        recent_listen = view.findViewById(R.id.historymusic_text);
+        Drawable drawable2 = getResources().getDrawable(R.mipmap.historymusic);
+        drawable2.setBounds(0, 0, 100, 100);
+        recent_listen.setCompoundDrawables(null, drawable2, null, null);
         login_name = view.findViewById(R.id.login_name);
         Intent intent = getActivity().getIntent();
         username = intent.getStringExtra("username");
@@ -111,18 +115,17 @@ public class MyMusicFragment extends Fragment implements  View.OnClickListener {
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, new MyCreateMusicFragment());
         fragmentTransaction.commit();
-        myMusicBottomAdapter = new MyMusicBottomAdapter(list_img, list_induction, list_number, getContext());
-        recyclerView = view.findViewById(R.id.my_music_recyclerview);
-        recyclerView.setAdapter(myMusicBottomAdapter);
+//        myMusicBottomAdapter = new MyMusicBottomAdapter(list_img, list_induction, list_number, getContext());
+//        recyclerView = view.findViewById(R.id.my_music_recyclerview);
+//        recyclerView.setAdapter(myMusicBottomAdapter);
         creatmusic_text = view.findViewById(R.id.create_music_text);
         selectmusic_text = view.findViewById(R.id.collect_music_text);
-        helpmusic_text = view.findViewById(R.id.help_music_text);
         gyroscopeObserver = new GyroscopeObserver();
         gyroscopeObserver.setMaxRotateRadian(Math.PI / 9);
         PanoramaImageView panoramaImageView = view.findViewById(R.id.favorite_image_view1);
 //        PanoramaImageView panoramaImageView1 = view.findViewById(R.id.favorite_image_view2);
 //        PanoramaImageView panoramaImageView2 = view.findViewById(R.id.favorite_image_view3);
-  //      panoramaImageView1.setGyroscopeObserver(gyroscopeObserver);
+        //      panoramaImageView1.setGyroscopeObserver(gyroscopeObserver);
         panoramaImageView.setGyroscopeObserver(gyroscopeObserver);
 //        panoramaImageView2.setGyroscopeObserver(gyroscopeObserver);
         creatmusic_text.setOnClickListener(this);
@@ -131,23 +134,37 @@ public class MyMusicFragment extends Fragment implements  View.OnClickListener {
         loadmusic.setOnClickListener(this);
         recent_listen.setOnClickListener(this);
         selectmusic_text.setOnClickListener(this);
-        helpmusic_text.setOnClickListener(this);
         My_favorite_music.setOnClickListener(this);
         panoramaImageView.setOnClickListener(this);
         detail_img.setOnClickListener(this);
-       // Personal_FM.setOnClickListener(this);
+        // Personal_FM.setOnClickListener(this);
         login_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), LoginMainActivity.class));
             }
         });
-        detail_img.setOnClickListener(new View.OnClickListener(){
+        detail_img.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                MusicListDialog musicListDialog=new MusicListDialog();
-                musicListDialog.show(getFragmentManager(),TAG);
+                MusicListDialog musicListDialog = new MusicListDialog();
+                musicListDialog.show(getFragmentManager(), TAG);
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, new MySelectFragment());
+                        swipeRefreshLayout.setRefreshing(false);
+                        fragmentTransaction.commit();
+                    }
+                }, 500);
+
             }
         });
     }
@@ -180,39 +197,27 @@ public class MyMusicFragment extends Fragment implements  View.OnClickListener {
                 fragmentTransaction.replace(R.id.fragment_container, new MyCreateMusicFragment());
                 creatmusic_text.setSelected(true);
                 selectmusic_text.setSelected(false);
-                helpmusic_text.setSelected(false);
                 break;
             case R.id.collect_music_text:
                 fragmentTransaction.replace(R.id.fragment_container, new MySelectFragment());
                 creatmusic_text.setSelected(false);
                 selectmusic_text.setSelected(true);
-                helpmusic_text.setSelected(false);
-                break;
-            case R.id.help_music_text:
-                fragmentTransaction.replace(R.id.fragment_container, new MyHelpMusicFragment());
-                creatmusic_text.setSelected(false);
-                selectmusic_text.setSelected(false);
-                helpmusic_text.setSelected(true);
                 break;
             case R.id.downloadmusic_text:
-                Intent intent1=new Intent(getActivity(), DownLoadMusic.class);
+                Intent intent1 = new Intent(getActivity(), DownLoadMusic.class);
                 startActivity(intent1);
                 break;
             case R.id.localmusic_text:
-                Intent intent2=new Intent(getActivity(), LocalMusic.class);
+                Intent intent2 = new Intent(getActivity(), LocalMusic.class);
                 startActivity(intent2);
                 break;
             case R.id.historymusic_text:
-                Intent intent3=new Intent(getActivity(), HistoryMusic.class);
+                Intent intent3 = new Intent(getActivity(), HistoryMusic.class);
                 startActivity(intent3);
                 break;
             case R.id.favorite_image_view1:
-                Intent intent4=new Intent(getActivity(),My_Favorite_Music.class);
+                Intent intent4 = new Intent(getActivity(), My_Favorite_Music.class);
                 startActivity(intent4);
-                break;
-            case R.id.text2:
-                Intent intent5=new Intent(getActivity(),Personal_FM.class);
-                startActivity(intent5);
                 break;
             default:
                 break;

@@ -53,31 +53,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_below="@+id/mymusic_up">
+
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:title=""
                     app:titleEnabled="false">
+
                     <ImageView
                         android:id="@+id/image2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
                         android:src="@mipmap/pic5" />
-                    <include
-                        layout="@layout/mymusic_middle_layout" />
+
+                    <include layout="@layout/mymusic_middle_layout" />
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
             </com.google.android.material.appbar.AppBarLayout>
-
-            <RelativeLayout
-                android:id="@+id/my_music_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/app_bar"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-                <include layout="@layout/my_music_bottom" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/my_music_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/app_bar"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                        android:id="@+id/swiprefreshlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <include layout="@layout/my_music_bottom" />
+                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                </RelativeLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </RelativeLayout>

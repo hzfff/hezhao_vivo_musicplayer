@@ -1,6 +1,7 @@
 package com.example.musicplayer_hezhao.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.Util;
+import com.example.musicplayer_hezhao.model.MusicListModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,41 +22,40 @@ import java.util.List;
  * Created by 11120555 on 2020/7/10 11:29
  */
 public class MyMusicBottomAdapter extends RecyclerView.Adapter<MyMusicBottomAdapter.MyMusicHolder> {
-    private List<Integer> list_image = new ArrayList<>();
-    private List<String> list_induction = new ArrayList<>();
-    private List<String> list_number = new ArrayList<>();
+    private List<MusicListModel> musicListModels;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
 
-    public MyMusicBottomAdapter(List<Integer> list_image, List<String> list_induction, List<String> list_number, Context mContext) {
-        this.list_image = list_image;
-        this.list_induction = list_induction;
-        this.list_number = list_number;
+    public MyMusicBottomAdapter(List<MusicListModel> listModels, Context mContext) {
+        this.musicListModels = listModels;
         this.mContext = mContext;
     }
 
     @NonNull
     @Override
     public MyMusicHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        return new MyMusicHolder(inflater.inflate(R.layout.my_music_recyclerview_item, parent, false));
-
+        View view = View.inflate(mContext, R.layout.my_music_recyclerview_item, null);
+        return new MyMusicHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyMusicHolder holder, int position) {
 
-        holder.mymusic_image.setImageDrawable(mContext.getResources().getDrawable(list_image.get(position)));
-        holder.mymusic_induction.setText(list_induction.get(position));
-        holder.mymusic_number.setText(list_number.get(position));
-        if(onItemClickListener!=null)
-        {
-            holder.mymusic_image.setOnClickListener(new View.OnClickListener(){
+        holder.mymusic_induction.setText(musicListModels.get(position).getMusicListName());
+        holder.mymusic_number.setText(""+musicListModels.get(position).getMusicName().size());
+        if (musicListModels.get(position).getMusicName().size() == 0) {
+            holder.mymusic_image.setImageBitmap(Util.CreateBitmap(mContext.getContentResolver(),
+                    Uri.parse(musicListModels.get(position).getMusicName().get(0).getAlbumUri())));
+        } else {
+            holder.mymusic_image.setImageResource(R.mipmap.pic12);
+        }
+        if (onItemClickListener != null) {
+            holder.mymusic_image.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    int position=holder.getLayoutPosition();
-                    onItemClickListener.onItemClick(holder.mymusic_image,position);
+                    int position = holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(holder.mymusic_image, position);
                 }
             });
         }
@@ -61,7 +63,7 @@ public class MyMusicBottomAdapter extends RecyclerView.Adapter<MyMusicBottomAdap
 
     @Override
     public int getItemCount() {
-        return list_image.size();
+        return musicListModels.size();
     }
 
     public class MyMusicHolder extends RecyclerView.ViewHolder {

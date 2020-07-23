@@ -55,7 +55,8 @@ public class My_Favorite_Music extends AppCompatActivity {
         task.execute();
         final Intent intent = new Intent(this, MyFavoriteMusic_Service.class);
         myServiceConn = new MyServiceConn();
-        bindService(intent, myServiceConn, BIND_AUTO_CREATE);
+       boolean flag= bindService(intent, myServiceConn, BIND_AUTO_CREATE);
+        System.out.println(flag);
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recyclerview);
         adapter = new MusicShowAdapter(musicList, getApplicationContext());
