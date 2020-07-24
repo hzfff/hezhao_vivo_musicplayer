@@ -28,7 +28,7 @@
         android:focusableInTouchMode="true"
         android:textStyle="bold"
         android:textColor="@color/drak"
-        android:textSize="17dp"/>
+        android:textSize="14dp"/>
     <TextView
         android:id="@+id/text2"
         android:layout_below="@+id/text1"
@@ -41,7 +41,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:textSize="12dp"/>
+        android:textSize="11dp"/>
 </RelativeLayout>
     <RelativeLayout
         android:id="@+id/toolbar"

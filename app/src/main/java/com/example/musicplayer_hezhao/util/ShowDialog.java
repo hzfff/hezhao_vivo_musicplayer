@@ -95,8 +95,9 @@ public class ShowDialog extends DialogFragment {
                     musicControl.delete(music);
                     collect.setText("收藏");
                     Toast.makeText(getContext(), "已取消收藏", Toast.LENGTH_SHORT).show();
-                    My_Favorite_Music.CanCel(position);
+                 //   My_Favorite_Music.CanCel(position);
                 }
+                getDialog().dismiss();
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +124,7 @@ public class ShowDialog extends DialogFragment {
                 bundle.putSerializable("music", (Serializable) music);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                getDialog().dismiss();
             }
         });
     }

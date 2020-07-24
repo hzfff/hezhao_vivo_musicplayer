@@ -63,7 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String SONG_LIST_TABLE = "CREATE TABLE  " + SONG_LIST_TABLE_NAME
                 + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + MUSIC_LIST_NAME + " VERCHAR(256) NOT NULL UNIQUE ,"
+                + MUSIC_LIST_NAME + " VERCHAR(256) NOT NULL ,"
                 + NAME + " VERCHAR(256),"
                 + LAST_PLAY_TIME + " LONG,"
                 + SONG_URI + " VERCHAR(128),"

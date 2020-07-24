@@ -57,7 +57,10 @@ public class MySelectFragment extends Fragment {
         recyclerView = view.findViewById(R.id.my_music_recyclerview);
     }
 
-    public void initrecyclerview() {
+
+    //初始化歌单列表
+    public void initdata() {
+        musiclistModel = musicControl.QueryMusicList();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -74,20 +77,14 @@ public class MySelectFragment extends Fragment {
                 startActivity(intent1);
             }
         });
-    }
 
-    //初始化歌单列表
-    public void initdata() {
-        musiclistModel = musicControl.QueryMusicList();
     }
 
     class MyServiceConn implements ServiceConnection {//用于实现连接服务
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             musicControl = (MusicListService.MusicServiceIBinder) service;
             initdata();
-            initrecyclerview();
         }
 
         @Override

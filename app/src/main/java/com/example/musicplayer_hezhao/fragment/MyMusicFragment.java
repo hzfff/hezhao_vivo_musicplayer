@@ -41,8 +41,11 @@ import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.google.android.material.appbar.AppBarLayout;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -71,6 +74,7 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
     private final String TAG = "HeZhao";
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mymusic_layout, null);
@@ -95,15 +99,15 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
         My_favorite_music = view.findViewById(R.id.text1);
         loadmusic = view.findViewById(R.id.downloadmusic_text);
         Drawable drawable = getResources().getDrawable(R.mipmap.download);
-        drawable.setBounds(0, 0, 100, 100);
+        drawable.setBounds(0, 0, 80, 80);
         loadmusic.setCompoundDrawables(null, drawable, null, null);
         local_music = view.findViewById(R.id.localmusic_text);
         Drawable drawable1 = getResources().getDrawable(R.mipmap.localmusic);
-        drawable1.setBounds(0, 0, 100, 100);
+        drawable1.setBounds(0, 0, 80, 80);
         local_music.setCompoundDrawables(null, drawable1, null, null);
         recent_listen = view.findViewById(R.id.historymusic_text);
         Drawable drawable2 = getResources().getDrawable(R.mipmap.historymusic);
-        drawable2.setBounds(0, 0, 100, 100);
+        drawable2.setBounds(0, 0, 80, 80);
         recent_listen.setCompoundDrawables(null, drawable2, null, null);
         login_name = view.findViewById(R.id.login_name);
         Intent intent = getActivity().getIntent();
@@ -116,8 +120,8 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
         fragmentTransaction.add(R.id.fragment_container, new MySelectFragment());
         fragmentTransaction.commit();
 //        myMusicBottomAdapter = new MyMusicBottomAdapter(list_img, list_induction, list_number, getContext());
-//        recyclerView = view.findViewById(R.id.my_music_recyclerview);
-//        recyclerView.setAdapter(myMusicBottomAdapter);
+        // recyclerView = view.findViewById(R.id.my_music_recyclerview);
+        // recyclerView.setAdapter(myMusicBottomAdapter);
         creatmusic_text = view.findViewById(R.id.create_music_text);
         selectmusic_text = view.findViewById(R.id.collect_music_text);
         gyroscopeObserver = new GyroscopeObserver();
@@ -145,7 +149,6 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
             }
         });
         detail_img.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 MusicListDialog musicListDialog = new MusicListDialog();
@@ -155,6 +158,7 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -163,7 +167,7 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
                         swipeRefreshLayout.setRefreshing(false);
                         fragmentTransaction.commit();
                     }
-                }, 500);
+                }, 100);
 
             }
         });

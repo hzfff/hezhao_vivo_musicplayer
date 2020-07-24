@@ -26,4 +26,13 @@
             android:layout_toRightOf="@+id/title_toolbar"
             android:text="我的歌单"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
 </RelativeLayout>

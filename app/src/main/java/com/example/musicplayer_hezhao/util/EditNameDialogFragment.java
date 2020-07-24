@@ -24,6 +24,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.Service.MusicListService;
+import com.example.musicplayer_hezhao.fragment.MyMusicFragment;
+import com.example.musicplayer_hezhao.fragment.MySelectFragment;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -60,7 +62,7 @@ public class EditNameDialogFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Intent intent=new Intent(getActivity(),MusicListService.class);
+        final Intent intent=new Intent(getActivity(),MusicListService.class);
         myServiceConn=new MyServiceConn();
         boolean flag=getActivity().bindService(intent,myServiceConn,BIND_AUTO_CREATE);
         editText = view.findViewById(R.id.music_list_name);

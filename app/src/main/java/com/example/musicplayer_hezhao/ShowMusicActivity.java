@@ -21,6 +21,7 @@ import com.example.musicplayer_hezhao.util.ShowDialog;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by 11120555 on 2020/7/23 14:05
@@ -64,7 +65,9 @@ public class ShowMusicActivity  extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         list_name.setText(MusicListName);
-        if(MusicList.size()>1){imageView.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(MusicList.get(2).getAlbumUri())));;}
+        Random random=new Random();
+        //从歌单中随机选一张照片作为封面
+        if(MusicList.size()>1){imageView.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(MusicList.get(random.nextInt(MusicList.size()-1)).getAlbumUri())));;}
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +92,6 @@ public class ShowMusicActivity  extends AppCompatActivity {
                     intent0.putExtra("position", position);
                     intent0.putExtras(bundle);
                     startActivity(intent0);
-
                 }
             }
         });

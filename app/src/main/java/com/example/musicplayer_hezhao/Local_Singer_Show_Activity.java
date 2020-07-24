@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.musicplayer_hezhao.adapter.MusicShowAdapter;
 import com.example.musicplayer_hezhao.fragment.local_music_fragment;
 import com.example.musicplayer_hezhao.model.Music;
+import com.example.musicplayer_hezhao.util.ShowDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,12 +65,20 @@ public class Local_Singer_Show_Activity  extends AppCompatActivity {
         adapters.setOnItemClickListener(new MusicShowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int index,View view, int position) {
+                if(index==2) {
+                    ShowDialog bottomDialogFr = new ShowDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("MusicList", (Serializable) Music_List.get(position));
+                    bottomDialogFr.setArguments(bundle);
+                    bottomDialogFr.show(getSupportFragmentManager(), "hezhao");
+                }else {
                 Intent intent0 = new Intent(getApplicationContext(), PlayMusicActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putSerializable("MusicList", (Serializable) Music_List);
                 intent0.putExtra("position",position);
                 intent0.putExtras(bundle);
                 startActivity(intent0);
+                }
             }
         });
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

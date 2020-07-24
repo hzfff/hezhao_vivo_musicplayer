@@ -26,6 +26,7 @@ public class MusicListDialog  extends DialogFragment {
     private TextView add_musiclist;
     private TextView delete_musiclist;
     private final  String TAG="HeZhao";
+    private OnButtonClick onButtonClick;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         view = inflater.inflate(R.layout.musiclist_create, null);
@@ -43,6 +44,8 @@ public class MusicListDialog  extends DialogFragment {
                //跳转到添加歌单界面
                 EditNameDialogFragment editNameDialogFragment=new EditNameDialogFragment();
                 editNameDialogFragment.show(getFragmentManager(),TAG);
+                getDialog().dismiss();
+
             }
         });
         delete_musiclist.setOnClickListener(new View.OnClickListener(){
@@ -52,6 +55,7 @@ public class MusicListDialog  extends DialogFragment {
                 //跳转到管理歌单界面
                 Intent intent=new Intent(getActivity(), ManagerMusicListActivity.class);
                 startActivity(intent);
+                getDialog().dismiss();
             }
         });
     }
@@ -70,5 +74,12 @@ public class MusicListDialog  extends DialogFragment {
         // 设置宽度
         params.width = getResources().getDisplayMetrics().widthPixels;
         window.setAttributes(params);
+    }
+    public interface  OnButtonClick{
+        public void onClick(View view);
+    }
+    public void setOnButtomClick(OnButtonClick onButtomClick)
+    {
+        this.onButtonClick=onButtomClick;
     }
 }

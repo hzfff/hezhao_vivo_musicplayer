@@ -8,17 +8,17 @@
         android:scaleType="centerCrop"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:onClick="onClick"/>
     <TextView
         android:layout_toRightOf="@+id/my_music_img"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="30dp"
         android:textColor="@color/drak"
         android:id="@+id/my_music_text"
         android:textStyle="bold"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:textSize="14dp"
         android:onClick="onClick"/>
@@ -28,8 +28,17 @@
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/my_music_img"
         android:layout_below="@+id/my_music_text"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textColor="@color/drak"
-        android:textSize="11dp"/>
+        android:textSize="10dp"/>
+    <ImageView
+        android:id="@+id/detail"
+        android:layout_width="23dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/detail"
+        android:layout_marginLeft="35dp"
+        android:layout_toRightOf="@+id/my_music_text"
+        android:layout_marginTop="35dp"/>
+
 </RelativeLayout>
