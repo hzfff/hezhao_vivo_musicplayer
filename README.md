@@ -3,6 +3,9 @@
 目前初步完成播放器本地音乐模块
 ![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test3.jpg)
 ![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test2.jpg)
+![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test7.jpg)
+![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test8.jpg)
 ![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test4.jpg)
 ![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test5.jpg)
 ![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test1.jpg)
+![目前完成了播放器本地模块的编写](https://github.com/hzfff/hezhao_vivo_musicplayer/blob/master/app/src/main/res/raw/test6.jpg)
