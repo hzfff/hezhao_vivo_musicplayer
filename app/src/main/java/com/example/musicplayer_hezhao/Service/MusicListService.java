@@ -45,39 +45,39 @@ public class MusicListService extends Service {
     }
 
     public class MusicServiceIBinder extends Binder {
-        public int InsertMusicList(String MusicListName, Music music) {
-            return insertMusicListInner(MusicListName, music);
+        public int InsertMusicList(String MusicListName, Music music,String UserName) {
+            return insertMusicListInner(MusicListName, music,UserName);
         }//向指定歌单插入音乐
 
-        public int DeleteMusicFromList(String MusicListName, Music music) {
-            return deleteMusicFromListInner(MusicListName, music);
+        public int DeleteMusicFromList(String MusicListName, Music music,String UserName) {
+            return deleteMusicFromListInner(MusicListName, music,UserName);
         }//从指定歌单删除某首音乐
 
-        public void DeleteMusicList(String MusicListName) {
-            deleteMusicListInner(MusicListName);
+        public void DeleteMusicList(String MusicListName,String UserName) {
+            deleteMusicListInner(MusicListName,UserName);
         }
 
-        public int CreateMusicList(String MusicListName) {
-            return CreateMusicListInner(MusicListName);
+        public int CreateMusicList(String MusicListName,String UserName) {
+            return CreateMusicListInner(MusicListName,UserName);
         }//创建一个喜欢的音乐表单
 
-        public List<Music> QueryMusicFromList(String MusicListName) {
-            return QueryMusicFromListInner(MusicListName);
+        public List<Music> QueryMusicFromList(String MusicListName,String UserName) {
+            return QueryMusicFromListInner(MusicListName,UserName);
         }//从指定歌单中查询所有音乐
 
-        public List<MusicListModel> QueryMusicList() {
-            return QueryMusicListInner();
+        public List<MusicListModel> QueryMusicList(String UserName) {
+            return QueryMusicListInner(UserName);
         }//查询所有的歌单
     }
 
-    public void deleteMusicListInner(String musiclistname) {
+    public void deleteMusicListInner(String musiclistname, String UserName) {
         ContentResolver resolver = getContentResolver();
-        String where = " musiclist_name=?";
-        String[] Args = new String[]{ musiclistname};
+        String where = " musiclist_name=? and username=?";
+        String[] Args = new String[]{ musiclistname,UserName};
         resolver.delete(PlayListProvider.CONTENT_URI_SONG_FOURTH, where, Args);
     }
 
-    public int insertMusicListInner(String MusicListName, Music music) {
+    public int insertMusicListInner(String MusicListName, Music music, String UserName) {
         ContentValues contentView = new ContentValues();
         contentView.put(DBHelper.MUSIC_LIST_NAME, MusicListName);
         contentView.put(DBHelper.NAME, music.Name);
@@ -86,32 +86,35 @@ public class MusicListService extends Service {
         contentView.put(DBHelper.ALBUM_URI, music.AlbumUri);
         contentView.put(DBHelper.DURATION, music.Duration);
         contentView.put(DBHelper.ARTIST, music.Artist);
+        contentView.put(DBHelper.UserName, UserName);
         Uri index = contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_FOURTH, contentView);
         return 0;
     }
 
-    public int deleteMusicFromListInner(String MusicListName, Music music) {
+    public int deleteMusicFromListInner(String MusicListName, Music music, String UserName) {
         ContentResolver resolver = getContentResolver();
-        String where = "song_uri=? and musiclist_name=?";
-        String[] Args = new String[]{music.getMusicUri(), MusicListName};
+        String where = "song_uri=? and musiclist_name=? and username=?";
+        String[] Args = new String[]{music.getMusicUri(), MusicListName,UserName};
         int index = resolver.delete(PlayListProvider.CONTENT_URI_SONG_FOURTH, where, Args);
         return index;
     }
 
-    public int CreateMusicListInner(String MusicListName) {
+    public int CreateMusicListInner(String MusicListName, String UserName) {
         ContentValues contentView = new ContentValues();
         contentView.put(DBHelper.MUSIC_LIST_NAME, MusicListName);
+        contentView.put(DBHelper.UserName, UserName);
         contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_FOURTH, contentView);
         return 0;
     }
 
-    public List<Music> QueryMusicFromListInner(String MusicListName) {
+    public List<Music> QueryMusicFromListInner(String MusicListName, String UserName) {
         musicList.clear();
-        String[] SongListUri = new String[]{MusicListName};
+        String where = "musiclist_name=? and  username=?";
+        String[] SongListUri = new String[]{MusicListName,UserName};
         Cursor cursor = contentResolver.query(
                 PlayListProvider.CONTENT_URI_SONG_FOURTH,
                 null,
-                DBHelper.MUSIC_LIST_NAME + " =?",
+                where,
                 SongListUri,
                 null);
         int index = -1;
@@ -128,14 +131,16 @@ public class MusicListService extends Service {
         return musicList;
     }
 
-    public List<MusicListModel> QueryMusicListInner() {
+    public List<MusicListModel> QueryMusicListInner(String UserName) {
         musicListModels.clear();
         HashMap<String, Integer> map = new HashMap<>();
+        String where = "username=?";
+        String[] SongListUri = new String[]{UserName};
         Cursor cursor = contentResolver.query(
                 PlayListProvider.CONTENT_URI_SONG_FOURTH,
                 null,
-                null,
-                null,
+                where,
+                SongListUri,
                 null);
         while (cursor.moveToNext()) {
             String musiclistname = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.MUSIC_LIST_NAME));

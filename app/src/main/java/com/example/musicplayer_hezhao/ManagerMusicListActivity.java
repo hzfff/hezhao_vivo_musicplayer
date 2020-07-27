@@ -30,7 +30,7 @@ import java.util.List;
  */
 //管理歌单
 //批量进行删除
-public class ManagerMusicListActivity extends AppCompatActivity {
+public class ManagerMusicListActivity extends BaseActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private TextView textView;
@@ -40,11 +40,13 @@ public class ManagerMusicListActivity extends AppCompatActivity {
     private ManagerMusicListAdapter adapter;
     private ImageView imageView;
     private boolean index = true;
+    private String UserName;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.deletelistlayout);
+        UserName = super.username;
         initview();
     }
 
@@ -69,10 +71,10 @@ public class ManagerMusicListActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View view) {
-                HashMap<Integer,Boolean> array = adapter.getHashMap();
+                HashMap<Integer, Boolean> array = adapter.getHashMap();
                 for (int i = 0; i < array.size(); i++) {
                     if (array.get(i)) {
-                        musicServiceIBinder.DeleteMusicList(musicListModels.get(i).getMusicListName());
+                        musicServiceIBinder.DeleteMusicList(musicListModels.get(i).getMusicListName(),username);
                     }
                 }
                 int index = 0;
@@ -92,10 +94,10 @@ public class ManagerMusicListActivity extends AppCompatActivity {
                 //全选
                 if (index) {
                     adapter.addall();
-                    index=!index;
+                    index = !index;
                 } else {
                     adapter.cancelall();
-                    index=!index;
+                    index = !index;
                 }
             }
         });
@@ -120,7 +122,7 @@ public class ManagerMusicListActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             musicServiceIBinder = (MusicListService.MusicServiceIBinder) iBinder;
-            musicListModels = musicServiceIBinder.QueryMusicList();
+            musicListModels = musicServiceIBinder.QueryMusicList(username);
             initrecyclerviw();
         }
 

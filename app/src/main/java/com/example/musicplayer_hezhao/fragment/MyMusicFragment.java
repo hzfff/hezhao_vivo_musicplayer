@@ -1,6 +1,8 @@
 package com.example.musicplayer_hezhao.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -52,10 +54,10 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 /**
  * Created by 11120555 on 2020/7/7 17:01
  */
-public class MyMusicFragment extends Fragment implements View.OnClickListener {
+public class MyMusicFragment extends BaseFragment implements View.OnClickListener, DialogInterface.OnDismissListener{
     private GyroscopeObserver gyroscopeObserver;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
+    private static FragmentManager fragmentManager;
+    private static FragmentTransaction fragmentTransaction;
     private TextView creatmusic_text;
     private TextView selectmusic_text;
     private List<String> list_induction = new ArrayList<>();
@@ -72,7 +74,7 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
     private ImageView imageView;
     private ImageView detail_img;
     private final String TAG = "HeZhao";
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private static SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -110,6 +112,10 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
         drawable2.setBounds(0, 0, 80, 80);
         recent_listen.setCompoundDrawables(null, drawable2, null, null);
         login_name = view.findViewById(R.id.login_name);
+        if(super.username!=null)
+        {
+            login_name.setText(super.username);
+        }
         Intent intent = getActivity().getIntent();
         username = intent.getStringExtra("username");
         if (username != null) {
@@ -153,12 +159,22 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
                 MusicListDialog musicListDialog = new MusicListDialog();
                 musicListDialog.show(getFragmentManager(), TAG);
+                //处理musiclistdialog的回调
+                musicListDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, new MySelectFragment());
+                        swipeRefreshLayout.setRefreshing(false);
+                        fragmentTransaction.commit();
+                    }
+                });
+
             }
         });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -171,8 +187,14 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-    }
 
+    }
+public static  void refresh(){
+    fragmentTransaction = fragmentManager.beginTransaction();
+    fragmentTransaction.replace(R.id.fragment_container, new MySelectFragment());
+    swipeRefreshLayout.setRefreshing(false);
+    fragmentTransaction.commit();
+}
 
     @Override
     public void onResume() {
@@ -227,5 +249,10 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener {
                 break;
         }
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+
     }
 }

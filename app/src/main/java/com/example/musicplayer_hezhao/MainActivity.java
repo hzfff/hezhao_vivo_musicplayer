@@ -53,7 +53,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 /**
  * Created by 11120555 on 2020/7/7 14:53
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     //将我的音乐、发现音乐、发现视频三个fragment传入到list中；
     private final String TAG = "HeZhao";
     private List<Fragment> FragmentList;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NavigationView navigationView;
     private String username = null;
     @Override
-    protected void onCreate(Bundle bundle) {
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

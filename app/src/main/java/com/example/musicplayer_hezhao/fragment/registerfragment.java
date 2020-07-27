@@ -95,6 +95,8 @@ public class registerfragment extends Fragment {
         SharedPreferences sp=getActivity().getSharedPreferences("loginInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor=sp.edit();
         editor.putString(userName,MD5PSW);
+        editor.putString("UserName",userName);
+        editor.putString("PassWord",MD5PSW);
         editor.commit();
     }
 

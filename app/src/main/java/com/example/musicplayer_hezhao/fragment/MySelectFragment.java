@@ -35,17 +35,18 @@ import static android.content.Context.BIND_AUTO_CREATE;
 /**
  * Created by 11120555 on 2020/7/10 14:31
  */
-public class MySelectFragment extends Fragment {
+public class MySelectFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private MyMusicBottomAdapter myMusicBottomAdapter;
     private List<MusicListModel> musiclistModel = new ArrayList<>();
     private MyServiceConn myServiceConn;
     private MusicListService.MusicServiceIBinder musicControl;
     private View view;
-
+    private String UserName;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.my_music_recyclerview, null);
+        UserName=super.username;
         initview();
         return view;
     }
@@ -60,24 +61,25 @@ public class MySelectFragment extends Fragment {
 
     //初始化歌单列表
     public void initdata() {
-        musiclistModel = musicControl.QueryMusicList();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        myMusicBottomAdapter = new MyMusicBottomAdapter(musiclistModel, getContext());
-        recyclerView.setAdapter(myMusicBottomAdapter);
-        myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                MusicListModel musiclistmode = musiclistModel.get(position);
-                Intent intent1 = new Intent(getActivity().getApplicationContext(), ShowMusicActivity.class);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("musiclistmode", musiclistmode);
-                intent1.putExtras(bundle1);
-                startActivity(intent1);
-            }
-        });
-
+        if(UserName!=null) {
+            musiclistModel = musicControl.QueryMusicList(UserName);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            myMusicBottomAdapter = new MyMusicBottomAdapter(musiclistModel, getContext());
+            recyclerView.setAdapter(myMusicBottomAdapter);
+            myMusicBottomAdapter.setOnItemClickListener(new MyMusicBottomAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    MusicListModel musiclistmode = musiclistModel.get(position);
+                    Intent intent1 = new Intent(getActivity().getApplicationContext(), ShowMusicActivity.class);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("musiclistmode", musiclistmode);
+                    intent1.putExtras(bundle1);
+                    startActivity(intent1);
+                }
+            });
+        }
     }
 
     class MyServiceConn implements ServiceConnection {//用于实现连接服务

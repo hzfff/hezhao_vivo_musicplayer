@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.musicplayer_hezhao.BaseActivity;
 import com.example.musicplayer_hezhao.ContentProvider.PlayListProvider;
 import com.example.musicplayer_hezhao.DB.DBHelper;
 import com.example.musicplayer_hezhao.PlayMusicActivity;
@@ -35,18 +36,19 @@ import java.util.Timer;
 /**
  * Created by 11120555 on 2020/7/15 15:07
  */
-public class My_Favorite_Music extends AppCompatActivity {
+public class My_Favorite_Music extends BaseActivity {
     private Toolbar toolbar;
     private static RecyclerView recyclerView;
     private static MusicShowAdapter adapter;
     private static List<Music> musicList = new ArrayList<>();
     private MyFavoriteMusic_Service.MusicServiceIBinder musicControl;
     private MyServiceConn myServiceConn;
-
+    private String UserName;
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.my_favorite_music);
+        UserName=super.username;
         initview();
     }
 
@@ -117,11 +119,13 @@ public class My_Favorite_Music extends AppCompatActivity {
         @Override
         protected Void doInBackground(Object... objects) {
             musicList.clear();
+            String where = "username=?";
+            String[] SongListUri = new String[]{UserName};
             Cursor cursor = getContentResolver().query(
                     PlayListProvider.CONTENT_URI_SONG_SECOND,
                     null,
-                    null,
-                    null,
+                    where,
+                    SongListUri,
                     null);
             while (cursor.moveToNext()) {
                 String songUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.SONG_URI));
@@ -159,7 +163,7 @@ public class My_Favorite_Music extends AppCompatActivity {
     }
 
     public void Insert(Music music) {
-        musicControl.add(music);
+        musicControl.add(music,UserName);
     }
 
 }

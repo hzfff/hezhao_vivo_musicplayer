@@ -29,7 +29,7 @@ import java.util.List;
  * Created by 11120555 on 2020/7/23 18:42
  */
 //用于实现将音乐添加到歌单
-public class AddMusicToList extends AppCompatActivity {
+public class AddMusicToList extends BaseActivity {
     private Toolbar toolbar;
     private Intent intent;
     private Music music;
@@ -39,11 +39,12 @@ public class AddMusicToList extends AppCompatActivity {
     private static RecyclerView recyclerView;
     private AddMusicToListAdapter adapter;
     private final String TAG = "HeZhao";
-
+    private String UserName;
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.addmusictolist);
+        UserName=super.username;
         initview();
     }
 
@@ -84,12 +85,14 @@ public class AddMusicToList extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             musicListService = (MusicListService.MusicServiceIBinder) iBinder;
-            initdata();
+            if(UserName!=null) {
+                initdata(UserName);
+            }
             initrecyclerview();
         }
 
-        public void initdata() {
-            musiclistModel = musicListService.QueryMusicList();
+        public void initdata(String UserName) {
+            musiclistModel = musicListService.QueryMusicList( UserName);
         }
 
         public void initrecyclerview() {

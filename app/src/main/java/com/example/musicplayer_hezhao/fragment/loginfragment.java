@@ -59,7 +59,7 @@ public class loginfragment   extends Fragment {
                     return;
                 } else if (md5Psw.equals(spPsw)) {
                     Toast.makeText(getContext(), "登陆成功", Toast.LENGTH_SHORT).show();
-                    saveLoginStatus(true, username);
+                    saveLoginStatus(true, username,md5Psw);
                     Intent intent = new Intent(getContext(),MainActivity.class);
                     intent.putExtra("isLogin", true);
                     intent.putExtra("username",username);
@@ -77,6 +77,7 @@ public class loginfragment   extends Fragment {
         });
     }
 
+
     //从sharedpreferences中读取密码
     public String readPsw(String username) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginInfo", MODE_PRIVATE);
@@ -84,11 +85,13 @@ public class loginfragment   extends Fragment {
     }
 
     //保存登录状态到sharedpreference
-    private void saveLoginStatus(boolean status, String Username) {
+    private void saveLoginStatus(boolean status, String Username,String MD5PSW) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isLogin", true);
         editor.putString("loginUserName", Username);
+        editor.putString("UserName",Username);
+        editor.putString("PassWord",MD5PSW);
         editor.commit();
     }
 

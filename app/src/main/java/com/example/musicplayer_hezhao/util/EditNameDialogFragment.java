@@ -24,6 +24,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.Service.MusicListService;
+import com.example.musicplayer_hezhao.fragment.BaseDialogFragment;
 import com.example.musicplayer_hezhao.fragment.MyMusicFragment;
 import com.example.musicplayer_hezhao.fragment.MySelectFragment;
 
@@ -33,7 +34,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
  * Created by 11120555 on 2020/7/22 17:47
  */
 //创建歌单，歌单管理
-public class EditNameDialogFragment extends DialogFragment {
+public class EditNameDialogFragment extends BaseDialogFragment {
     private EditText editText;
     private Button submit;
     private Button cancel;
@@ -41,6 +42,7 @@ public class EditNameDialogFragment extends DialogFragment {
     private String MusicListName;
     private MyServiceConn myServiceConn;
     private MusicListService.MusicServiceIBinder musicServiceIBinder;
+    private  String UserName;
     public EditNameDialogFragment() {
     }
 
@@ -57,6 +59,7 @@ public class EditNameDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_name, container, false);
+        UserName=super.UserName;
         return view;
     }
 
@@ -82,7 +85,7 @@ public class EditNameDialogFragment extends DialogFragment {
                     Toast.makeText(getActivity(), "歌单名不能为空", Toast.LENGTH_SHORT).show();
 
                 }else{
-                    musicServiceIBinder.CreateMusicList(MusicListName);
+                    musicServiceIBinder.CreateMusicList(MusicListName,UserName);
                     Toast.makeText(getActivity(), "创建歌单成功", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
                     return;

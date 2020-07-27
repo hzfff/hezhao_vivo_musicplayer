@@ -34,6 +34,7 @@ import androidx.core.app.ActivityCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer_hezhao.Service.MusicService;
+import com.example.musicplayer_hezhao.fragment.BaseFragment;
 import com.example.musicplayer_hezhao.model.Music;
 import com.example.musicplayer_hezhao.tool.CircleImageView;
 import com.example.musicplayer_hezhao.tool.LrcView;
@@ -50,7 +51,7 @@ import jp.wasabeef.glide.transformations.internal.Utils;
 /**
  * Created by 11120555 on 2020/7/17 15:38
  */
-public class PlayMusicActivity extends AppCompatActivity implements View.OnClickListener {
+public class PlayMusicActivity extends BaseActivity implements View.OnClickListener {
     private SeekBar seekBar;
     private LrcView lrcView;
     private ImageView start_button;
@@ -82,11 +83,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private boolean temp = true;
     private Intent intent;
     private int position;
-
+    private String UserName;
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.play_music_main_pager);
+        UserName=super.username;
         intent1 = getIntent();
         initView();
     }
@@ -181,7 +183,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 animator.setCurrentPlayTime(currentPlayTime);
                 isStart = false;
                 temp = true;
-                mMusicService.playNext();
+                mMusicService.playNext(UserName);
                 break;
             case R.id.play_btn:
 
@@ -190,13 +192,13 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                     index = false;
                 }
                 if (isStart) {
-                    mMusicService.play();
+                    mMusicService.play(UserName);
                     start_button.setBackground(getDrawable(R.mipmap.play));
                     animator.start();
                     animator.setCurrentPlayTime(currentPlayTime);
                     isStart = false;
                 } else {
-                    mMusicService.pause();
+                    mMusicService.pause(UserName);
                     start_button.setBackground(getDrawable(R.mipmap.stop));
                     currentPlayTime = animator.getCurrentPlayTime();
                     animator.pause();
@@ -214,7 +216,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 animator.setCurrentPlayTime(currentPlayTime);
                 isStart = false;
                 temp = true;
-                mMusicService.playPre();
+                mMusicService.playPre(UserName);
                 break;
             case R.id.img1:
                 if (state == 1) {

@@ -26,6 +26,7 @@ import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.Service.MusicListService;
 import com.example.musicplayer_hezhao.Service.MyFavoriteMusic_Service;
 import com.example.musicplayer_hezhao.Util;
+import com.example.musicplayer_hezhao.fragment.BaseDialogFragment;
 import com.example.musicplayer_hezhao.fragment.My_Favorite_Music;
 import com.example.musicplayer_hezhao.model.Music;
 import com.example.musicplayer_hezhao.model.MusicListModel;
@@ -38,7 +39,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
 /**
  * Created by 11120555 on 2020/7/24 9:17
  */
-public class AddMusicToListDialog  extends DialogFragment {
+public class AddMusicToListDialog  extends BaseDialogFragment {
     private View view;
     private Window window;
     private TextView collect;
@@ -51,6 +52,7 @@ public class AddMusicToListDialog  extends DialogFragment {
     private List<MusicListModel>MusicListModels;
     private MusicListService.MusicServiceIBinder musicServiceIBinder;
     private int Position;
+    private String UserName;
     public AddMusicToListDialog(Music music, List<MusicListModel> musicListModelList, int position)
     {
         this.Music=music;
@@ -59,6 +61,7 @@ public class AddMusicToListDialog  extends DialogFragment {
     }
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        UserName=super.UserName;
         view = inflater.inflate(R.layout.musicadddialog, null);
         initview();
         return view;
@@ -83,15 +86,15 @@ public class AddMusicToListDialog  extends DialogFragment {
         add_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Music> result = musicServiceIBinder.QueryMusicFromList(MusicListModels.get(Position).getMusicListName());
+                List<Music> result = musicServiceIBinder.QueryMusicFromList(MusicListModels.get(Position).getMusicListName(),UserName);
                 if(result.contains(Music)){
                     add_music.setText("添加");
-                    musicServiceIBinder.DeleteMusicFromList(MusicListModels.get(Position).getMusicListName(),Music);
+                    musicServiceIBinder.DeleteMusicFromList(MusicListModels.get(Position).getMusicListName(),Music,UserName);
                     AddMusicToList.notifyChangeDelete(Position,Music);
                     Toast.makeText(getContext(), "已取消收藏", Toast.LENGTH_SHORT).show();
                 } else {
                     add_music.setText("已添加");
-                    musicServiceIBinder.InsertMusicList(MusicListModels.get(Position).getMusicListName(),Music);
+                    musicServiceIBinder.InsertMusicList(MusicListModels.get(Position).getMusicListName(),Music,UserName);
                     Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
                     AddMusicToList.notifyChangeAdd(Position,Music);
                 }

@@ -24,6 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public final static String ALBUM_URI = "album_uri";
     public final static String DURATION = "duration";
     public final static String ARTIST = "artist";
+    public final static String UserName = "username";
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -48,7 +49,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + SONG_URI + " VERCHAR(128),"
                 + ALBUM_URI + " VERCHAR(128),"
                 + DURATION + " LONG,"
-                + ARTIST + " VERCHAR(256)"
+                + ARTIST + " VERCHAR(256),"
+                + UserName + " VERCHAR(256)"
                 + ");";
         String RECENT_TABLE = "CREATE TABLE  " + RECENT_TABLE_NAME
                 + "("
@@ -58,7 +60,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + SONG_URI + " VERCHAR(128),"
                 + ALBUM_URI + " VERCHAR(128),"
                 + DURATION + " LONG,"
-                + ARTIST + " VERCHAR(256)"
+                + ARTIST + " VERCHAR(256),"
+                + UserName + " VERCHAR(256)"
                 + ");";
         String SONG_LIST_TABLE = "CREATE TABLE  " + SONG_LIST_TABLE_NAME
                 + "("
@@ -69,7 +72,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + SONG_URI + " VERCHAR(128),"
                 + ALBUM_URI + " VERCHAR(128),"
                 + DURATION + " LONG,"
-                + ARTIST + " VERCHAR(256)"
+                + ARTIST + " VERCHAR(256),"
+                + UserName + " VERCHAR(256)"
                 + ");";
         sqLiteDatabase.execSQL(PLAYLIST_TABLE_DB);
         sqLiteDatabase.execSQL(FAVORITE_TABLE_DB);

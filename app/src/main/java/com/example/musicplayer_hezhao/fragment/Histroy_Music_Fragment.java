@@ -36,17 +36,19 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/22 14:07
  */
-public class Histroy_Music_Fragment   extends Fragment {
+public class Histroy_Music_Fragment extends BaseFragment {
     private RecyclerView recyclerView;
     private MusicShowAdapter adapters;
     private View view;
     private MusicUpdateTask musicUpdateTask;
     private List<Music> musicList = new ArrayList<>();
+    private String UserName;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setHasOptionsMenu(true);
+        UserName=super.username;
         musicUpdateTask = new MusicUpdateTask();
         musicUpdateTask.execute();
     }
@@ -69,15 +71,15 @@ public class Histroy_Music_Fragment   extends Fragment {
         //相应recyclerview的点击事件
         adapters.setOnItemClickListener(new MusicShowAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int index,View view, int position) {
+            public void onItemClick(int index, View view, int position) {
                 //点击右侧图片跳出底部选项歌曲详细信息，删除或者添加到喜欢的音乐选项
-                if(index==2) {
+                if (index == 2) {
                     ShowDialog bottomDialogFr = new ShowDialog();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("MusicList", (Serializable) musicList.get(position));
                     bottomDialogFr.setArguments(bundle);
                     bottomDialogFr.show(getFragmentManager(), "hezhao");
-                }else if(index==1){
+                } else if (index == 1) {
                     //点击歌名跳转到播放页面
                     Intent intent0 = new Intent(getActivity(), PlayMusicActivity.class);
                     Bundle bundle = new Bundle();
@@ -90,18 +92,21 @@ public class Histroy_Music_Fragment   extends Fragment {
             }
         });
     }
+
     private class MusicUpdateTask extends AsyncTask<Object, Music, Void> {
 
         @Override
         protected Void doInBackground(Object... objects) {
             musicList.clear();
+            String where = "username=?";
+            String[] SongListUri = new String[]{UserName};
             Cursor cursor = getActivity().getContentResolver().query(
                     PlayListProvider.CONTENT_URI_SONG_THIRD,
                     null,
-                    null,
-                    null,
+                    where,
+                    SongListUri,
                     null);
-            StringBuilder sb=new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             while (cursor.moveToNext()) {
                 String songUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.SONG_URI));
                 String albumUri = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ALBUM_URI));
@@ -109,7 +114,7 @@ public class Histroy_Music_Fragment   extends Fragment {
                 long playedtime = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.LAST_PLAY_TIME));
                 long duration = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.DURATION));
                 String artist = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.ARTIST));
-                Music music = new Music(songUri, albumUri, name, duration, playedtime,artist);
+                Music music = new Music(songUri, albumUri, name, duration, playedtime, artist);
                 musicList.add(music);
             }
             Collections.reverse(musicList);

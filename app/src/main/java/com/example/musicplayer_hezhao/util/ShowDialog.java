@@ -26,6 +26,7 @@ import com.example.musicplayer_hezhao.PlayMusicActivity;
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.Service.MyFavoriteMusic_Service;
 import com.example.musicplayer_hezhao.Util;
+import com.example.musicplayer_hezhao.fragment.BaseDialogFragment;
 import com.example.musicplayer_hezhao.fragment.My_Favorite_Music;
 import com.example.musicplayer_hezhao.model.Music;
 
@@ -38,7 +39,7 @@ import java.util.List;
  * Created by 11120555 on 2020/7/14 16:52
  */
 
-public class ShowDialog extends DialogFragment {
+public class ShowDialog extends BaseDialogFragment {
     private View view;
     private Window window;
     private RoundImageView imageView;
@@ -53,7 +54,7 @@ public class ShowDialog extends DialogFragment {
     private MyFavoriteMusic_Service.MusicServiceIBinder musicControl;
     private MyServiceConn myServiceConn;
     private int position=0;
-
+    private String UserName;
     public ShowDialog() {
     }
 
@@ -64,6 +65,7 @@ public class ShowDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         view = inflater.inflate(R.layout.musicshowdialog, null);
+        UserName=super.UserName;
         initview();
         return view;
     }
@@ -87,12 +89,15 @@ public class ShowDialog extends DialogFragment {
         collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (collect.getText().equals("收藏")) {
-                    musicControl.add(music);
+                if(UserName==null){
+                    Toast.makeText(getContext(), "请登录", Toast.LENGTH_SHORT).show();
+                }
+               else if (collect.getText().equals("收藏")) {
+                    musicControl.add(music,UserName);
                     collect.setText("已收藏");
                     Toast.makeText(getContext(), "收藏成功", Toast.LENGTH_SHORT).show();
                 } else {
-                    musicControl.delete(music);
+                    musicControl.delete(music,UserName);
                     collect.setText("收藏");
                     Toast.makeText(getContext(), "已取消收藏", Toast.LENGTH_SHORT).show();
                  //   My_Favorite_Music.CanCel(position);
@@ -150,9 +155,13 @@ public class ShowDialog extends DialogFragment {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             musicControl = (MyFavoriteMusic_Service.MusicServiceIBinder) service;
-            int id = musicControl.query(music);
-            if (id > 0) {
-                collect.setText("已收藏");
+            if(UserName==null){
+                Toast.makeText(getContext(), "请登录", Toast.LENGTH_SHORT).show();
+            }else {
+                int id = musicControl.query(music, UserName);
+                if (id > 0) {
+                    collect.setText("已收藏");
+                }
             }
         }
 

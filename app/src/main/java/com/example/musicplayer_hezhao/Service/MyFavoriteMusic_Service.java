@@ -63,14 +63,14 @@ public class MyFavoriteMusic_Service extends Service {
     }
 
     public class MusicServiceIBinder extends Binder {
-        public void delete(Music music) {
+        public void delete(Music music,String UserName) {
             ContentResolver resolver = getContentResolver();
-            String where = "song_uri=?";
-            String[] Args = new String[]{music.getMusicUri()};
+            String where = "song_uri=? and username=?";
+            String[] Args = new String[]{music.getMusicUri(),UserName};
             resolver.delete(PlayListProvider.CONTENT_URI_SONG_SECOND, where, Args);
         }
 
-        public void add(Music music) {
+        public void add(Music music,String UserName) {
             ContentValues contentView = new ContentValues();
             contentView.put(DBHelper.NAME, music.Name);
             contentView.put(DBHelper.DURATION, music.Duration);
@@ -78,15 +78,17 @@ public class MyFavoriteMusic_Service extends Service {
             contentView.put(SONG_URI, music.MusicUri);
             contentView.put(DBHelper.ALBUM_URI, music.AlbumUri);
             contentView.put(DBHelper.ARTIST, music.Artist);
+            contentView.put(DBHelper.UserName, UserName);
             contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_SECOND, contentView);
         }
 
-        public int query(Music music) {
-            String[] SongUri =new String[]{ music.getMusicUri()};
+        public int query(Music music,String UserName) {
+            String where = "song_uri=? and username=?";
+            String[] SongUri =new String[]{ music.getMusicUri(),UserName};
             Cursor cursor = contentResolver.query(
                     PlayListProvider.CONTENT_URI_SONG_SECOND,
                     null,
-                    SONG_URI + " =?" ,
+                    where ,
                     SongUri,
                     null);
             int index = -1;

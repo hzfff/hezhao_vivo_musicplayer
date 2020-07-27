@@ -1,5 +1,6 @@
 package com.example.musicplayer_hezhao.util;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,17 +17,35 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.musicplayer_hezhao.ManagerMusicListActivity;
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.adapter.AddMusicToListAdapter;
+import com.example.musicplayer_hezhao.fragment.MyMusicFragment;
 
 /**
  * Created by 11120555 on 2020/7/22 17:08
  */
-public class MusicListDialog  extends DialogFragment {
+public class MusicListDialog  extends DialogFragment  implements DialogInterface.OnDismissListener {
     private Window window;
     private  View view;
     private TextView add_musiclist;
     private TextView delete_musiclist;
     private final  String TAG="HeZhao";
     private OnButtonClick onButtonClick;
+    private DialogInterface.OnDismissListener mOnClickListener;
+    public void setOnDismissListener(DialogInterface.OnDismissListener listener){
+        this.mOnClickListener = listener;
+    }
+    public void setOnItemClickListener(DialogInterface.OnDismissListener onItemClickListener) {
+        this.mOnClickListener = onItemClickListener;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(mOnClickListener != null) {
+            mOnClickListener.onDismiss(dialog);
+            MyMusicFragment.refresh();
+        }
+    }
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         view = inflater.inflate(R.layout.musiclist_create, null);
@@ -44,7 +63,6 @@ public class MusicListDialog  extends DialogFragment {
                //跳转到添加歌单界面
                 EditNameDialogFragment editNameDialogFragment=new EditNameDialogFragment();
                 editNameDialogFragment.show(getFragmentManager(),TAG);
-                getDialog().dismiss();
 
             }
         });
@@ -55,7 +73,6 @@ public class MusicListDialog  extends DialogFragment {
                 //跳转到管理歌单界面
                 Intent intent=new Intent(getActivity(), ManagerMusicListActivity.class);
                 startActivity(intent);
-                getDialog().dismiss();
             }
         });
     }
