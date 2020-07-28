@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -84,6 +85,8 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
     private Intent intent;
     private int position;
     private String UserName;
+    private Music musics;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -93,11 +96,8 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         initView();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void initView() {
-        intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        musicList = (List<Music>) bundle.getSerializable("MusicList");
-        position = intent.getIntExtra("position", 0);
         music_title = findViewById(R.id.text1);
         singer_name = findViewById(R.id.text2);
         image1 = findViewById(R.id.img1);
@@ -113,6 +113,16 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         profile_pic = findViewById(R.id.image);
         begin_time = findViewById(R.id.played_time);
         end_time = findViewById(R.id.duration_time);
+        intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        musicList = (List<Music>) bundle.getSerializable("MusicList");
+        position = intent.getIntExtra("position", 0);
+        if(position>9000){
+            start_button.setBackground(getDrawable(R.mipmap.play));
+            index = false;
+            position-=10000;
+            isStart = false;
+        }
         intent2 = new Intent(this, MusicService.class);
         myServiceConn = new MyServiceConn();
         bindService(intent2, myServiceConn, BIND_AUTO_CREATE);
@@ -175,7 +185,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.next_btn:
                 if (indexs && index && indexss) {
-                    mMusicService.addPlayList(musicList, position);
+                    mMusicService.addPlayList(musicList, position,username);
                     indexs = false;
                 }
                 start_button.setBackground(getDrawable(R.mipmap.play));
@@ -188,7 +198,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
             case R.id.play_btn:
 
                 if (index && indexs && indexss) {
-                    mMusicService.addPlayList(musicList, position);
+                    mMusicService.addPlayList(musicList, position,username);
                     index = false;
                 }
                 if (isStart) {
@@ -208,7 +218,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
             case R.id.pre_btn:
 
                 if (indexss && indexs && index) {
-                    mMusicService.addPlayList(musicList, position);
+                    mMusicService.addPlayList(musicList, position,username);
                     indexs = false;
                 }
                 start_button.setBackground(getDrawable(R.mipmap.play));
@@ -217,6 +227,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
                 isStart = false;
                 temp = true;
                 mMusicService.playPre(UserName);
+
                 break;
             case R.id.img1:
                 if (state == 1) {
@@ -274,11 +285,14 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         seekBar.setMax((int) music.Duration);
         seekBar.setProgress((int) music.PlayedTime);
         if (temp) {
+
+            musics=new Music(music.getName(),music.getMusicUri(),music.getAlbumUri(),music.getDuration());
             temp = false;
             music_title.setText(music.Name);
             singer_name.setText(music.Artist);
             profile_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(music.AlbumUri)));
             background_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(music.AlbumUri)));
+
         }
     }
 
@@ -315,5 +329,15 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         //TODO
         return true;
+    }
+    @Override
+    protected void onDestroy() {
+        Message msg= MainActivity.handler.obtainMessage();//创建消息对象
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("MUSIC",musics);
+        msg.setData(bundle);
+        MainActivity.handler.sendMessage(msg);
+        super.onDestroy();
+
     }
 }

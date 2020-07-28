@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/GRAY"/>
+    <com.example.musicplayer_hezhao.tool.CircleImageView
+        android:id="@+id/play_music_img"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/pic1"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"/>
+    <com.example.musicplayer_hezhao.util.MyTextView
+        android:id="@+id/play_music_text"
+        android:layout_toRightOf="@+id/play_music_img"
+        android:text="窗边故事-周杰伦 "
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/White"
+        android:layout_width="180dp"
+        android:layout_height="35dp"/>
+    <ImageView
+        android:id="@+id/play_music_buttom"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/play_music_text"
+        android:src="@mipmap/stop" />
+    <ImageView
+        android:id="@+id/play_music"
+        android:layout_toRightOf="@+id/play_music_buttom"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/play_music_pic4"
+        android:layout_marginTop="15dp"/>
+</RelativeLayout>

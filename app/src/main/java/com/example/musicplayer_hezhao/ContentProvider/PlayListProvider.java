@@ -24,7 +24,7 @@ public class PlayListProvider extends ContentProvider {
     private static final int MATCH_SECOND = 2;
     private static final int MATCH_THIRD = 3;
     private static final int MATCH_FOURTH = 4;
-    public static final String AUTHORITY = "com.example.musicplayer_hezhao.ContentProvider.PlayListProvider";
+    public static final String AUTHORITY = "com.example.musicplayer_hezhao.ContentProvider.PlayListProviders";
     //后期随着数据库表的增加继续增加
     public static final Uri CONTENT_URI_SONG_FIRST = Uri.parse("content://" + AUTHORITY + "/playlist_table");
     public static final Uri CONTENT_URI_SONG_SECOND = Uri.parse("content://" + AUTHORITY + "/favoritelist_table");

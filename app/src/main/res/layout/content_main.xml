@@ -10,7 +10,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/music_main_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="630dp"
+        android:layout_height="640dp"
         android:layout_below="@+id/title_layout"
         app:noScroll="true" />
 

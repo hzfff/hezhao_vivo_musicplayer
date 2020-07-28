@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
         username = sharedPreferences.getString("UserName", null);
         String PassWord = sharedPreferences.getString("PassWord", null);
         String MD5PWD=sharedPreferences.getString(username,null);
-        if(MD5PWD.equals(PassWord))
+        if(MD5PWD!=null&&MD5PWD.equals(PassWord))
         {
 
         }else {

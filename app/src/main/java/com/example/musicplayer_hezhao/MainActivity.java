@@ -1,14 +1,21 @@
 package com.example.musicplayer_hezhao;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,14 +29,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.musicplayer_hezhao.Service.MusicPlayService;
+import com.example.musicplayer_hezhao.adapter.BottomViewAdapter;
 import com.example.musicplayer_hezhao.adapter.MainAdapter;
+import com.example.musicplayer_hezhao.adapter.MusicShowAdapter;
 import com.example.musicplayer_hezhao.fragment.FindMusicFragment;
 import com.example.musicplayer_hezhao.fragment.FindVedioFragment;
 import com.example.musicplayer_hezhao.fragment.MyMusicFragment;
@@ -43,8 +55,10 @@ import com.example.musicplayer_hezhao.menu_work.nav_show_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_stop_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_store_activity;
 import com.example.musicplayer_hezhao.model.Music;
+import com.example.musicplayer_hezhao.util.customViewpagerView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +98,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private TextView find_vedio;
     private NavigationView navigationView;
     private String username = null;
+    private static List<Music> musicList = new ArrayList<>();
+    private MusicPlayService.MusicServiceIBinder musicPlayService;
+    private MusicConnection musicConnection;
+    private int position = 0;
+    private boolean temp = true;
+    private static customViewpagerView viewPager;
+    private static BottomViewAdapter adapter;
+    private int postions = 0;
+    private boolean temps = true;
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -146,7 +170,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    //    public void onPageSelected(int position) {
+//        mCurrentIndex = position;
+//        if ( musicList.size() > 1) {
+//            if ( position < 1) {
+//                position = musicList.size()-1;
+//                viewPager.setCurrentItem(position,false);
+//            }
+//        }
+//        if(position >= musicList.size()){
+//            mCurrentIndex = position%musicList.size() == 0?1:position%musicList.size()+1;
+//        }
+//        mCurrentSong = musicList.get(mCurrentIndex);
+//    }
     public void initView() {
+        viewPager = findViewById(R.id.viewpager);
+        musicConnection = new MusicConnection();
+        Intent intent = new Intent(MainActivity.this, MusicPlayService.class);
+        bindService(intent, musicConnection, BIND_AUTO_CREATE);
+        MusicUpdateTask task = new MusicUpdateTask();
+        task.doInBackground();
         mymusic_text = findViewById(R.id.mymusic_text);
         mymusic_text.setTextSize(20);
         find_music = findViewById(R.id.find_music);
@@ -154,12 +197,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         navigationView = findViewById(R.id.mNavigationView);
         View view = navigationView.getHeaderView(0);
         login_textview = view.findViewById(R.id.login_information);
-        play_music_text = findViewById(R.id.play_music_text);
         login_text = view.findViewById(R.id.login_information);
         mymusic_head_pic = findViewById(R.id.mymusic_head_pic);
         backgroundpic = findViewById(R.id.background_picture);
         mDrawerLayout = findViewById(R.id.mdrawerLayout);
+        adapter = new BottomViewAdapter(musicList, getApplicationContext(), super.username);
+        viewPager.setAdapter(adapter);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Message msg = BottomViewAdapter.handler.obtainMessage();
+                Bundle bundle = new Bundle();
+                if (temps) {
+                    bundle.putString("MSGS", "INIT");
+                    msg.setData(bundle);
+                    temps = false;
+                }else{
+                    bundle.putString("MSGS", "NOINIT");
+                    msg.setData(bundle);
+                }
+                if (postions < position) {
+                    bundle.putString("MSG", "NEXT");
+                    msg.setData(bundle);
+                } else if (postions > position) {
+                    bundle.putString("MSG", "PRE");
+                    msg.setData(bundle);
+                }
+                bundle.putString("USERNAME", MainActivity.super.username);
+                BottomViewAdapter.handler.sendMessage(msg);
+                postions = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -205,6 +285,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
             }
         });
+        adapter.setOnViewClickListener(new BottomViewAdapter.OnViewClickListener() {
+            @Override
+            public void onViewClicked(int position) {
+
+            }
+        });
+        adapter.notifyDataSetChanged();
         //给navigationView设置监听事件
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -252,6 +339,58 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return false;
             }
         });
+    }
+    public static Handler handler=new Handler(){//创建消息处理器对象
+        //在主线程中处理从子线程发送过来的消息
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle bundle=msg.getData();
+            Music music= (Music) bundle.getSerializable("MUSIC");
+            int key=musicList.indexOf(music);
+            viewPager.setCurrentItem(musicList.indexOf(music));
+
+        }};
+    class MusicUpdateTask {
+
+        public Void doInBackground(Object... objects) {
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            String[] strs = new String[]{
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ALBUM_ID,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.DURATION
+            };
+            String where = MediaStore.Audio.Media.DATA + " like \"%" + "/raw" + "%\"";
+            String[] keywords = null;
+            String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+            ContentResolver contentResolver = getContentResolver();
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            Cursor cursor = contentResolver.query(uri, strs, where, keywords, sortOrder);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                    Uri musicUri = Uri.withAppendedPath(uri, id);
+                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                    int albumId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID));
+                    Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+                    String Artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+                    Music music = new Music(String.valueOf(musicUri), String.valueOf(albumUri), name, duration, Artist, 0);
+                    if (uri != null) {
+                        ContentResolver resolver = getContentResolver();
+                        music.MusicImage = String.valueOf(albumUri);
+                    }
+                    musicList.add(music);
+                }
+                cursor.close();
+
+            }
+            return null;
+        }
+
     }
 
     public void initData() {
@@ -347,6 +486,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    class MusicConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            musicPlayService = (MusicPlayService.MusicServiceIBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    }
     //开始处理后台任务
     //新建一个AsyncTask
     //TODO

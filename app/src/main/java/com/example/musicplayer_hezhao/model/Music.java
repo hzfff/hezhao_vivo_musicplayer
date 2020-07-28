@@ -141,7 +141,15 @@ public class Music implements Serializable {
     }
 
     public void setDuration(long duration) {
+
         Duration = duration;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Music music= (Music) obj;
+        return this.getMusicUri()==music.getMusicUri();
+    }
+
 
 }

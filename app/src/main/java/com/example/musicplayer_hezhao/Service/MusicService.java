@@ -20,6 +20,7 @@ import android.os.Message;
 
 import com.example.musicplayer_hezhao.ContentProvider.PlayListProvider;
 import com.example.musicplayer_hezhao.DB.DBHelper;
+import com.example.musicplayer_hezhao.MainActivity;
 import com.example.musicplayer_hezhao.MusicWeight;
 import com.example.musicplayer_hezhao.Util;
 import com.example.musicplayer_hezhao.model.Music;
@@ -42,6 +43,7 @@ public class MusicService extends Service {
     public static final String ACTION_PLAY_MUSIC_TOGGLE = "com.example.musicplayer_hezhao.playtoggle";
     public static final String ACTION_PLAY_MUSIC_UPDATE = "com.example.musicplayer_hezhao.playupdate";
     private final int MSG_PROGRESS_UPDATE = 0;
+    private final int UPDATA_ADAPTER = 1;
     private List<OnStateChangeListener> listenerList = new ArrayList<>();
     private List<Music> musicList;
     private Music mcurrentmusic;
@@ -99,6 +101,7 @@ public class MusicService extends Service {
                     updateMusicItem(mcurrentmusic);
                     sendEmptyMessageDelayed(MSG_PROGRESS_UPDATE, 1);
                     break;
+
             }
 
         }
@@ -137,27 +140,42 @@ public class MusicService extends Service {
     //播放上一首歌曲,获取当前位置，取前一首歌曲
     public void playPreInnner(String UserNames) {
         int currentindex = musicList.indexOf(mcurrentmusic);
+        Message msg= MainActivity.handler.obtainMessage();//创建消息对象
+        //将音乐的总时长和播放进度封装至消息对象中
+        Bundle bundle=new Bundle();
         if (currentindex - 1 >= 0) {
             mcurrentmusic = musicList.get(currentindex - 1);
             playMusicItem(mcurrentmusic, true);
+            bundle.putInt("POSTION",currentindex - 1 );
         } else {
             mcurrentmusic = musicList.get(musicList.size() - 1);
             playMusicItem(mcurrentmusic, true);
+            bundle.putInt("POSTION",musicList.size() - 1);
         }
+//        msg.setData(bundle);
+//        MainActivity.handler.sendMessage(msg);
         addRecentMusic(mcurrentmusic,UserNames);
     }
 
     //播放下一首歌曲
     public void playNextInner(String UserNames) {
         //获取当前播放歌曲位置，然后取后一首歌曲
+        Message msg= MainActivity.handler.obtainMessage();//创建消息对象
+        //将音乐的总时长和播放进度封装至消息对象中
+        Bundle bundle=new Bundle();
         int currentindex = musicList.indexOf(mcurrentmusic);
         if (currentindex + 1 < musicList.size()) {
             mcurrentmusic = musicList.get(currentindex + 1);
             playMusicItem(mcurrentmusic, true);
+            bundle.putInt("POSTION",currentindex + 1);
+
         } else {
             mcurrentmusic = musicList.get(0);
             playMusicItem(mcurrentmusic, true);
+            bundle.putInt("POSTION",0);
         }
+        msg.setData(bundle);
+       // MainActivity.handler.sendMessage(msg);
         addRecentMusic(mcurrentmusic,UserNames);
     }
 
@@ -358,7 +376,7 @@ public class MusicService extends Service {
             addPlayListInner(items,UserNames);
         }
 
-        public void addPlayList(List<Music> items, int position) {
+        public void addPlayList(List<Music> items, int position,String UserNames) {
             addPlayListInner(items, position,UserNames);
         }
 
@@ -419,6 +437,7 @@ public class MusicService extends Service {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
+
         mediaPlayer.release();
         unregisterReceiver(broadcastReceiver);
         handler.removeMessages(MSG_PROGRESS_UPDATE);

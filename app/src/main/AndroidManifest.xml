@@ -66,7 +66,7 @@
 
         <provider
             android:exported="true"
-            android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProvider"
+            android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProviders"
             android:name=".ContentProvider.PlayListProvider" />
 
         <service android:name=".Service.MusicService" />
