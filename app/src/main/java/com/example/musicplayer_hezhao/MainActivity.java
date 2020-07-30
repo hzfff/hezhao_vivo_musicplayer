@@ -1,10 +1,10 @@
 package com.example.musicplayer_hezhao;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,15 +34,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.musicplayer_hezhao.Service.MusicPlayService;
-import com.example.musicplayer_hezhao.adapter.BottomViewAdapter;
+import com.example.musicplayer_hezhao.Service.MusicService;
+import com.example.musicplayer_hezhao.adapter.LocalMusic_Singer_Adapter;
 import com.example.musicplayer_hezhao.adapter.MainAdapter;
-import com.example.musicplayer_hezhao.adapter.MusicShowAdapter;
+import com.example.musicplayer_hezhao.adapter.playmusicadapter;
 import com.example.musicplayer_hezhao.fragment.FindMusicFragment;
 import com.example.musicplayer_hezhao.fragment.FindVedioFragment;
 import com.example.musicplayer_hezhao.fragment.MyMusicFragment;
@@ -55,7 +58,7 @@ import com.example.musicplayer_hezhao.menu_work.nav_show_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_stop_activity;
 import com.example.musicplayer_hezhao.menu_work.nav_store_activity;
 import com.example.musicplayer_hezhao.model.Music;
-import com.example.musicplayer_hezhao.util.customViewpagerView;
+import com.example.musicplayer_hezhao.util.VpRecyView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.Serializable;
@@ -67,7 +70,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 /**
  * Created by 11120555 on 2020/7/7 14:53
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     //将我的音乐、发现音乐、发现视频三个fragment传入到list中；
     private final String TAG = "HeZhao";
     private List<Fragment> FragmentList;
@@ -99,17 +102,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private NavigationView navigationView;
     private String username = null;
     private static List<Music> musicList = new ArrayList<>();
-    private MusicPlayService.MusicServiceIBinder musicPlayService;
-    private MusicConnection musicConnection;
-    private int position = 0;
+    private static VpRecyView recyclerView;
+    private static playmusicadapter adapter;
+    private MusicService.MusicServiceIBinder musicservice;
+    private MyServiceConnect musicConnect;
     private boolean temp = true;
-    private static customViewpagerView viewPager;
-    private static BottomViewAdapter adapter;
-    private int postions = 0;
-    private boolean temps = true;
+    private static int position_copy = 0;
+    private boolean index_copy = false;
+    private static LinearLayoutManager linearLayoutManager;
+    private static Context context;
+
+    class MyServiceConnect implements ServiceConnection {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            musicservice = (MusicService.MusicServiceIBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    }
 
     @Override
-    public void onCreate(Bundle bundle) {
+    protected void onCreate(final Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -139,8 +155,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onPageSelected(int position) {
                 if (position == 0) {
                     mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic4));
-                } else {
-                    mymusic_head_pic.setImageDrawable(null);
+                } else if (position==1){
+                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic5));
+                }else{
+                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic3));
                 }
                 mymusic_text.setTextSize(16);
                 find_music.setTextSize(16);
@@ -163,33 +181,123 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             }
         });
-        Intent intent = this.getIntent();
+        final Intent intent = this.getIntent();
         username = intent.getStringExtra("username");
         if (username != null) {
             login_text.setText(username);
         }
+        adapter = new playmusicadapter(musicList, getApplicationContext());
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setOnPagerChageListener(new VpRecyView.onPagerChageListener() {
+            @Override
+            public void onPagerChage(int position) {
+                if (position_copy > position) {
+                    if (temp) {
+                        ArrayList<Music> list = new ArrayList<>();
+                        for (int i = musicList.size() - 1; i >= 0; i--) {
+                            list.add(musicList.get(i));
+                        }
+                        musicservice.addPlayList(list);
+                        musicservice.pause();
+                        temp = false;
+                    }
+                    musicservice.playPre();
+                    position_copy = position;
+                } else if (position_copy < position) {
+                    if (temp) {
+                        ArrayList<Music> list = new ArrayList<>();
+                        for (int i = musicList.size() - 1; i >= 0; i--) {
+                            list.add(musicList.get(i));
+                        }
+                        musicservice.addPlayList(list);
+                        temp = false;
+                    }
+                    position_copy = position;
+                    musicservice.playNext();
+                    musicservice.pause();
+                }
+            }
+        });
+        recyclerView.setOnPagerPosition(0);
+        adapter.setOnItemClickListener(new playmusicadapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, int index) {
+                if (index == 1) {
+                    Intent intent1 = new Intent(MainActivity.this, PlayMusicActivity.class);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("MusicList", (Serializable) musicList);
+                    bundle1.putInt("position", position);
+                    if (index_copy) {
+                        bundle1.putInt("index_copy", 1);
+                    } else {
+                        bundle1.putInt("index_copy", 2);
+                    }
+                    intent1.putExtras(bundle1);
+                    startActivity(intent1);
+                } else if (index == 2) {
+                    if (temp) {
+                        ArrayList<Music> list = new ArrayList<>();
+                        for (int i = musicList.size() - 1; i >= 0; i--) {
+                            list.add(musicList.get(i));
+                        }
+                        musicservice.addPlayList(list);
+                        index_copy = true;
+                        temp = false;
+                    } else {
+                        musicservice.play(username);
+                        index_copy = true;
+                    }
+                } else if (index == 3) {
+                    musicservice.pause();
+                    index_copy = false;
+
+                } else if (index == 4) {
+
+                }
+            }
+        });
     }
 
-    //    public void onPageSelected(int position) {
-//        mCurrentIndex = position;
-//        if ( musicList.size() > 1) {
-//            if ( position < 1) {
-//                position = musicList.size()-1;
-//                viewPager.setCurrentItem(position,false);
-//            }
-//        }
-//        if(position >= musicList.size()){
-//            mCurrentIndex = position%musicList.size() == 0?1:position%musicList.size()+1;
-//        }
-//        mCurrentSong = musicList.get(mCurrentIndex);
-//    }
+    public static Handler handler_copy = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            ArrayList<Music>list = (ArrayList<Music>) bundle.getSerializable("MusicList");
+            musicList.clear();
+            for(int i=0;i<list.size();i++)
+            {
+                musicList.add(list.get(i));
+            }
+            LinearLayoutManager manager= (LinearLayoutManager) recyclerView.getLayoutManager();
+            adapter= (playmusicadapter) recyclerView.getAdapter();
+            adapter.notifyDataSetChanged();
+           // int postion = bundle.getInt("position");
+            manager.scrollToPositionWithOffset(0, 0);
+            manager.setStackFromEnd(true);
+
+        }
+    };
+    public static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            int num = bundle.getInt("MusicNum");
+            int postion = recyclerView.getOnPagerPosition();
+            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            manager.scrollToPositionWithOffset(num , 0);
+            manager.setStackFromEnd(true);
+        }
+    };
+
     public void initView() {
-        viewPager = findViewById(R.id.viewpager);
-        musicConnection = new MusicConnection();
-        Intent intent = new Intent(MainActivity.this, MusicPlayService.class);
-        bindService(intent, musicConnection, BIND_AUTO_CREATE);
-        MusicUpdateTask task = new MusicUpdateTask();
-        task.doInBackground();
+        context=getApplicationContext();
+        musicConnect = new MyServiceConnect();
+        Intent intent = new Intent(MainActivity.this, MusicService.class);
+        bindService(intent, musicConnect, BIND_AUTO_CREATE);
+        recyclerView = findViewById(R.id.recyclerview);
         mymusic_text = findViewById(R.id.mymusic_text);
         mymusic_text.setTextSize(20);
         find_music = findViewById(R.id.find_music);
@@ -197,49 +305,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         navigationView = findViewById(R.id.mNavigationView);
         View view = navigationView.getHeaderView(0);
         login_textview = view.findViewById(R.id.login_information);
+        play_music_text = findViewById(R.id.play_music_text);
         login_text = view.findViewById(R.id.login_information);
         mymusic_head_pic = findViewById(R.id.mymusic_head_pic);
         backgroundpic = findViewById(R.id.background_picture);
         mDrawerLayout = findViewById(R.id.mdrawerLayout);
-        adapter = new BottomViewAdapter(musicList, getApplicationContext(), super.username);
-        viewPager.setAdapter(adapter);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Message msg = BottomViewAdapter.handler.obtainMessage();
-                Bundle bundle = new Bundle();
-                if (temps) {
-                    bundle.putString("MSGS", "INIT");
-                    msg.setData(bundle);
-                    temps = false;
-                }else{
-                    bundle.putString("MSGS", "NOINIT");
-                    msg.setData(bundle);
-                }
-                if (postions < position) {
-                    bundle.putString("MSG", "NEXT");
-                    msg.setData(bundle);
-                } else if (postions > position) {
-                    bundle.putString("MSG", "PRE");
-                    msg.setData(bundle);
-                }
-                bundle.putString("USERNAME", MainActivity.super.username);
-                BottomViewAdapter.handler.sendMessage(msg);
-                postions = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        MusicUpdateTask task = new MusicUpdateTask();
+        task.doInBackground();
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -285,13 +357,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
             }
         });
-        adapter.setOnViewClickListener(new BottomViewAdapter.OnViewClickListener() {
-            @Override
-            public void onViewClicked(int position) {
-
-            }
-        });
-        adapter.notifyDataSetChanged();
         //给navigationView设置监听事件
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -340,16 +405,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
     }
-    public static Handler handler=new Handler(){//创建消息处理器对象
-        //在主线程中处理从子线程发送过来的消息
-        @Override
-        public void handleMessage(Message msg) {
-            Bundle bundle=msg.getData();
-            Music music= (Music) bundle.getSerializable("MUSIC");
-            int key=musicList.indexOf(music);
-            viewPager.setCurrentItem(musicList.indexOf(music));
 
-        }};
     class MusicUpdateTask {
 
         public Void doInBackground(Object... objects) {
@@ -407,6 +463,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         MainAdapter = new MainAdapter(getApplicationContext(), getSupportFragmentManager(), FragmentList, titleList);
         MusicPlayerViewPager.setAdapter(MainAdapter);
         MusicPlayerViewPager.setOffscreenPageLimit(0);
+
     }
 
     public void inittitleList() {
@@ -434,12 +491,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.find_music:
                 Log.d("hezhao", "FINDMUSIC");
                 MusicPlayerViewPager.setCurrentItem(Num_FindMusic, true);
-                mymusic_head_pic.setImageDrawable(null);
+                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic5));
                 break;
             case R.id.find_vedio:
                 Log.d("hezhao", "FINDVEDIO");
                 MusicPlayerViewPager.setCurrentItem(Num_FindVedio, true);
-                mymusic_head_pic.setImageDrawable(null);
+                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic6));
                 break;
             default:
                 break;
@@ -486,18 +543,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    class MusicConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            musicPlayService = (MusicPlayService.MusicServiceIBinder) service;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    }
     //开始处理后台任务
     //新建一个AsyncTask
     //TODO

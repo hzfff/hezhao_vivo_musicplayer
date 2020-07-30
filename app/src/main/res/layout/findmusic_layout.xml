@@ -2,14 +2,19 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:gravity="center">
+    <androidx.viewpager.widget.ViewPager
+        android:background="@color/GRAY"
+        android:id="@+id/viewpager"
+        android:layout_marginTop="20dp"
+        android:layout_width="330dp"
+        android:layout_height="170dp"/>
+    </RelativeLayout>
     <ImageView
         android:id="@+id/findmusic_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:textSize="40dp"
-    android:text="FindMusic"/>
 </RelativeLayout>

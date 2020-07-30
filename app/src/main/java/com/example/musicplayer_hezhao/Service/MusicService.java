@@ -20,7 +20,6 @@ import android.os.Message;
 
 import com.example.musicplayer_hezhao.ContentProvider.PlayListProvider;
 import com.example.musicplayer_hezhao.DB.DBHelper;
-import com.example.musicplayer_hezhao.MainActivity;
 import com.example.musicplayer_hezhao.MusicWeight;
 import com.example.musicplayer_hezhao.Util;
 import com.example.musicplayer_hezhao.model.Music;
@@ -30,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
+import static com.example.musicplayer_hezhao.DB.DBHelper.NAME;
 import static com.example.musicplayer_hezhao.DB.DBHelper.SONG_URI;
-import static com.example.musicplayer_hezhao.DB.DBHelper.UserName;
 
 
 /**
@@ -43,7 +42,6 @@ public class MusicService extends Service {
     public static final String ACTION_PLAY_MUSIC_TOGGLE = "com.example.musicplayer_hezhao.playtoggle";
     public static final String ACTION_PLAY_MUSIC_UPDATE = "com.example.musicplayer_hezhao.playupdate";
     private final int MSG_PROGRESS_UPDATE = 0;
-    private final int UPDATA_ADAPTER = 1;
     private List<OnStateChangeListener> listenerList = new ArrayList<>();
     private List<Music> musicList;
     private Music mcurrentmusic;
@@ -51,7 +49,7 @@ public class MusicService extends Service {
     private ContentResolver contentResolver;
     private boolean mPaused;
     private final Binder mbinder = new MusicServiceIBinder();
-    private String UserNames;
+    private String UserName;
     public interface OnStateChangeListener {
         void onPlayProgressChange(Music music);
 
@@ -101,7 +99,6 @@ public class MusicService extends Service {
                     updateMusicItem(mcurrentmusic);
                     sendEmptyMessageDelayed(MSG_PROGRESS_UPDATE, 1);
                     break;
-
             }
 
         }
@@ -122,14 +119,14 @@ public class MusicService extends Service {
             String action = intent.getAction();
             if (action != null) {
                 if (ACTION_PLAY_MUSIC_PRE.equals(action)) {
-                    playPreInnner(UserNames);
+                    playPreInnner();
                 } else if (ACTION_PLAY_MUSIC_NEXT.equals(action)) {
-                    playNextInner(UserNames);
+                    playNextInner();
                 } else if (ACTION_PLAY_MUSIC_TOGGLE.equals(action)) {
                     if (isPlayingInner()) {
                         pauseInner();
                     } else {
-                        playInner(UserNames);
+                        playInner();
                     }
                 }
             }
@@ -138,45 +135,30 @@ public class MusicService extends Service {
     }
 
     //播放上一首歌曲,获取当前位置，取前一首歌曲
-    public void playPreInnner(String UserNames) {
+    public void playPreInnner() {
         int currentindex = musicList.indexOf(mcurrentmusic);
-        Message msg= MainActivity.handler.obtainMessage();//创建消息对象
-        //将音乐的总时长和播放进度封装至消息对象中
-        Bundle bundle=new Bundle();
         if (currentindex - 1 >= 0) {
             mcurrentmusic = musicList.get(currentindex - 1);
             playMusicItem(mcurrentmusic, true);
-            bundle.putInt("POSTION",currentindex - 1 );
         } else {
             mcurrentmusic = musicList.get(musicList.size() - 1);
             playMusicItem(mcurrentmusic, true);
-            bundle.putInt("POSTION",musicList.size() - 1);
         }
-//        msg.setData(bundle);
-//        MainActivity.handler.sendMessage(msg);
-        addRecentMusic(mcurrentmusic,UserNames);
+        addRecentMusic(mcurrentmusic);
     }
 
     //播放下一首歌曲
-    public void playNextInner(String UserNames) {
+    public void playNextInner() {
         //获取当前播放歌曲位置，然后取后一首歌曲
-        Message msg= MainActivity.handler.obtainMessage();//创建消息对象
-        //将音乐的总时长和播放进度封装至消息对象中
-        Bundle bundle=new Bundle();
         int currentindex = musicList.indexOf(mcurrentmusic);
         if (currentindex + 1 < musicList.size()) {
             mcurrentmusic = musicList.get(currentindex + 1);
             playMusicItem(mcurrentmusic, true);
-            bundle.putInt("POSTION",currentindex + 1);
-
         } else {
             mcurrentmusic = musicList.get(0);
             playMusicItem(mcurrentmusic, true);
-            bundle.putInt("POSTION",0);
         }
-        msg.setData(bundle);
-       // MainActivity.handler.sendMessage(msg);
-        addRecentMusic(mcurrentmusic,UserNames);
+        addRecentMusic(mcurrentmusic);
     }
 
     //暂停
@@ -191,7 +173,7 @@ public class MusicService extends Service {
     }
 
     //播放
-    public void playInner(String UserNames) {
+    public void playInner() {
         if (musicList.size() > 0 && mcurrentmusic == null) {
             mcurrentmusic = musicList.get(0);
         }
@@ -200,35 +182,32 @@ public class MusicService extends Service {
         } else {
             playMusicItem(mcurrentmusic, true);
         }
-        addRecentMusic(mcurrentmusic,UserNames);
+        addRecentMusic(mcurrentmusic);
     }
 
-    public void addRecentMusic(Music music,String UserNames) {
-        if(UserNames!=null) {
-            ContentValues contentView = new ContentValues();
-            String wheres = "SONG_URI=? and  username=?";
-            contentView.put(DBHelper.NAME, music.Name);
-            contentView.put(DBHelper.DURATION, music.Duration);
-            contentView.put(DBHelper.LAST_PLAY_TIME, music.PlayedTime);
-            contentView.put(SONG_URI, music.MusicUri);
-            contentView.put(DBHelper.ALBUM_URI, music.AlbumUri);
-            contentView.put(DBHelper.ARTIST, music.Artist);
-            contentView.put(UserName, UserNames);
-            String[] SongUri = new String[]{music.getMusicUri(), UserNames};
-            Cursor cursor = contentResolver.query(
-                    PlayListProvider.CONTENT_URI_SONG_THIRD,
-                    null,
-                    wheres,
-                    SongUri,
-                    null);
-            if (cursor.moveToNext()) {
-                ContentResolver resolver = getContentResolver();
-                String where = "song_uri=?";
-                String[] Args = new String[]{music.getMusicUri()};
-                int index = resolver.delete(PlayListProvider.CONTENT_URI_SONG_THIRD, where, Args);
-            }
-            contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_THIRD, contentView);
+    public void addRecentMusic(Music music) {
+        ContentValues contentView = new ContentValues();
+        contentView.put(DBHelper.NAME, music.Name);
+        contentView.put(DBHelper.DURATION, music.Duration);
+        contentView.put(DBHelper.LAST_PLAY_TIME, music.PlayedTime);
+        contentView.put(SONG_URI, music.MusicUri);
+        contentView.put(DBHelper.ALBUM_URI, music.AlbumUri);
+        contentView.put(DBHelper.ARTIST, music.Artist);
+        contentView.put(DBHelper.UserName,UserName);
+        String[] SongUri = new String[]{music.getMusicUri()};
+        Cursor cursor = contentResolver.query(
+                PlayListProvider.CONTENT_URI_SONG_THIRD,
+                null,
+                SONG_URI + " =?",
+                SongUri,
+                null);
+        if (cursor.moveToNext()) {
+            ContentResolver resolver = getContentResolver();
+            String where = "song_uri=?";
+            String[] Args = new String[]{music.getMusicUri()};
+            int index = resolver.delete(PlayListProvider.CONTENT_URI_SONG_THIRD, where, Args);
         }
+        contentResolver.insert(PlayListProvider.CONTENT_URI_SONG_THIRD, contentView);
 
     }
 
@@ -317,7 +296,7 @@ public class MusicService extends Service {
         public void onCompletion(MediaPlayer mediaPlayer) {
             mcurrentmusic.PlayedTime = 0;
             updateMusicItem(mcurrentmusic);
-            playNextInner(UserNames);
+            playNextInner();
         }
     };
 
@@ -331,20 +310,20 @@ public class MusicService extends Service {
         }
     }
 
-    private void addPlayListInner(List<Music> items,String UserNames) {
+    private void addPlayListInner(List<Music> items) {
 
         contentResolver.delete(PlayListProvider.CONTENT_URI_SONG_FIRST, null, null);
         musicList.clear();
 
         for (Music item : items) {
-            addPlayListInner(item, false,UserNames);
+            addPlayListInner(item, false);
         }
 
         mcurrentmusic = musicList.get(0);
-        playInner(UserNames);
+        playInner();
     }
 
-    private void addPlayListInner(Music item, boolean needPlay,String UserNames) {
+    private void addPlayListInner(Music item, boolean needPlay) {
 
         if (musicList.contains(item)) {
             return;
@@ -358,45 +337,47 @@ public class MusicService extends Service {
 
             //测试---------------------------------------------------------------------------------------------------------------
             mcurrentmusic = item;
-            playInner(UserNames);
+            playInner();
         }
     }
 
-    private void addPlayListInner(List<Music> item, int position,String UserNames) {
+    private void addPlayListInner(List<Music> item, int position) {
         musicList = item;
         mcurrentmusic = musicList.get(position);
     }
 
     public class MusicServiceIBinder extends Binder {
         public void addPlayList(Music item) {
-            addPlayListInner(item, true,UserNames);
+            addPlayListInner(item, true);
+        }
+
+        public int getcurrentmusic() {
+            if(musicList.size()==0||mcurrentmusic==null){return -1;}
+            return musicList.indexOf(getCurrentMusic());
         }
 
         public void addPlayList(List<Music> items) {
-            addPlayListInner(items,UserNames);
+            addPlayListInner(items);
         }
 
-        public void addPlayList(List<Music> items, int position,String UserNames) {
-            addPlayListInner(items, position,UserNames);
+        public void addPlayList(List<Music> items, int position) {
+            addPlayListInner(items, position);
         }
 
         public void play(String Name) {
-            UserNames=Name;
-            playInner(UserNames);
+            UserName=Name;
+            playInner();
         }
 
-        public void playNext(String Name) {
-            UserNames=Name;
-            playNextInner(UserNames);
+        public void playNext() {
+            playNextInner();
         }
 
-        public void playPre(String Name) {
-            UserNames=Name;
-            playPreInnner(UserNames);
+        public void playPre() {
+            playPreInnner();
         }
 
-        public void pause(String Name) {
-            UserNames=Name;
+        public void pause() {
             pauseInner();
         }
 
@@ -437,7 +418,6 @@ public class MusicService extends Service {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
-
         mediaPlayer.release();
         unregisterReceiver(broadcastReceiver);
         handler.removeMessages(MSG_PROGRESS_UPDATE);

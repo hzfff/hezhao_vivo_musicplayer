@@ -35,7 +35,6 @@ import androidx.core.app.ActivityCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer_hezhao.Service.MusicService;
-import com.example.musicplayer_hezhao.fragment.BaseFragment;
 import com.example.musicplayer_hezhao.model.Music;
 import com.example.musicplayer_hezhao.tool.CircleImageView;
 import com.example.musicplayer_hezhao.tool.LrcView;
@@ -45,6 +44,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.internal.Utils;
@@ -77,27 +78,38 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
     private ImageView image3;
     //表示image的三种状态
     private int state = 1;
-    private List<Music> musicList = new ArrayList<>();
+    private static List<Music> musicList = new ArrayList<>();
     private boolean index = true;
     private boolean indexs = true;
     private boolean indexss = true;
-    private boolean temp = true;
+    private boolean temp = false;
     private Intent intent;
     private int position;
-    private String UserName;
-    private Music musics;
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private  int index_temp=0;
+    private int index_copy = 0;
+    private int num = 0;
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.play_music_main_pager);
-        UserName=super.username;
         intent1 = getIntent();
         initView();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void initView() {
+        intent = getIntent();
+        final Bundle bundle = intent.getExtras();
+        musicList = (List<Music>) bundle.getSerializable("MusicList");
+        position = intent.getIntExtra("position", 0);
+        index_temp=position;
+        index_copy = intent.getIntExtra("index_copy", 2);
+        Message msg = MainActivity.handler_copy.obtainMessage();
+        Bundle bundle1 = new Bundle();
+        bundle1.putSerializable("MusicList", (Serializable) musicList);
+        bundle1.putInt("position", position);
+        msg.setData(bundle1);
+        MainActivity.   handler_copy.sendMessage(msg);
         music_title = findViewById(R.id.text1);
         singer_name = findViewById(R.id.text2);
         image1 = findViewById(R.id.img1);
@@ -113,16 +125,6 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         profile_pic = findViewById(R.id.image);
         begin_time = findViewById(R.id.played_time);
         end_time = findViewById(R.id.duration_time);
-        intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        musicList = (List<Music>) bundle.getSerializable("MusicList");
-        position = intent.getIntExtra("position", 0);
-        if(position>9000){
-            start_button.setBackground(getDrawable(R.mipmap.play));
-            index = false;
-            position-=10000;
-            isStart = false;
-        }
         intent2 = new Intent(this, MusicService.class);
         myServiceConn = new MyServiceConn();
         bindService(intent2, myServiceConn, BIND_AUTO_CREATE);
@@ -134,6 +136,10 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         image1.setOnClickListener(this);
         image3.setOnClickListener(this);
         //TODO 后期将从网络传入图片
+        if (index_copy == 1) {
+            start_button.setBackgroundResource(R.mipmap.play);
+            isStart = false;
+        }
         animator = ObjectAnimator.ofFloat(profile_pic, "rotation", 0f, 360.0f);//设置图片动画
         animator.setDuration(10000);//动画旋转一周的时间为10秒
         animator.setInterpolator(new LinearInterpolator());//匀速
@@ -149,6 +155,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         end_time.setText(times);
         singer_name.setText(musicList.get(position).getArtist());
         music_title.setText(musicList.get(position).getName());
+        System.out.println(musicList.get(position).getName());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +184,26 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
+    public void play() {
+        if (indexs && index && indexss && position != mMusicService.getcurrentmusic()) {
+            mMusicService.addPlayList(musicList, position);
+            indexs = false;
+        }
+        if (isStart) {
+            mMusicService.play(super.username);
+            start_button.setBackground(getDrawable(R.mipmap.play));
+            animator.start();
+            animator.setCurrentPlayTime(currentPlayTime);
+            isStart = false;
+        } else {
+            mMusicService.pause();
+            start_button.setBackground(getDrawable(R.mipmap.stop));
+            currentPlayTime = animator.getCurrentPlayTime();
+            animator.pause();
+            isStart = true;
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View view) {
@@ -185,7 +212,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.next_btn:
                 if (indexs && index && indexss) {
-                    mMusicService.addPlayList(musicList, position,username);
+                    mMusicService.addPlayList(musicList, position);
                     indexs = false;
                 }
                 start_button.setBackground(getDrawable(R.mipmap.play));
@@ -193,32 +220,33 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
                 animator.setCurrentPlayTime(currentPlayTime);
                 isStart = false;
                 temp = true;
-                mMusicService.playNext(UserName);
+                mMusicService.playNext();
+                num += 1;
                 break;
             case R.id.play_btn:
 
                 if (index && indexs && indexss) {
-                    mMusicService.addPlayList(musicList, position,username);
+                    mMusicService.addPlayList(musicList, position);
                     index = false;
                 }
                 if (isStart) {
-                    mMusicService.play(UserName);
+                    mMusicService.play(super.username);
                     start_button.setBackground(getDrawable(R.mipmap.play));
                     animator.start();
                     animator.setCurrentPlayTime(currentPlayTime);
                     isStart = false;
                 } else {
-                    mMusicService.pause(UserName);
+                    mMusicService.pause();
                     start_button.setBackground(getDrawable(R.mipmap.stop));
                     currentPlayTime = animator.getCurrentPlayTime();
                     animator.pause();
                     isStart = true;
                 }
+
                 break;
             case R.id.pre_btn:
-
                 if (indexss && indexs && index) {
-                    mMusicService.addPlayList(musicList, position,username);
+                    mMusicService.addPlayList(musicList, position);
                     indexs = false;
                 }
                 start_button.setBackground(getDrawable(R.mipmap.play));
@@ -226,8 +254,8 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
                 animator.setCurrentPlayTime(currentPlayTime);
                 isStart = false;
                 temp = true;
-                mMusicService.playPre(UserName);
-
+                mMusicService.playPre();
+                num -= 1;
                 break;
             case R.id.img1:
                 if (state == 1) {
@@ -246,12 +274,25 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    public void addTimer() {
+
+        Message msg = MainActivity.handler.obtainMessage();
+        Bundle bundle = new Bundle();
+        int nums=num+index_temp;
+        bundle.putInt("MusicNum", num+index_temp);
+        msg.setData(bundle);
+        MainActivity.handler.sendMessage(msg);
+
+    }
+
+
     class MyServiceConn implements ServiceConnection {
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mMusicService = (MusicService.MusicServiceIBinder) iBinder;
             mMusicService.registerOnStateChangeListener(mStateChangeListener);
+            play();
         }
 
         @Override
@@ -285,14 +326,11 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         seekBar.setMax((int) music.Duration);
         seekBar.setProgress((int) music.PlayedTime);
         if (temp) {
-
-            musics=new Music(music.getName(),music.getMusicUri(),music.getAlbumUri(),music.getDuration());
             temp = false;
             music_title.setText(music.Name);
             singer_name.setText(music.Artist);
             profile_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(music.AlbumUri)));
             background_pic.setImageBitmap(Util.CreateBitmap(getContentResolver(), Uri.parse(music.AlbumUri)));
-
         }
     }
 
@@ -330,14 +368,10 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         //TODO
         return true;
     }
-    @Override
-    protected void onDestroy() {
-        Message msg= MainActivity.handler.obtainMessage();//创建消息对象
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("MUSIC",musics);
-        msg.setData(bundle);
-        MainActivity.handler.sendMessage(msg);
-        super.onDestroy();
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        addTimer();
     }
 }
