@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.musicplayer_hezhao">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:screenOrientation="portrait"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,54 +24,54 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SearchActivity"/>
+        <activity android:name=".SearchActivity" />
 
         <activity android:name=".menu_work.change_background_activity" />
 
         <activity android:name=".menu_work.nav_developer_msg_activity" />
 
-        <activity android:name=".menu_work.nav_listening_activity"/>
+        <activity android:name=".menu_work.nav_listening_activity" />
 
-        <activity android:name=".menu_work.nav_msg_activity"/>
+        <activity android:name=".menu_work.nav_msg_activity" />
 
-        <activity android:name=".menu_work.nav_order_activity"/>
+        <activity android:name=".menu_work.nav_order_activity" />
 
-        <activity android:name=".menu_work.nav_price_activity"/>
+        <activity android:name=".menu_work.nav_price_activity" />
 
-        <activity android:name=".menu_work.nav_show_activity"/>
+        <activity android:name=".menu_work.nav_show_activity" />
 
-        <activity android:name=".menu_work.nav_stop_activity"/>
+        <activity android:name=".menu_work.nav_stop_activity" />
 
-        <activity android:name=".menu_work.nav_store_activity"/>
+        <activity android:name=".menu_work.nav_store_activity" />
 
-        <activity android:name=".LoginMainActivity"/>
+        <activity android:name=".LoginMainActivity" />
 
-        <activity android:name=".DownLoadMusic"/>
+        <activity android:name=".DownLoadMusic" />
 
-        <activity android:name=".HistoryMusic"/>
+        <activity android:name=".HistoryMusic" />
 
-        <activity android:name=".LocalMusic"/>
+        <activity android:name=".LocalMusic" />
 
-        <activity android:name=".StartActivity"/>
+        <activity android:name=".StartActivity" />
 
-        <activity android:name=".fragment.My_Favorite_Music"/>
+        <activity android:name=".fragment.My_Favorite_Music" />
 
-        <activity android:name=".Song_Show"/>
+        <activity android:name=".Song_Show" />
 
-        <activity android:name=".PlayMusicActivity"/>
+        <activity android:name=".PlayMusicActivity" />
 
-        <activity android:name=".Local_Singer_Show_Activity"/>
+        <activity android:name=".Local_Singer_Show_Activity" />
 
-        <activity android:name=".ManagerMusicListActivity"/>
+        <activity android:name=".ManagerMusicListActivity" />
 
-        <activity android:name=".ShowMusicActivity"/>
+        <activity android:name=".ShowMusicActivity" />
 
-        <activity android:name=".AddMusicToList"/>
+        <activity android:name=".AddMusicToList" />
 
         <provider
-            android:exported="true"
+            android:name=".ContentProvider.PlayListProvider"
             android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProviders"
-            android:name=".ContentProvider.PlayListProvider" />
+            android:exported="true" />
 
         <service android:name=".Service.MusicService" />
         <service android:name=".Service.MyFavoriteMusic_Service" />

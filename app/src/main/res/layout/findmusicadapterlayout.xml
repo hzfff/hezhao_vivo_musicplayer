@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="140dp"
+    android:layout_height="150dp">
+
+    <RelativeLayout
+        android:id="@+id/left"
+        android:layout_width="10dp"
+        android:layout_height="match_parent">
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:layout_toRightOf="@+id/left">
+
+        <com.example.musicplayer_hezhao.util.RoundImageView
+            android:id="@+id/image"
+            android:layout_width="120dp"
+            android:layout_height="120dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp">
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="67dp"
+                android:src="@mipmap/stopingmusic" />
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="2dp"
+                android:layout_toRightOf="@+id/image1"
+                android:text="120万"
+                android:textColor="@color/drak"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/image"
+            android:textColor="@color/drak"
+            android:textSize="12dp"
+            android:textStyle="normal" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -46,4 +46,25 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+     //从网络请求数据
+    //网络请求 Retrofit库(基于okHttp封装的网络请求库)
+    //retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+
+// 用Gson解析json的转换器
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+//rxjava2视频播放
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+
+    //视频播放控件
+    compile 'fm.jiecao:jiecaovideoplayer:4.8.3'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+
+
 }

@@ -463,6 +463,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainAdapter = new MainAdapter(getApplicationContext(), getSupportFragmentManager(), FragmentList, titleList);
         MusicPlayerViewPager.setAdapter(MainAdapter);
         MusicPlayerViewPager.setOffscreenPageLimit(0);
+        MusicPlayerViewPager.setCurrentItem(0);
+
 
     }
 
@@ -496,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.find_vedio:
                 Log.d("hezhao", "FINDVEDIO");
                 MusicPlayerViewPager.setCurrentItem(Num_FindVedio, true);
-                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic6));
+               mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic6));
                 break;
             default:
                 break;

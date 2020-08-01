@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class MhealthAdater extends PagerAdapter {
     private List<RoundImageView> mViewList;
+    private List<String> titlelist;
     public MhealthAdater(List<RoundImageView> mViewList){
         this.mViewList=mViewList;
     }
