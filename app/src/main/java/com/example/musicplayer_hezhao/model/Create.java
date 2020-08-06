@@ -1,9 +1,11 @@
 package com.example.musicplayer_hezhao.model;
 
+import java.io.Serializable;
+
 /**
  * Created by 11120555 on 2020/7/31 16:02
  */
-public class Create {
+public class Create  implements Serializable {
     private String nickname;
     private String avatarUrl;
     private String signature;

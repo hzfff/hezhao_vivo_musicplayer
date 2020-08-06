@@ -21,15 +21,17 @@ import java.util.Map;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
+
 /**
  * Created by 11120555 on 2020/7/31 17:23
  */
-public class MV_Adapter extends RecyclerView.Adapter<MV_Adapter.MV_AdapterHolder> {
+public class MV_Adapter extends RecyclerView.Adapter {
     private List<VedioInformation>List_MV;
     private downmusicrecycleradapter.OnItemClickListener onItemClickListener;
     private Context mContext;
     private static View view;
-
+    public boolean isLoadMore = false;
+    private final int view_Normal=1;
     public MV_Adapter(List<VedioInformation> infos, Context context) {
         List_MV = infos;
         mContext = context;
@@ -37,53 +39,67 @@ public class MV_Adapter extends RecyclerView.Adapter<MV_Adapter.MV_AdapterHolder
 
     @NonNull
     @Override
-    public MV_AdapterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        view = View.inflate(mContext, R.layout.vedioplayerlayout, null);
-        return new MV_AdapterHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            view = View.inflate(mContext, R.layout.vedioplayerlayout, null);
+            return new MV_AdapterHolder(view);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MV_AdapterHolder holder, int position) {
-        Map<String,String> map= (Map<String, String>) List_MV.get(position).getData().getBrs();
-        String URl=null;
-        if(map.containsKey("1080")){
-            URl=map.get("1080");
-        }else if(map.containsKey("720"))
-        {
-            URl=map.get("720");
-        }else if(map.containsKey("480"))
-        {
-            URl=map.get("480");
-        }else if(map.containsKey("240"))
-        {
-            URl=map.get("240");
-        }
-        boolean setUp = holder.playerStandard.setUp(URl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
-        if (setUp) {
-            Glide.with(mContext).load(List_MV.get(position).getData().getCover()).into(holder.playerStandard.thumbImageView);
-        }
-        holder.textView.setText(List_MV.get(position).getData().getName());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            MV_AdapterHolder holders = (MV_AdapterHolder) holder;
+            Map<String, String> map = (Map<String, String>) List_MV.get(position).getData().getBrs();
+            String URl = null;
+            if (map.containsKey("240")) {
+                URl = map.get("240");
+            } else if (map.containsKey("480")) {
+                URl = map.get("480");
+            } else if (map.containsKey("720")) {
+                URl = map.get("720");
+            } else if (map.containsKey("1080")) {
+                URl = map.get("1080");
+            }
+            if (URl != null) {
+                boolean setUp = holders.playerStandard.setUp(URl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
+                if (setUp) {
+                    Glide.with(mContext).load(List_MV.get(position).getData().getCover()).into(holders.playerStandard.thumbImageView);
+                }
+                holders.textView.setText(List_MV.get(position).getData().getName());
+            }
     }
+
 
     @Override
     public int getItemCount() {
-        return 2;
+        return List_MV.size();
     }
 
+    //用于监控adapter的数据变化
+    public void addList(List<VedioInformation> vedio) {
+        List_MV.addAll(vedio);
+        notifyDataSetChanged();
+    }
     static class MV_AdapterHolder extends RecyclerView.ViewHolder {
         TextView textView;
-        JCVideoPlayerStandard  playerStandard;
+        JCVideoPlayerStandard playerStandard;
         public MV_AdapterHolder(@NonNull View itemView) {
             super(itemView);
             textView=view.findViewById(R.id.text);
             playerStandard=view.findViewById(R.id.player_list_video);
         }
     }
-
+    static class RefreshHolder extends RecyclerView.ViewHolder {
+        public RefreshHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
-
+    public void setIsLoadMore() {
+        this.isLoadMore = true;
+        notifyDataSetChanged();
+    }
     public void setOnItemClickListener(downmusicrecycleradapter.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }

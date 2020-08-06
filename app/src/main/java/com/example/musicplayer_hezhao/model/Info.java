@@ -1,19 +1,29 @@
 package com.example.musicplayer_hezhao.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by 11120555 on 2020/7/31 8:35
  */
-public class Info {
-   private String pic;
-   private String titleColor;
-   private String typeTitle;
-   private String  name;//歌单名
-   private Long id;//歌单的id
-   private String coverImgUrl;//歌单的封面
-   private Create creator;//歌单创建者信息
-   private int playCount;//歌单播放数
+public class Info implements Serializable {
+    private String pic;
+    private String titleColor;
+    private String typeTitle;
+    private String name;//歌单名
+    private Long id;//歌单的id
+    private String coverImgUrl;//歌单的封面
+    private Create creator;//歌单创建者信息
+    private int playCount;//歌单播放数
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public int getPlayCount() {
         return playCount;

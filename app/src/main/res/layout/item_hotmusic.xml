@@ -39,7 +39,7 @@
         android:layout_toRightOf="@+id/hot_music_information"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:textColor="@color/Red"
+        android:textColor="@color/drak"
         android:textSize="15dp"/>
     </RelativeLayout>
     <Space

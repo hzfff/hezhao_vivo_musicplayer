@@ -29,17 +29,17 @@ public class MhealthAdater extends PagerAdapter {
     //初始化
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        position %= mViewList.size();
-        RoundImageView view = mViewList.get(position);
-        //如果View已经在之前添加到了一个父组件，则必须先remove，否则会抛出IllegalStateException。
-        ViewParent vp =view.getParent();
-        if (vp!=null){
-            ViewGroup parent = (ViewGroup)vp;
-            parent.removeView(view);
-        }
-        container.addView(view);
-        //add listeners here if necessary
-        return mViewList.get(position);
+            position %= mViewList.size();
+            RoundImageView view = mViewList.get(position);
+            //如果View已经在之前添加到了一个父组件，则必须先remove，否则会抛出IllegalStateException。
+            ViewParent vp = view.getParent();
+            if (vp != null) {
+                ViewGroup parent = (ViewGroup) vp;
+                parent.removeView(view);
+            }
+            container.addView(view);
+            //add listeners here if necessary
+            return mViewList.get(position);
     }
 
 

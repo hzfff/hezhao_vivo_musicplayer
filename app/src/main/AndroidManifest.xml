@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.musicplayer_hezhao.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,6 +68,12 @@
 
         <activity android:name=".AddMusicToList" />
 
+        <activity android:name=".ShowSongList" />
+
+        <activity android:name=".PlayMusicListActivity" />
+
+        <activity android:name=".SearchResultActivity" />
+
         <provider
             android:name=".ContentProvider.PlayListProvider"
             android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProviders"
@@ -76,6 +82,7 @@
         <service android:name=".Service.MusicService" />
         <service android:name=".Service.MyFavoriteMusic_Service" />
         <service android:name=".Service.MusicListService" />
+        <service android:name=".Service.ListService" />
 
     </application>
 

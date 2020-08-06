@@ -1,13 +1,17 @@
 package com.example.musicplayer_hezhao;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +25,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer_hezhao.adapter.HistoryMusicAdapter;
 import com.example.musicplayer_hezhao.adapter.HotMusicAdapter;
+import com.example.musicplayer_hezhao.model.Data;
 import com.example.musicplayer_hezhao.model.HistoryModel;
+import com.example.musicplayer_hezhao.model.HotMusic;
 import com.example.musicplayer_hezhao.model.HotMusicModel;
+import com.example.musicplayer_hezhao.model.Info;
+import com.example.musicplayer_hezhao.model.MusicInfo;
+import com.example.musicplayer_hezhao.model.Num;
+import com.example.musicplayer_hezhao.model.SearchMusicCallback;
+import com.example.musicplayer_hezhao.model.SongID;
+import com.example.musicplayer_hezhao.model.VedioInformation;
+import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +46,21 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 /**
  * Created by 11120555 on 2020/7/8 14:15
  */
-public class SearchActivity extends AppCompatActivity {
-    private EditText meditText;
+public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMusicApiTool.Callback {
+    private static EditText meditText;
     private Toolbar mtoolbar;
     private ImageView mimageView;
+    private TextView search_btn;
     private List<HistoryModel> historyModelList=new ArrayList<>();
     private List<HotMusicModel>hotMusicModelList=new ArrayList<>();
     private RecyclerView  historyrecyclerview;
-    private RecyclerView  hotMusicrecyclerview;
+    private static RecyclerView  hotMusicrecyclerview;
     private HistoryMusicAdapter historyMusicAdapter;
-    private HotMusicAdapter hotMusicAdapter;
+    private static HotMusicAdapter hotMusicAdapter;
+    private static NeteaseCloudMusicApiTool neteaseCloudMusicApiTool;
+    private static HotMusic hotMusic;
+    private  NeteaseCloudMusicApiTool.Callback callback=this;
+    private SearchMusicCallback SearchMusicCallback;
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -58,6 +76,8 @@ public class SearchActivity extends AppCompatActivity {
         Glide.with(this).load(R.mipmap.pic5).
                 apply(RequestOptions.
                         bitmapTransform(new BlurTransformation(18, 3))).into(mimageView);
+        neteaseCloudMusicApiTool=new NeteaseCloudMusicApiTool();
+        neteaseCloudMusicApiTool.findhotmusic(this);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         historyrecyclerview.setLayoutManager(linearLayoutManager);
@@ -66,16 +86,26 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager1=new LinearLayoutManager(this);
         linearLayoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         hotMusicrecyclerview.setLayoutManager(linearLayoutManager1);
-        hotMusicAdapter=new HotMusicAdapter(hotMusicModelList);
-        hotMusicrecyclerview.setAdapter(hotMusicAdapter);
     }
     public void initview() {
+        search_btn=findViewById(R.id.search_music);
         mimageView=findViewById(R.id.background_pic);
         mtoolbar = findViewById(R.id.search_toolbar);
         meditText = findViewById(R.id.input_music);
         historyrecyclerview=findViewById(R.id.history_search);
         hotMusicrecyclerview=findViewById(R.id.hot_music);
         setSupportActionBar(mtoolbar);
+        //search  music
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String musicname=meditText.getText().toString().trim();
+                if(musicname!=null&&musicname.length()>0)
+                {
+                    neteaseCloudMusicApiTool.searchmsuci(musicname,callback);
+                }
+            }
+        });
         //setDisplayHomeAsUpEnabled设置为true以后，会显示toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -90,19 +120,82 @@ public class SearchActivity extends AppCompatActivity {
             historyModelList.add(mode4);
         }
 
-        for(int i=0;i<5;i++)
-        {
-            HotMusicModel model=new HotMusicModel("1","心如止水","233456","这可能是你单曲循环最多的歌曲");
-            HotMusicModel mode2=new HotMusicModel("2","高考加油","343356","唱遍影视剧插曲的天籁歌手");
-            HotMusicModel mode3=new HotMusicModel("3","海底","903456","还是希望你好，虽然与我无关");
-            HotMusicModel mode4=new HotMusicModel("4","与我无关","734456","加油你们是最棒的");
-            HotMusicModel mode5=new HotMusicModel("5","下落不明","912356","张杰带你穿越人海");
-            hotMusicModelList.add(model);
-            hotMusicModelList.add(mode2);
-            hotMusicModelList.add(mode3);
-            hotMusicModelList.add(mode4);
-            hotMusicModelList.add(mode5);
+    }
 
-        }
+   public  static Handler handler=new Handler(){
+       @Override
+       public void handleMessage(Message msg) {
+           switch (msg.what)
+           {
+               case 1:
+                   hotMusicAdapter=new HotMusicAdapter(hotMusic);
+                   hotMusicrecyclerview.setAdapter(hotMusicAdapter);
+                   break;
+               default:
+                   break;
+           }
+           hotMusicAdapter.setOnItemClickListener(new HotMusicAdapter.OnItemClickListener() {
+               @Override
+               public void onItemClick(View view, int position) {
+                   String searchsong=hotMusic.getData().get(position).getSearchWord();
+                   meditText.setText(searchsong);
+                   meditText.refreshDrawableState();
+               }
+           });
+       }
+   };
+    @Override
+    public void doResult1(List<SongID> obj) {
+
+    }
+
+    @Override
+    public void doResult2(List<String> obj) {
+
+    }
+
+    @Override
+    public void doResult3(List<MusicInfo> obj) {
+
+    }
+
+    @Override
+    public void doResult4(List<String> obj) {
+
+    }
+
+    @Override
+    public void doResult5(Data<Info> obj) {
+
+    }
+
+    @Override
+    public void doResult6(List<Num> obj) {
+
+    }
+
+    @Override
+    public void doResult7(List<VedioInformation> obj) {
+
+    }
+
+    @Override
+    public void doResult8(HotMusic obj) {
+        hotMusic=obj;
+        Message msg = handler.obtainMessage();//创建消息对象
+        msg.what=1;
+       handler.sendMessage(msg);
+    }
+
+    @Override
+    public void doResult9(SearchMusicCallback searchMusicCallback) {
+        SearchMusicCallback=searchMusicCallback;
+        Intent  intent=new Intent(this,SearchResultActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("SearchMusicCallback",SearchMusicCallback);
+        String SongName=meditText.getText().toString().trim();
+        bundle.putString("SongName",SongName);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

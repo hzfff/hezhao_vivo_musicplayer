@@ -39,6 +39,7 @@ import com.example.musicplayer_hezhao.model.Music;
 import com.example.musicplayer_hezhao.tool.CircleImageView;
 import com.example.musicplayer_hezhao.tool.LrcView;
 import com.example.musicplayer_hezhao.util.MyTextView;
+//import com.example.musicplayer_hezhao.util.VideoPlayer;
 
 import java.io.Serializable;
 import java.util.ArrayList;

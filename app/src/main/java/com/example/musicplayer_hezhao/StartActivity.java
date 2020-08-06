@@ -19,7 +19,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.startactivity_layout);
         StartImage=findViewById(R.id.image);
         AlphaAnimation anima = new AlphaAnimation(1.0f, 1.0f);
-        anima.setDuration(3000);
+        anima.setDuration(1000);
         StartImage.startAnimation(anima);
         anima.setAnimationListener(new AnimationImpl());
     }

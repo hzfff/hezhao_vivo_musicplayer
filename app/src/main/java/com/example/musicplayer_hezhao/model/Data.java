@@ -1,7 +1,5 @@
 package com.example.musicplayer_hezhao.model;
 
-import com.example.musicplayer_hezhao.model.Info;
-
 import java.util.List;
 
 /**
@@ -12,6 +10,15 @@ public class Data<T> {
     private int code;
     private List<Info> banners;
     private List<Info> playlists;
+    private List<SongID>privileges;
+
+    public List<SongID> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(List<SongID> privileges) {
+        this.privileges = privileges;
+    }
 
     public List<Info> getPlaylists() {
         return playlists;

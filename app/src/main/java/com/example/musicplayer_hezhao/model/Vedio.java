@@ -1,11 +1,12 @@
 package com.example.musicplayer_hezhao.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by 11120555 on 2020/7/31 18:00
  */
-public class Vedio {
+public class Vedio  implements Serializable {
     private String name;//vedio名字
     private String artistName;//作者名字
     private String cover;//vedio 图片

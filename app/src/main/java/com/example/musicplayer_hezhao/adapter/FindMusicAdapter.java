@@ -1,7 +1,9 @@
 package com.example.musicplayer_hezhao.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.ShowSongList;
 import com.example.musicplayer_hezhao.model.Data;
 import com.example.musicplayer_hezhao.model.Info;
 import com.example.musicplayer_hezhao.util.RoundImageView;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,7 +27,7 @@ import java.util.List;
  */
 public class FindMusicAdapter extends RecyclerView.Adapter<FindMusicAdapter.FindMusicViewHolder> {
     private List<Info> List_Sings;
-    private downmusicrecycleradapter.OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
     private Context mContext;
     private static View view;
 
@@ -41,7 +45,6 @@ public class FindMusicAdapter extends RecyclerView.Adapter<FindMusicAdapter.Find
 
     @Override
     public void onBindViewHolder(@NonNull FindMusicViewHolder holder, int position) {
-        RoundImageView view1 = new RoundImageView(mContext);
         Glide.with(mContext).load(List_Sings.get(position).getCoverImgUrl()).into(holder.music_imageView);
         holder.music_describe.setText(List_Sings.get(position).getName());
         int num = List_Sings.get(position).getPlayCount();
@@ -50,6 +53,18 @@ public class FindMusicAdapter extends RecyclerView.Adapter<FindMusicAdapter.Find
         } else {
             holder.music_listen_num.setText(num / 10000 + "万");
         }
+        holder.music_imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Info info=List_Sings.get(position);
+                Intent intent=new Intent(mContext.getApplicationContext(), ShowSongList.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("info", (Serializable) info);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -74,7 +89,7 @@ public class FindMusicAdapter extends RecyclerView.Adapter<FindMusicAdapter.Find
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickListener(downmusicrecycleradapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 }
