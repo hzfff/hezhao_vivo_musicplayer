@@ -1,6 +1,7 @@
 package com.example.musicplayer_hezhao.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.icu.text.IDNA;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.ShowSingerActivity;
 import com.example.musicplayer_hezhao.Util;
 import com.example.musicplayer_hezhao.adapter.FindMusicAdapter;
 //import com.example.musicplayer_hezhao.adapter.MV_Adapter;
@@ -40,6 +43,8 @@ import com.example.musicplayer_hezhao.model.SongID;
 import com.example.musicplayer_hezhao.model.Vedio;
 import com.example.musicplayer_hezhao.model.VedioData;
 import com.example.musicplayer_hezhao.model.VedioInformation;
+import com.example.musicplayer_hezhao.model.findsongs;
+import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 import com.example.musicplayer_hezhao.util.DataTranslateService;
 import com.example.musicplayer_hezhao.util.RoundImageView;
@@ -83,6 +88,9 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
     private RecyclerView MV_Recyclerview;
     private MV_Adapter mv_adapter;
     private ImageView image;
+    private ImageView singer;
+    private ImageView songlist;
+    private ImageView mvlist;
     private int num = 1;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,11 +100,15 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
             StrictMode.setThreadPolicy(policy);
         }
         init();
+        onclick();
         return mView;
     }
 
     public void init() {
         CloudMusicTool.getbanner(this);
+        singer=mView.findViewById(R.id.image1);
+        mvlist=mView.findViewById(R.id.image2);
+        songlist=mView.findViewById(R.id.image3);
         viewPager = (ViewPager) mView.findViewById(R.id.viewpager);
         image = mView.findViewById(R.id.image);
         swipeRefreshLayout = mView.findViewById(R.id.swiprefreshlayout);
@@ -122,7 +134,6 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
 
             @Override
             public void onPageSelected(int arg0) {
-                //  changeIcon(arg0);
                 currentItem = arg0;
             }
 
@@ -141,7 +152,27 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
             }
         });
     }
+public void onclick(){
+    singer.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+         Intent  intent =new Intent(getActivity(), ShowSingerActivity.class);
+         startActivity(intent);
+        }
+    });
+    mvlist.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
+        }
+    });
+    songlist.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    });
+}
     public void initpre() {
         pic_uri.add("http://p1.music.126.net/6lM5D0NG6GR3_3FcbMI_Bg==/109951165201392548.jpg");
         pic_uri.add("http://p1.music.126.net/6Ux98l5OB-P66XPuUavO2g==/109951165198121518.jpg");
@@ -215,40 +246,6 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
         mhandler.sendEmptyMessageDelayed(0, 2000);
     }
 
-//    public void intitviewpager() throws IOException {
-//        Message msg = new Message();
-//        msg.what = 1;
-//        handler.sendMessage(msg);
-//    }
-
-//    private int mLastVisibleItemPosition;
-//    private RecyclerView.OnScrollListener monScrollListener = new RecyclerView.OnScrollListener() {
-//        @Override
-//        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//            super.onScrollStateChanged(recyclerView, newState);
-//            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-//            if (layoutManager instanceof LinearLayoutManager) {
-//                mLastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-//            }
-//            if (mv_adapter != null) {
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE
-//                        && mLastVisibleItemPosition + 1 == mv_adapter.getItemCount()) {
-//                    AsyncTask asyncTask = new AsyncTask() {
-//                        @Override
-//                        protected Object doInBackground(Object[] objects) {
-//                            try {
-//                                sendMoreRequest();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                            return null;
-//                        }
-//                    };
-//                    asyncTask.execute();
-//                }
-//            }
-//        }
-//    };
 
     public void sendMoreRequest() throws IOException {
         num++;
@@ -361,6 +358,16 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
 
     @Override
     public void doResult9(SearchMusicCallback searchMusicCallback) {
+
+    }
+
+    @Override
+    public void doResult10(huayu huayu) {
+
+    }
+
+    @Override
+    public void doResult11(findsongs findsongs) {
 
     }
 

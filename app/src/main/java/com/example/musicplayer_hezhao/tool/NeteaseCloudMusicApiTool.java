@@ -13,8 +13,11 @@ import com.example.musicplayer_hezhao.model.ResponseCheck;
 import com.example.musicplayer_hezhao.model.SearchMusicCallback;
 import com.example.musicplayer_hezhao.model.SongID;
 import com.example.musicplayer_hezhao.model.VedioInformation;
+import com.example.musicplayer_hezhao.model.findsongs;
+import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.util.DataTranslateService;
 
+import java.io.CharArrayReader;
 import java.io.IOException;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -326,6 +329,53 @@ public class NeteaseCloudMusicApiTool {
         }).start();
     }
 
+    public void findHuYu(Callback callback){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://music.eleuu.com/artist/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                        .build();
+                DataTranslateService api = retrofit.create(DataTranslateService.class);
+                Call<huayu> dataCall = api.findhuayu();
+                Response<huayu> data =null;
+                try {
+                    data = dataCall.execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (callback != null) {
+                    callback.doResult10(data.body());
+                }
+            }
+        }).start();
+    }
+    public void findsinger(Callback callback,int id)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://music.eleuu.com/artist/top/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                        .build();
+                DataTranslateService api = retrofit.create(DataTranslateService.class);
+                Call<findsongs> dataCall = api.findsongs(id);
+                Response<findsongs> data =null;
+                try {
+                    data = dataCall.execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (callback != null) {
+                    callback.doResult11(data.body());
+                }
+            }
+        }).start();
+    }
     public interface Callback {
         void doResult1(List<SongID> obj);
 
@@ -344,5 +394,9 @@ public class NeteaseCloudMusicApiTool {
         void doResult8(HotMusic obj);
 
         void doResult9(SearchMusicCallback searchMusicCallback);
+
+        void doResult10(huayu huayu);
+
+        void doResult11(findsongs findsongs);
     }
 }

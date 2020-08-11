@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else if (position==1){
                     mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic5));
                 }else{
-                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic3));
+                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
                 }
                 mymusic_text.setTextSize(16);
                 find_music.setTextSize(16);
@@ -498,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.find_vedio:
                 Log.d("hezhao", "FINDVEDIO");
                 MusicPlayerViewPager.setCurrentItem(Num_FindVedio, true);
-               mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic6));
+               mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
                 break;
             default:
                 break;

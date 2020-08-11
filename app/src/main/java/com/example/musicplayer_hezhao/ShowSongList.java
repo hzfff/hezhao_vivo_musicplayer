@@ -22,6 +22,8 @@ import com.example.musicplayer_hezhao.model.Num;
 import com.example.musicplayer_hezhao.model.SearchMusicCallback;
 import com.example.musicplayer_hezhao.model.SongID;
 import com.example.musicplayer_hezhao.model.VedioInformation;
+import com.example.musicplayer_hezhao.model.findsongs;
+import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
 import java.io.IOException;
@@ -162,6 +164,16 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
 
     @Override
     public void doResult9(SearchMusicCallback searchMusicCallback) {
+
+    }
+
+    @Override
+    public void doResult10(huayu huayu) {
+
+    }
+
+    @Override
+    public void doResult11(findsongs findsongs) {
 
     }
 

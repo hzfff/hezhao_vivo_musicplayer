@@ -35,6 +35,8 @@ import com.example.musicplayer_hezhao.model.Num;
 import com.example.musicplayer_hezhao.model.SearchMusicCallback;
 import com.example.musicplayer_hezhao.model.SongID;
 import com.example.musicplayer_hezhao.model.VedioInformation;
+import com.example.musicplayer_hezhao.model.findsongs;
+import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
 import java.util.ArrayList;
@@ -197,5 +199,15 @@ public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMu
         bundle.putString("SongName",SongName);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void doResult10(huayu huayu) {
+
+    }
+
+    @Override
+    public void doResult11(findsongs findsongs) {
+
     }
 }

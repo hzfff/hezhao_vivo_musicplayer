@@ -74,6 +74,10 @@
 
         <activity android:name=".SearchResultActivity" />
 
+        <activity android:name=".ShowSingerActivity" />
+
+        <activity android:name=".ShowArtistActivity" />
+
         <provider
             android:name=".ContentProvider.PlayListProvider"
             android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProviders"

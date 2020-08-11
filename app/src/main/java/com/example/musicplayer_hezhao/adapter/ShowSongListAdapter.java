@@ -64,7 +64,6 @@ public class ShowSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mContext.startActivity(intent);
                 }
             });
-
         }
     }
 

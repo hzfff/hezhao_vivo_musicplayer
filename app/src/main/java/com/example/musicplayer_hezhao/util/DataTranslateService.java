@@ -11,6 +11,8 @@ import com.example.musicplayer_hezhao.model.PhoneEmail;
 import com.example.musicplayer_hezhao.model.ResponseCheck;
 import com.example.musicplayer_hezhao.model.SearchMusicCallback;
 import com.example.musicplayer_hezhao.model.VedioInformation;
+import com.example.musicplayer_hezhao.model.findsongs;
+import com.example.musicplayer_hezhao.model.huayu;
 
 import java.util.List;
 
@@ -57,4 +59,8 @@ public interface DataTranslateService {
     Call<HotMusic> queryhotmusic();
     @GET("search?")
     Call<SearchMusicCallback> searchmusic(@Query("keywords") String keywords);
+    @GET("list?type=1&area=8&limit=30")
+    Call<huayu> findhuayu();
+    @GET("song?")
+    Call<findsongs> findsongs(@Query("id")int id);
 }
