@@ -371,6 +371,11 @@ public void onclick(){
 
     }
 
+    @Override
+    public void doResult12(List<String> lyrclist) {
+
+    }
+
     private Handler mhandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

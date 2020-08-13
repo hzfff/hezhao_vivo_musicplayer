@@ -143,4 +143,9 @@ public class HuaYuFragment extends Fragment implements NeteaseCloudMusicApiTool.
     public void doResult11(findsongs findsongs) {
 
     }
+
+    @Override
+    public void doResult12(List<String> lyrclist) {
+
+    }
 }

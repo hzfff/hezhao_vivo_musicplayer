@@ -77,7 +77,7 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
                     mv_adapter = new MV_Adapter(VedioDataList, mContext);
                     recyclerView.setAdapter(mv_adapter);
                     recyclerView.setLayoutManager(linearLayoutManager);
-                    break;
+                break;
                 default:
                     break;
             }
@@ -104,7 +104,7 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
         neteaseCloudMusicApiTool = new NeteaseCloudMusicApiTool();
         linearLayoutManager=new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        swipeRefreshLayout=new SwipeRefreshLayout(getContext());
+        swipeRefreshLayout=view.findViewById(R.id.swiprefreshlayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -112,7 +112,7 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        neteaseCloudMusicApiTool.getVedioInformation(20, this);
+        neteaseCloudMusicApiTool.getVedioInformation(10, this);
     }
 
     @Override
@@ -175,6 +175,11 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
 
     @Override
     public void doResult11(findsongs findsongs) {
+
+    }
+
+    @Override
+    public void doResult12(List<String> lyrclist) {
 
     }
 }

@@ -6,41 +6,39 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_msg"
-            android:title="我的消息"/>
+            android:title="我的消息" />
         <item
             android:id="@+id/nav_listening"
-            android:title="在线听歌免流量"/>
+            android:title="在线听歌免流量" />
         <item
             android:id="@+id/nav_stop"
-            android:title="定时停止播放"/>
+            android:title="定时停止播放" />
         <item
             android:id="@+id/change_background"
-            android:title="更换桌面主题"/>
+            android:title="更换桌面主题" />
     </group>
 
     <item android:title="开发者信息">
         <menu>
             <item
                 android:id="@+id/nav_developer_msg"
-                android:title="开发者信息"/>
+                android:title="开发者信息" />
         </menu>
     </item>
     <item android:title="周边">
         <menu>
             <item
                 android:id="@+id/nav_store"
-                android:title="商城"/>
+                android:title="商城" />
             <item
                 android:id="@+id/nav_order"
-                android:title="我的订单"/>
+                android:title="我的订单" />
             <item
-            android:id="@+id/nav_show"
-            android:title="演出"
-            />
+                android:id="@+id/nav_show"
+                android:title="演出" />
             <item
                 android:id="@+id/nav_price"
-                android:title="优惠券"
-                />
+                android:title="优惠券" />
         </menu>
-</item>
+    </item>
 </menu>

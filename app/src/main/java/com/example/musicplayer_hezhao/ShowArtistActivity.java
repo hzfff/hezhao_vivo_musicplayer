@@ -191,4 +191,9 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
         });
         handler.sendMessage(message);
     }
+
+    @Override
+    public void doResult12(List<String> lyrclist) {
+
+    }
 }

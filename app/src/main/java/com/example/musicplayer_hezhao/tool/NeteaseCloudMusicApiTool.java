@@ -15,6 +15,7 @@ import com.example.musicplayer_hezhao.model.SongID;
 import com.example.musicplayer_hezhao.model.VedioInformation;
 import com.example.musicplayer_hezhao.model.findsongs;
 import com.example.musicplayer_hezhao.model.huayu;
+import com.example.musicplayer_hezhao.model.klyic;
 import com.example.musicplayer_hezhao.util.DataTranslateService;
 
 import java.io.CharArrayReader;
@@ -113,6 +114,38 @@ public class NeteaseCloudMusicApiTool {
                 List<Num> list = body.getData();
                 if (callback != null) {
                     callback.doResult6(list);
+                }
+            }
+        }).start();
+    }
+
+    //获取歌词
+    public void getmusiclyric( Callback callback, List<SongID>songIDList) throws IOException {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://music.eleuu.com/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                        .build();
+                List<String>list=new ArrayList<>();
+                DataTranslateService api = retrofit.create(DataTranslateService.class);
+                for(int i=0;i<songIDList.size();i++) {
+                    Call<klyic> dataCall = api.findlyric(songIDList.get(i).getId());
+                    try {
+                        Response<klyic> data = dataCall.execute();
+                        if(data.body().getQfy()){
+                            list.add("");
+                        }else {
+                            list.add(data.body().getLrc().getLyric());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (callback != null) {
+                    callback.doResult12(list);
                 }
             }
         }).start();
@@ -291,9 +324,9 @@ public class NeteaseCloudMusicApiTool {
                         .build();
                 DataTranslateService api = retrofit.create(DataTranslateService.class);
                 Call<HotMusic> dataCall = api.queryhotmusic();
-                Response<HotMusic> data =null;
+                Response<HotMusic> data = null;
                 try {
-                     data = dataCall.execute();
+                    data = dataCall.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -305,7 +338,7 @@ public class NeteaseCloudMusicApiTool {
         }).start();
     }
 
-    public void searchmsuci(String musicname,Callback callback){
+    public void searchmsuci(String musicname, Callback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -316,7 +349,7 @@ public class NeteaseCloudMusicApiTool {
                         .build();
                 DataTranslateService api = retrofit.create(DataTranslateService.class);
                 Call<SearchMusicCallback> dataCall = api.searchmusic(musicname);
-                Response<SearchMusicCallback> data =null;
+                Response<SearchMusicCallback> data = null;
                 try {
                     data = dataCall.execute();
                 } catch (IOException e) {
@@ -329,7 +362,7 @@ public class NeteaseCloudMusicApiTool {
         }).start();
     }
 
-    public void findHuYu(Callback callback){
+    public void findHuYu(Callback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -340,7 +373,7 @@ public class NeteaseCloudMusicApiTool {
                         .build();
                 DataTranslateService api = retrofit.create(DataTranslateService.class);
                 Call<huayu> dataCall = api.findhuayu();
-                Response<huayu> data =null;
+                Response<huayu> data = null;
                 try {
                     data = dataCall.execute();
                 } catch (IOException e) {
@@ -352,8 +385,8 @@ public class NeteaseCloudMusicApiTool {
             }
         }).start();
     }
-    public void findsinger(Callback callback,int id)
-    {
+
+    public void findsinger(Callback callback, int id) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -364,7 +397,7 @@ public class NeteaseCloudMusicApiTool {
                         .build();
                 DataTranslateService api = retrofit.create(DataTranslateService.class);
                 Call<findsongs> dataCall = api.findsongs(id);
-                Response<findsongs> data =null;
+                Response<findsongs> data = null;
                 try {
                     data = dataCall.execute();
                 } catch (IOException e) {
@@ -376,12 +409,13 @@ public class NeteaseCloudMusicApiTool {
             }
         }).start();
     }
+
     public interface Callback {
         void doResult1(List<SongID> obj);
 
         void doResult2(List<String> obj);
 
-        void doResult3(List<MusicInfo> obj);
+        void doResult3(List<MusicInfo> obj) ;
 
         void doResult4(List<String> obj);
 
@@ -398,5 +432,7 @@ public class NeteaseCloudMusicApiTool {
         void doResult10(huayu huayu);
 
         void doResult11(findsongs findsongs);
+
+        void doResult12(List<String> lyrclist);
     }
 }

@@ -27,6 +27,7 @@ import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,6 +52,7 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
     private Toolbar toolbar;
     private NeteaseCloudMusicApiTool neteaseCloudMusicApiTool;
     private LinearLayoutManager linearLayoutManager;
+    private List<String>Lyriclist=new ArrayList<>();
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -115,26 +117,14 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
     }
 
     @Override
-    public void doResult3(List<MusicInfo> obj) {
+    public void doResult3(List<MusicInfo> obj)  {
 
         music_Info = obj;
-        recyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter=new ShowSongListAdapter(song_ID,song_List,music_Info,getApplicationContext());
-                linearLayoutManager=new LinearLayoutManager(ShowSongList.this);
-                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL) ;
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                adapter.setOnItemClickListener(new ShowSongListAdapter.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(View view, int position) {
-
-                    }
-                });
-            }
-        });
-
+        try {
+            neteaseCloudMusicApiTool.getmusiclyric(this,song_ID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -175,6 +165,27 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
     @Override
     public void doResult11(findsongs findsongs) {
 
+    }
+
+    @Override
+    public void doResult12(List<String> lyrclist) {
+        Lyriclist=lyrclist;
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                adapter=new ShowSongListAdapter(Lyriclist,song_ID,song_List,music_Info,getApplicationContext());
+                linearLayoutManager=new LinearLayoutManager(ShowSongList.this);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL) ;
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                adapter.setOnItemClickListener(new ShowSongListAdapter.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                    }
+                });
+            }
+        });
     }
 
 }

@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
+        MusicPlayerViewPager.setOffscreenPageLimit(3);
         MusicPlayerViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -155,9 +156,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onPageSelected(int position) {
                 if (position == 0) {
                     mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic4));
-                } else if (position==1){
+                } else if (position == 1) {
                     mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic5));
-                }else{
+                } else {
                     mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
                 }
                 mymusic_text.setTextSize(16);
@@ -265,16 +266,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
-            ArrayList<Music>list = (ArrayList<Music>) bundle.getSerializable("MusicList");
+            ArrayList<Music> list = (ArrayList<Music>) bundle.getSerializable("MusicList");
             musicList.clear();
-            for(int i=0;i<list.size();i++)
-            {
+            for (int i = 0; i < list.size(); i++) {
                 musicList.add(list.get(i));
             }
-            LinearLayoutManager manager= (LinearLayoutManager) recyclerView.getLayoutManager();
-            adapter= (playmusicadapter) recyclerView.getAdapter();
+            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            adapter = (playmusicadapter) recyclerView.getAdapter();
             adapter.notifyDataSetChanged();
-           // int postion = bundle.getInt("position");
+            // int postion = bundle.getInt("position");
             manager.scrollToPositionWithOffset(0, 0);
             manager.setStackFromEnd(true);
 
@@ -287,13 +287,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int num = bundle.getInt("MusicNum");
             int postion = recyclerView.getOnPagerPosition();
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            manager.scrollToPositionWithOffset(num , 0);
+            manager.scrollToPositionWithOffset(num, 0);
             manager.setStackFromEnd(true);
         }
     };
 
     public void initView() {
-        context=getApplicationContext();
+        context = getApplicationContext();
         musicConnect = new MyServiceConnect();
         Intent intent = new Intent(MainActivity.this, MusicService.class);
         bindService(intent, musicConnect, BIND_AUTO_CREATE);
@@ -498,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.find_vedio:
                 Log.d("hezhao", "FINDVEDIO");
                 MusicPlayerViewPager.setCurrentItem(Num_FindVedio, true);
-               mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
+                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
                 break;
             default:
                 break;

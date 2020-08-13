@@ -210,4 +210,9 @@ public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMu
     public void doResult11(findsongs findsongs) {
 
     }
+
+    @Override
+    public void doResult12(List<String> lyrclist) {
+
+    }
 }

@@ -27,13 +27,17 @@ import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.example.musicplayer_hezhao.Service.ListService;
 import com.example.musicplayer_hezhao.model.MusicInfo;
+import com.example.musicplayer_hezhao.tool.LrcRow;
+import com.example.musicplayer_hezhao.tool.LrcRows;
+import com.example.musicplayer_hezhao.tool.LrcView;
+import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
 import java.util.List;
 
 /**
  * Created by 11120555 on 2020/8/4 8:56
  */
-public class PlayMusicListActivity extends AppCompatActivity {
+public class PlayMusicListActivity extends AppCompatActivity implements LrcView.MedCallBack {
     private List<String> MusicUrl;
     private List<MusicInfo> MusicInfo;
     private ImageView imageView1;
@@ -58,7 +62,9 @@ public class PlayMusicListActivity extends AppCompatActivity {
     private PlayMusicConn playMusicConn;
     private boolean is_playing = false;
     private boolean index = false;
-
+    private static List<String>Lyriclist;
+    private static LrcView lrcView;
+    private static LrcRows lrcRows=new LrcRows();
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -69,6 +75,7 @@ public class PlayMusicListActivity extends AppCompatActivity {
     }
 
     public void initview() {
+        lrcView=findViewById(R.id.lyric);
         textView1 = findViewById(R.id.text1);
         textView2 = findViewById(R.id.text2);
         textView3 = findViewById(R.id.played_time);
@@ -89,12 +96,16 @@ public class PlayMusicListActivity extends AppCompatActivity {
         intent = getIntent();
         bundle = intent.getExtras();
         MusicUrl = (List<String>) bundle.getSerializable("musicUrl");
+        Lyriclist= (List<String>) bundle.getSerializable("Lyriclist");
         MusicInfo = (List<com.example.musicplayer_hezhao.model.MusicInfo>) bundle.getSerializable("musicInfo");
         position = bundle.getInt("position");
     }
 
     public void initdata() {
         playMusicConn = new PlayMusicConn();
+        if(listservice!=null) {
+            listservice.init();
+        }
         Intent intent = new Intent(getApplicationContext(), ListService.class);
         boolean test= getApplicationContext().bindService(intent, playMusicConn, BIND_AUTO_CREATE);
         textView1.setText(MusicInfo.get(position).getSongs()[0].getName());
@@ -105,6 +116,10 @@ public class PlayMusicListActivity extends AppCompatActivity {
         animator.setDuration(10000);//动画旋转一周的时间为10秒
         animator.setInterpolator(new LinearInterpolator());//匀速
         animator.setRepeatCount(-1);
+
+        List<LrcRow>list=lrcRows.BuildList(getApplicationContext(),Lyriclist.get(position));
+        lrcView.setLrc(list);
+        lrcView.setCall(this);
         inittime();
         seekBar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);//设置滑块颜色、样式
         seekBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);//设置进度条颜色、样式
@@ -220,6 +235,11 @@ public class PlayMusicListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void call(long time) {
+
+    }
+
     class PlayMusicConn implements ServiceConnection {
 
         @Override
@@ -272,6 +292,7 @@ public class PlayMusicListActivity extends AppCompatActivity {
                 strSecond = second + " ";
             }
             textView3.setText(strMinute + ":" + strSecond);
+            lrcView.LrcToPlayer(currentPosition);
         }
     };
 }

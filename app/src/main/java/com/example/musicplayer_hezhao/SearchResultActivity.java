@@ -26,6 +26,7 @@ import com.example.musicplayer_hezhao.model.findsongs;
 import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,14 +112,12 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
     @Override
     public void doResult3(List<MusicInfo> obj) {
         musicInfo = obj;
-        Intent intent = new Intent(getApplicationContext(), PlayMusicListActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("musicUrl", (Serializable) listurl);
-        bundle.putSerializable("musicInfo", (Serializable) musicInfo);
-        bundle.putInt("position",0);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-        intent.putExtras(bundle);
-        startActivity(intent);
+        try {
+            neteaseCloudMusicApiTool.getmusiclyric(this,listnum);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -159,5 +158,19 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
     @Override
     public void doResult11(findsongs findsongs) {
 
+    }
+
+    @Override
+    public void doResult12(List<String> lyrclist) {
+
+        Intent intent = new Intent(getApplicationContext(), PlayMusicListActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("musicUrl", (Serializable) listurl);
+        bundle.putSerializable("musicInfo", (Serializable) musicInfo);
+        bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
+        bundle.putInt("position",0);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

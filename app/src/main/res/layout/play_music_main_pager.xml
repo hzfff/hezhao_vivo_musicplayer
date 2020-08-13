@@ -84,10 +84,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/play_music_pager_up">
-            <com.example.musicplayer_hezhao.tool.LrcView
+
+                <com.example.musicplayer_hezhao.tool.LrcView
                 android:id="@+id/lyric"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
         </RelativeLayout>
     </RelativeLayout>
 

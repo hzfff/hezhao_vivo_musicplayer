@@ -27,7 +27,7 @@ public class ListService extends Service {
     private ContentResolver contentResolver;
     private MusicControl musicControl = new MusicControl();
     private List<String> MusicList = new ArrayList<>();
-    private MediaPlayer mediaPlayer;
+    private static MediaPlayer mediaPlayer=new MediaPlayer();
     private Timer timer;
     private int position;
 
@@ -36,7 +36,7 @@ public class ListService extends Service {
         return new MusicControl();
     }
 
-    public void initplayer() throws IOException {
+    public  void initplayer() throws IOException {
         mediaPlayer.reset();
         mediaPlayer.prepare();
     }
@@ -75,8 +75,15 @@ public class ListService extends Service {
         }
     }
 
-    public class MusicControl extends Binder {//Binder是一种跨进程的通信方式
+    public  class MusicControl extends Binder {//Binder是一种跨进程的通信方式
 
+        public void init(){
+            try {
+                initplayer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         public void play(List<String>MusicUrl,int position ) {//String path
             Uri uri = Uri.parse(MusicUrl.get(position));
             try {

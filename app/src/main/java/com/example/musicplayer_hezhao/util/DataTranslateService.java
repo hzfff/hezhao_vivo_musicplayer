@@ -13,6 +13,7 @@ import com.example.musicplayer_hezhao.model.SearchMusicCallback;
 import com.example.musicplayer_hezhao.model.VedioInformation;
 import com.example.musicplayer_hezhao.model.findsongs;
 import com.example.musicplayer_hezhao.model.huayu;
+import com.example.musicplayer_hezhao.model.klyic;
 
 import java.util.List;
 
@@ -63,4 +64,7 @@ public interface DataTranslateService {
     Call<huayu> findhuayu();
     @GET("song?")
     Call<findsongs> findsongs(@Query("id")int id);
+
+    @GET("lyric?")
+    Call<klyic> findlyric(@Query("id")String id);
 }

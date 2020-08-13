@@ -17,6 +17,7 @@ import com.example.musicplayer_hezhao.model.MusicInfo;
 import com.example.musicplayer_hezhao.model.SongID;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +30,12 @@ public class ShowSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context mContext;
     private OnItemClickListener onItemClickListener;
     private static View view;
-
-    public ShowSongListAdapter(List<SongID> song_ID, List<String> song_list, List<MusicInfo> music_Info, Context context) {
+    private List<String>Lyriclist=new ArrayList<>();
+    public ShowSongListAdapter(List<String>lyriclist,List<SongID> song_ID, List<String> song_list, List<MusicInfo> music_Info, Context context) {
         Song_ID = song_ID;
         Song_List = song_list;
         Music_Info = music_Info;
+        Lyriclist=lyriclist;
         mContext = context;
     }
 
@@ -57,6 +59,7 @@ public class ShowSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Bundle bundle=new Bundle();
                     bundle.putSerializable("musicUrl", (Serializable) Song_List);
                     bundle.putSerializable("musicInfo", (Serializable) Music_Info);
+                    bundle.putSerializable("Lyriclist", (Serializable) Lyriclist);
                     bundle.putInt("position",position);
                     Intent intent=new Intent(mContext, PlayMusicListActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );

@@ -19,168 +19,201 @@ import java.util.List;
  * Created by 11120555 on 2020/7/17 15:24
  */
 //自定义view处理滚动文件
+import java.util.List;
+
+import android.R.bool;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+
 public class LrcView extends View {
-    private List<LrcBean> list;
-    private Paint gPaint;
-    private Paint hPaint;
-    private int width = 0, height = 0;
-    private int currentPosition = 0;
-    private MediaPlayer player;
-    private int lastPosition = 0;
-    private int highLineColor;
-    private int lrcColor;
-    private int mode = 0;
 
-
-//    LrcView lrcView;
-//    lrcView.setLrc(歌词);
-//    lrcView.setPlayer(player);
-//    lrcView.init;
-
-    public void setHighLineColor(int highLineColor) {
-        this.highLineColor = highLineColor;
-    }
-
-    public void setLrcColor(int lrcColor) {
-        this.lrcColor = lrcColor;
-    }
-
-    public void setMode(int mode) {
-        this.mode = mode;
-    }
-
-    public void setPlayer(MediaPlayer player) {
-        this.player = player;
-    }
-
-    public void setLrc(String lrc) {
-        list = LrcUtil.parseStr2List(lrc);
-    }
+    private Paint paint;//画笔
+    private List<LrcRow> list;//歌词数据源
+    private int nowColor = Color.WHITE;//正在播放的歌词颜色
+    private int normalColor = Color.GRAY;//其他歌词的颜色
+    private int lineColor = Color.WHITE;//分割线及时间显示的颜色
+    private float textSize =50f;//歌词字体的大小
+    private float timeSize = 50f;//时间显示的大小
+    private int lineHeight = 2;//分割线的高度
+    private int marginHeight = 30;//歌词与歌词之间的间隔
+    private int height;//自定义视图的高度
+    private int width;//自定义视图的宽;
+    private int index = 0;//正在播放的歌词的行数
+    private String tipstr = "暂无歌词";//默认情况下的歌词
+    private boolean TouchFlag = false;//手指按下的标志：当手指滑动的时候，界面不进行刷新
+    //回调接口
+    private MedCallBack medCallBack;
+    private float lasty = 0;//最后手指按下的坐标不
 
     public LrcView(Context context) {
-        this(context, null);
+        super(context);
+// TODO Auto-generated constructor stub
     }
 
     public LrcView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     }
 
-    public LrcView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.LrcView);
-        highLineColor = ta.getColor(R.styleable.LrcView_hignLineColor, getResources().getColor(R.color.Red));
-        lrcColor = ta.getColor(R.styleable.LrcView_lrcColor, getResources().getColor(android.R.color.darker_gray));
-        mode = ta.getInt(R.styleable.LrcView_lrcMode, mode);
-        ta.recycle();
-        gPaint = new Paint();
-        gPaint.setAntiAlias(true);
-        gPaint.setColor(lrcColor);
-        gPaint.setTextSize(36);
-        gPaint.setTextAlign(Paint.Align.CENTER);
-        hPaint = new Paint();
-        hPaint.setAntiAlias(true);
-        hPaint.setColor(highLineColor);
-        hPaint.setTextSize(36);
-        hPaint.setTextAlign(Paint.Align.CENTER);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+// TODO Auto-generated method stub
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        height = getMeasuredHeight();
+        width = getMeasuredWidth();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (width == 0 || height == 0) {
-            width = getMeasuredWidth();
-            height = getMeasuredHeight();
+// TODO Auto-generated method stub
+        super.onDraw(canvas);
+
+        paint.reset();//重置画笔
+        paint.setColor(nowColor);
+        paint.setTextSize(textSize);
+        paint.setTextAlign(Align.CENTER);
+
+        if (list == null) {
+            canvas.drawText(tipstr, width / 2, height / 2 - textSize, paint);
+            return;
         }
-        if (list == null || list.size() == 0) {
-            canvas.drawText("暂无歌词", width / 2, height / 2, gPaint);
+        if (list.size() == 0) {
+            canvas.drawText(tipstr, width / 2, height / 2 - textSize, paint);
+            return;
+        }
+//绘制中间正在播放的歌词
+        canvas.drawText(list.get(index).row, width / 2, height / 2 - textSize, paint);
+//绘制中间的分割线
+        paint.reset();
+        paint.setColor(lineColor);
+
+        if (TouchFlag) {
+            canvas.drawLine(0, height / 2 - textSize, width, height / 2 - textSize + lineHeight, paint);
+            paint.setTextSize(timeSize);
+            paint.setTextAlign(Align.LEFT);
+            canvas.drawText(list.get(index).str_timer, 0, height / 2, paint);
+        }
+//绘制普通的歌词
+        paint.reset();
+        paint.setColor(normalColor);
+        paint.setTextSize(textSize);
+        paint.setTextAlign(Align.CENTER);
+//绘制正在播放歌词上面的歌词
+        int normalIndex = 0;
+        int rowY = 0;//每行歌词的Y值
+        normalIndex = index - 1;
+        rowY = (int) (height / 2 - textSize * 2 - marginHeight);
+
+        while (normalIndex >= 0 && rowY > -textSize) {
+
+            canvas.drawText(list.get(normalIndex).row, width / 2, rowY, paint);
+            normalIndex--;
+            rowY = (int) (rowY - textSize - marginHeight);
+        }
+//2.绘制播放歌词下面的歌词
+        normalIndex = index + 1;
+        rowY = (int) (height / 2 + marginHeight);
+        while (normalIndex < list.size() && rowY < (height + textSize)) {
+            canvas.drawText(list.get(normalIndex).row, width / 2, rowY, paint);
+            normalIndex++;
+            rowY = (int) (rowY + marginHeight + textSize);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (list == null) {
+            return true;
+        }
+        if (list.size() == 0) {
+            return true;
+        }
+//手指按下
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            TouchFlag = true;//显示时间和分割线
+            lasty = event.getY();//获取你手按下的Y轴坐标
+
+//手指滑动
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            float nowY = event.getY();//当前手指滑动到的Y值
+            float disY = nowY - lasty;//计算手指滑动的Y轴的距离
+
+//判断滑动的距离跨越几行歌词
+            if (Math.abs(disY) > marginHeight) {
+                int num = (int) (Math.abs(disY) / (marginHeight + textSize));
+                if (num >= 1) {
+                    if (disY < 0) {
+//快进
+                        index += num;
+                        index = Math.min(list.size() - 1, index);
+                    } else if (disY > 0) {
+//快退
+                        index -= num;
+                        index = Math.max(0, index);
+                    }
+                }
+            }
+            lasty = nowY;
+//手指抬起
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            TouchFlag = false;
+
+//调用接口
+            if (medCallBack != null) {
+                medCallBack.call(list.get(index).time);
+            }
+        }
+        invalidate();//刷新布局
+        return true;
+    }
+
+
+    //查找歌词的方法,根据播放的进度跟新歌词 ，根据传入的参数进行当前歌曲进度的跳播
+    public void LrcToPlayer(long time) {
+        if (list == null) {
+            return;
+        }
+        if (list.size() == 0) {
+            return;
+        }
+        if (TouchFlag) {
             return;
         }
 
-        getCurrentPosition();
-        int currentMillis = player.getCurrentPosition();
-        drawLrc2(canvas, currentMillis);
-        long start = list.get(currentPosition).getStart();
-        float v = (currentMillis - start) > 500 ? currentPosition * 80 : lastPosition * 80 + (currentPosition - lastPosition) * 80 * ((currentMillis - start) / 500f);
-        setScrollY((int) v);
-        if (getScrollY() == currentPosition * 80) {
-            lastPosition = currentPosition;
-        }
-        postInvalidateDelayed(100);
-    }
-
-    private void drawLrc2(Canvas canvas, int currentMillis) {
-        if (mode == 0) {
-            for (int i = 0; i < list.size(); i++) {
-                if (i == currentPosition) {
-                    canvas.drawText(list.get(i).getLrc(), width / 2, height / 2 + 80 * i, hPaint);
-                } else {
-                    canvas.drawText(list.get(i).getLrc(), width / 2, height / 2 + 80 * i, gPaint);
-                }
+//遍历整个歌词集合，寻找time的插入区间
+        for (int i = 0; i < list.size(); i++) {
+            LrcRow lrcRow = list.get(i);//当前的歌词对象
+            LrcRow lrcRow2 = (i + 1) >= list.size() ? null : list.get(i + 1);
+            if (time > lrcRow.time && lrcRow2 != null && time < lrcRow2.time) {
+                index = i;
+                break;
             }
-        } else {
-            for (int i = 0; i < list.size(); i++) {
-                canvas.drawText(list.get(i).getLrc(), width / 2, height / 2 + 80 * i, gPaint);
-            }
-            String highLineLrc = list.get(currentPosition).getLrc();
-            int highLineWidth = (int) gPaint.measureText(highLineLrc);
-            int leftOffset = (width - highLineWidth) / 2;
-            LrcBean lrcBean = list.get(currentPosition);
-            long start = lrcBean.getStart();
-            long end = lrcBean.getEnd();
-            int i = (int) ((currentMillis - start) * 1.0f / (end - start) * highLineWidth);
-            if (i > 0) {
-                Bitmap textBitmap = Bitmap.createBitmap(i, 80, Bitmap.Config.ARGB_8888);
-                Canvas textCanvas = new Canvas(textBitmap);
-                textCanvas.drawText(highLineLrc, highLineWidth / 2, 80, hPaint);
-                canvas.drawBitmap(textBitmap, leftOffset, height / 2 + 80 * (currentPosition - 1), null);
+            if (lrcRow2 == null) {
+                index = list.size() - 1;
             }
         }
-    }
-
-    public void init() {
-        currentPosition = 0;
-        lastPosition = 0;
-        setScrollY(0);
         invalidate();
     }
 
-    private void drawLrc1(Canvas canvas) {
-        String text = list.get(currentPosition).getLrc();
-        canvas.drawText(text, width / 2, height / 2, hPaint);
-
-        for (int i = 1; i < 10; i++) {
-            int index = currentPosition - i;
-            if (index > -1) {
-                canvas.drawText(list.get(index).getLrc(), width / 2, height / 2 - 80 * i, gPaint);
-            }
-        }
-        for (int i = 1; i < 10; i++) {
-            int index = currentPosition + i;
-            if (index < list.size()) {
-                canvas.drawText(list.get(index).getLrc(), width / 2, height / 2 + 80 * i, gPaint);
-            }
-        }
+    public interface MedCallBack {
+        //接口回调吧时间回调到主啊抽屉activity中去更新歌曲播放进度
+        public void call(long time);
     }
 
-    private void getCurrentPosition() {
-        try {
-            int currentMillis = player.getCurrentPosition();
-            if (currentMillis < list.get(0).getStart()) {
-                currentPosition = 0;
-                return;
-            }
-            if (currentMillis > list.get(list.size() - 1).getStart()) {
-                currentPosition = list.size() - 1;
-                return;
-            }
-            for (int i = 0; i < list.size(); i++) {
-                if (currentMillis >= list.get(i).getStart() && currentMillis < list.get(i).getEnd()) {
-                    currentPosition = i;
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            postInvalidateDelayed(100);
-        }
+    //设置歌词的方法
+    public void setLrc(List<LrcRow> list) {
+        this.list = list;
+    }
+
+    public void setCall(MedCallBack medCallBack) {
+        this.medCallBack = medCallBack;
     }
 }
-
