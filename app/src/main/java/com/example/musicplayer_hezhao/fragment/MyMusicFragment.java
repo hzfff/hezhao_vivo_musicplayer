@@ -27,8 +27,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -38,10 +40,12 @@ import com.example.musicplayer_hezhao.LocalMusic;
 import com.example.musicplayer_hezhao.LoginMainActivity;
 import com.example.musicplayer_hezhao.R;
 import com.example.musicplayer_hezhao.adapter.MyMusicBottomAdapter;
+import com.example.musicplayer_hezhao.adapter.MyMusicShowAdapter;
 import com.example.musicplayer_hezhao.util.MusicListDialog;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.tabs.TabLayout;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -75,8 +79,9 @@ public class MyMusicFragment extends BaseFragment implements View.OnClickListene
     private ImageView detail_img;
     private final String TAG = "HeZhao";
     private static SwipeRefreshLayout swipeRefreshLayout;
-
-
+    private static List<Integer> imageViews = new ArrayList<>();
+    private static List<String> titles = new ArrayList<>();
+    private MyMusicShowAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mymusic_layout, null);
@@ -92,13 +97,24 @@ public class MyMusicFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle bundle) {
+        recyclerView=view.findViewById(R.id.recyclerview);
+        titles.add("我喜欢的音乐");
+        titles.add("私人FM");
+        titles.add("古典音乐推荐");
+        titles.add("ACG专区");
+        imageViews.add(R.mipmap.pic1);
+        imageViews.add(R.mipmap.pic2);
+        imageViews.add(R.mipmap.pic4);
+        imageViews.add(R.mipmap.pic7);
+        adapter=new MyMusicShowAdapter(titles,imageViews,getContext());
+        LinearLayoutManager  linearLayoutManager=new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
         swipeRefreshLayout = view.findViewById(R.id.swiprefreshlayout);
         imageView = view.findViewById(R.id.image2);
-        Glide.with(this).load(R.mipmap.pic5).
-                apply(RequestOptions.
-                        bitmapTransform(new BlurTransformation(18, 3))).into(imageView);
         detail_img = view.findViewById(R.id.image_title);
-        My_favorite_music = view.findViewById(R.id.text1);
+      //  My_favorite_music = view.findViewById(R.id.text1);
         loadmusic = view.findViewById(R.id.downloadmusic_text);
         Drawable drawable = getResources().getDrawable(R.mipmap.download);
         drawable.setBounds(0, 0, 80, 80);
@@ -125,27 +141,20 @@ public class MyMusicFragment extends BaseFragment implements View.OnClickListene
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, new MySelectFragment());
         fragmentTransaction.commit();
-//        myMusicBottomAdapter = new MyMusicBottomAdapter(list_img, list_induction, list_number, getContext());
-        // recyclerView = view.findViewById(R.id.my_music_recyclerview);
-        // recyclerView.setAdapter(myMusicBottomAdapter);
         creatmusic_text = view.findViewById(R.id.create_music_text);
         selectmusic_text = view.findViewById(R.id.collect_music_text);
         gyroscopeObserver = new GyroscopeObserver();
         gyroscopeObserver.setMaxRotateRadian(Math.PI / 9);
-        PanoramaImageView panoramaImageView = view.findViewById(R.id.favorite_image_view1);
-//        PanoramaImageView panoramaImageView1 = view.findViewById(R.id.favorite_image_view2);
-//        PanoramaImageView panoramaImageView2 = view.findViewById(R.id.favorite_image_view3);
-        //      panoramaImageView1.setGyroscopeObserver(gyroscopeObserver);
-        panoramaImageView.setGyroscopeObserver(gyroscopeObserver);
-//        panoramaImageView2.setGyroscopeObserver(gyroscopeObserver);
+        //TODO
+   //     ImageView panoramaImageView = view.findViewById(R.id.favorite_image_view1);
         creatmusic_text.setOnClickListener(this);
         creatmusic_text.setSelected(true);
         local_music.setOnClickListener(this);
         loadmusic.setOnClickListener(this);
         recent_listen.setOnClickListener(this);
         selectmusic_text.setOnClickListener(this);
-        My_favorite_music.setOnClickListener(this);
-        panoramaImageView.setOnClickListener(this);
+     //   My_favorite_music.setOnClickListener(this);
+    //    panoramaImageView.setOnClickListener(this);
         detail_img.setOnClickListener(this);
         // Personal_FM.setOnClickListener(this);
         login_name.setOnClickListener(new View.OnClickListener() {
@@ -208,13 +217,6 @@ public static  void refresh(){
         gyroscopeObserver.unregister();
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_toolbar, menu);
-        super.onCreateOptionsMenu(menu, menuInflater);
-    }
-
     @Override
     public void onClick(View view) {
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -241,10 +243,11 @@ public static  void refresh(){
                 Intent intent3 = new Intent(getActivity(), HistoryMusic.class);
                 startActivity(intent3);
                 break;
-            case R.id.favorite_image_view1:
-                Intent intent4 = new Intent(getActivity(), My_Favorite_Music.class);
-                startActivity(intent4);
-                break;
+                //TODO
+//           // case R.id.favorite_image_view1:
+//                Intent intent4 = new Intent(getActivity(), My_Favorite_Music.class);
+//                startActivity(intent4);
+//                break;
             default:
                 break;
         }

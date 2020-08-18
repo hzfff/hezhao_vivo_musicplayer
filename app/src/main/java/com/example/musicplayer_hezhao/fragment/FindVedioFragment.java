@@ -105,11 +105,26 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
         linearLayoutManager=new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         swipeRefreshLayout=view.findViewById(R.id.swiprefreshlayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    //这里获取数据的逻辑
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
-            public void onRefresh() {
-                //这里获取数据的逻辑
-                swipeRefreshLayout.setRefreshing(false);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
         neteaseCloudMusicApiTool.getVedioInformation(10, this);

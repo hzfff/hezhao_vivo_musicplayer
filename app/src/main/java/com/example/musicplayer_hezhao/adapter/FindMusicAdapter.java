@@ -79,7 +79,7 @@ public class FindMusicAdapter extends RecyclerView.Adapter<FindMusicAdapter.Find
 
         public FindMusicViewHolder(@NonNull View itemView) {
             super(itemView);
-            music_imageView = view.findViewById(R.id.image);
+            music_imageView = view.findViewById(R.id.imagess);
             music_describe = view.findViewById(R.id.text);
             music_listen_num = view.findViewById(R.id.text1);
         }

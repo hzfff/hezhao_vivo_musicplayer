@@ -6,21 +6,22 @@
     <com.example.musicplayer_hezhao.util.RoundImageView
         android:id="@+id/my_music_img"
         android:scaleType="centerCrop"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:onClick="onClick"/>
     <TextView
         android:layout_toRightOf="@+id/my_music_img"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="25dp"
         android:textColor="@color/drak"
         android:id="@+id/my_music_text"
         android:textStyle="bold"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
+        android:layout_marginRight="10dp"
+        android:textSize="12dp"
         android:onClick="onClick"/>
     <TextView
         android:id="@+id/my_music_number"
@@ -28,8 +29,8 @@
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/my_music_img"
         android:layout_below="@+id/my_music_text"
-        android:layout_width="match_parent"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:textColor="@color/drak"
-        android:textSize="11dp"/>
+        android:textSize="10dp"/>
 </RelativeLayout>

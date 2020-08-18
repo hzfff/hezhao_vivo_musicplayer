@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,8 +64,7 @@ public class MySelectFragment extends BaseFragment {
     public void initdata() {
         if(UserName!=null) {
             musiclistModel = musicControl.QueryMusicList(UserName);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(),2);
             recyclerView.setLayoutManager(linearLayoutManager);
             myMusicBottomAdapter = new MyMusicBottomAdapter(musiclistModel, getContext());
             recyclerView.setAdapter(myMusicBottomAdapter);

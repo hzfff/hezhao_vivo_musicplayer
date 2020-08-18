@@ -4,41 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+<!--    <TextView-->
+<!--        android:id="@+id/text1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="20dp"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:textColor="@color/drak"-->
+<!--        android:textStyle="bold"-->
+<!--        android:text="我喜欢的音乐"-->
+<!--        android:textSize="15dp" />-->
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/drak"
-        android:textStyle="bold"
-        android:text="我喜欢的音乐"
-        android:textSize="15dp" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:gravity="left|center"
-        android:layout_below="@+id/text1">
-        <com.example.musicplayer_hezhao.util.ChangeImageView
-            android:id="@+id/favorite_image_view1"
-            android:layout_width="180dp"
-            android:layout_height="170dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/pic17"
-            app:piv_enablePanoramaMode="true"
-            app:piv_invertScrollDirection="false"
-            app:piv_show_scrollbar="true" />
-        <com.example.musicplayer_hezhao.util.ChangeImageView
-            android:layout_width="180dp"
-            android:layout_height="170dp"
-            android:background="@color/drak"
-            android:layout_marginLeft="15dp"
-            android:alpha="0.2"
-            android:layout_marginTop="10dp"/>
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="180dp"-->
+<!--        android:gravity="left|center"-->
+<!--        android:layout_below="@+id/text1">-->
+<!--        <ImageView-->
+<!--            android:id="@+id/favorite_image_view1"-->
+<!--            android:layout_width="180dp"-->
+<!--            android:layout_height="170dp"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@mipmap/pic17" />-->
+<!--        <com.example.musicplayer_hezhao.util.ChangeImageView-->
+<!--            android:layout_width="180dp"-->
+<!--            android:layout_height="170dp"-->
+<!--            android:background="@color/drak"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:alpha="0.2"-->
+<!--            android:layout_marginTop="10dp"/>-->
 <!--        <com.example.musicplayer_hezhao.util.ChangeImageView-->
 <!--            android:id="@+id/favorite_image_view2"-->
 <!--            android:layout_width="110dp"-->
@@ -98,5 +98,5 @@
 <!--            android:text="ACG专区"-->
 <!--            android:textSize="15dp"-->
 <!--            android:textStyle="bold" />-->
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 </RelativeLayout>

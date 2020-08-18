@@ -81,7 +81,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.0'
     implementation 'com.jakewharton:butterknife-compiler:10.2.0'
 
-
+    compile 'com.jaeger.statusbaruitl:library:1.0.0'
 //
 //
 //    //ijkplayer引入

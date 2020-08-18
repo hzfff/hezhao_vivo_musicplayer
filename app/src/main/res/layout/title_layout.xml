@@ -4,7 +4,8 @@
     android:id="@+id/title_layout"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/Red">
 
     <RelativeLayout
         android:layout_width="40dp"
@@ -14,7 +15,13 @@
             android:id="@+id/mtoolbar"
             android:fitsSystemWindows="true"
             android:layout_width="40dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/ic_menu"/>
+        </androidx.appcompat.widget.Toolbar>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/MyMusic"
@@ -87,7 +94,7 @@
             android:layout_marginTop="15dp"
             android:layout_alignParentRight="true"
             android:onClick="onClick"
-            android:src="@mipmap/search"></ImageView>
+            android:src="@mipmap/actionbar_search"></ImageView>
     </RelativeLayout>
 
 </LinearLayout>

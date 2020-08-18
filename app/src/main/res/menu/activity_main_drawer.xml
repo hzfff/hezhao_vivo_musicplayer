@@ -1,44 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_msg"
-            android:title="我的消息" />
+            android:id="@+id/nav_changes"
+            android:icon="@drawable/music_note"
+            android:title="均衡器" />
+        <item
+            android:id="@+id/nav_change"
+            android:icon="@drawable/settings"
+            android:title="设置" />
+    </group>
+    <group android:checkableBehavior="single">
+        <item android:title="开发者信息">
+            <menu>
+                <item
+                    android:id="@+id/nav_developer_msg"
+                    android:icon="@drawable/information"
+                    android:title="关于" />
+            </menu>
+        </item>
         <item
             android:id="@+id/nav_listening"
-            android:title="在线听歌免流量" />
-        <item
-            android:id="@+id/nav_stop"
-            android:title="定时停止播放" />
-        <item
-            android:id="@+id/change_background"
-            android:title="更换桌面主题" />
+            android:icon="@drawable/bookmark_music"
+            android:title="退出" />
     </group>
 
-    <item android:title="开发者信息">
-        <menu>
-            <item
-                android:id="@+id/nav_developer_msg"
-                android:title="开发者信息" />
-        </menu>
-    </item>
-    <item android:title="周边">
-        <menu>
-            <item
-                android:id="@+id/nav_store"
-                android:title="商城" />
-            <item
-                android:id="@+id/nav_order"
-                android:title="我的订单" />
-            <item
-                android:id="@+id/nav_show"
-                android:title="演出" />
-            <item
-                android:id="@+id/nav_price"
-                android:title="优惠券" />
-        </menu>
-    </item>
 </menu>

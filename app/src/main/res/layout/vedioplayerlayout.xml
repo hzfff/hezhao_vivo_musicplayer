@@ -5,17 +5,17 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="240dp"
         android:gravity="center"
         android:layout_below="@+id/space">
     <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
         android:id="@+id/player_list_video"
-        android:layout_width="350dp"
-        android:layout_height="220dp" />
+        android:layout_width="330dp"
+        android:layout_height="185dp" />
         <TextView
             android:id="@+id/text"
             android:layout_marginTop="5dp"
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/player_list_video"
             android:textSize="18dp"

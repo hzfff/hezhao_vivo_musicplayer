@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,11 +23,14 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
@@ -60,6 +64,7 @@ import com.example.musicplayer_hezhao.menu_work.nav_store_activity;
 import com.example.musicplayer_hezhao.model.Music;
 import com.example.musicplayer_hezhao.util.VpRecyView;
 import com.google.android.material.navigation.NavigationView;
+import com.jaeger.library.StatusBarUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -89,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final int Num_FindMusic = 1;
     private final int Num_FindVedio = 2;
     private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
     private Toolbar toolbar;
     private ImageView backgroundpic;
     private ImageView mymusic_head_pic;
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean index_copy = false;
     private static LinearLayoutManager linearLayoutManager;
     private static Context context;
+    private ImageView imageView;
 
     class MyServiceConnect implements ServiceConnection {
         @Override
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initView();
         initData();
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mDrawerLayout.openDrawer(Gravity.LEFT);
@@ -155,9 +160,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic4));
+                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.White));
                 } else if (position == 1) {
-                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic5));
+                    mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.White));
                 } else {
                     mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
                 }
@@ -312,6 +317,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDrawerLayout = findViewById(R.id.mdrawerLayout);
         MusicUpdateTask task = new MusicUpdateTask();
         task.doInBackground();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            // 有些情况下需要先清除透明flag
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.Red));
+        }
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -331,14 +343,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onDrawerStateChanged(int newState) {
             }
         });
-        mNavigationView = findViewById(R.id.mNavigationView);
         toolbar = findViewById(R.id.mtoolbar);
         setSupportActionBar(toolbar);
-        //setDisplayHomeAsUpEnabled设置为true以后，会显示toolbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        //这里将toolbar的默认显示箭更改为三横线
-        getSupportActionBar().setHomeAsUpIndicator(new DrawerArrowDrawable(getApplicationContext()));
+        imageView = findViewById(R.id.image);
+        imageView.setOnClickListener(this);
+        toolbar.setNavigationOnClickListener(this);
         SerchMusic = findViewById(R.id.SearchMusic);
         MyMusic = findViewById(R.id.MyMusic);
         FindMusic = findViewById(R.id.FindMusic);
@@ -362,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.nav_msg:
+                    case R.id.nav_change:
                         Intent intent1 = new Intent(MainActivity.this, nav_msg_activity.class);
                         startActivity(intent1);
                         break;
@@ -370,34 +379,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent2 = new Intent(MainActivity.this, nav_listening_activity.class);
                         startActivity(intent2);
                         break;
-                    case R.id.nav_stop:
-                        Intent intent3 = new Intent(MainActivity.this, nav_stop_activity.class);
-                        startActivity(intent3);
-                        break;
-                    case R.id.change_background:
-                        Intent intent4 = new Intent(MainActivity.this, change_background_activity.class);
-                        startActivity(intent4);
-                        break;
                     case R.id.nav_developer_msg:
                         Intent intent5 = new Intent(MainActivity.this, nav_developer_msg_activity.class);
                         startActivity(intent5);
                         break;
-                    case R.id.nav_store:
-                        Intent intent6 = new Intent(MainActivity.this, nav_store_activity.class);
-                        startActivity(intent6);
-                        break;
-                    case R.id.nav_order:
-                        Intent intent7 = new Intent(MainActivity.this, nav_order_activity.class);
-                        startActivity(intent7);
-                        break;
-                    case R.id.nav_show:
-                        Intent intent8 = new Intent(MainActivity.this, nav_show_activity.class);
-                        startActivity(intent8);
-                        break;
-                    case R.id.nav_price:
-                        Intent intent9 = new Intent(MainActivity.this, nav_price_activity.class);
-                        startActivity(intent9);
-                        break;
+
                     default:
                         break;
                 }
@@ -450,16 +436,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initData() {
-        mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic4));
         if (titleList == null || titleList.size() == 0) {
             inittitleList();
         }
         if (FragmentList == null || FragmentList.size() == 0) {
             initFragment();
         }
-        Glide.with(this).load(R.mipmap.pic5).
-                apply(RequestOptions.
-                        bitmapTransform(new BlurTransformation(18, 3))).into(backgroundpic);
         MainAdapter = new MainAdapter(getApplicationContext(), getSupportFragmentManager(), FragmentList, titleList);
         MusicPlayerViewPager.setAdapter(MainAdapter);
         MusicPlayerViewPager.setOffscreenPageLimit(0);
@@ -487,18 +469,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.mymusic_text:
                 Log.d("hezhao", "MYMUSIC");
-                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic4));
+                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.White));
                 MusicPlayerViewPager.setCurrentItem(Num_MyMusic, true);
                 break;
             case R.id.find_music:
                 Log.d("hezhao", "FINDMUSIC");
                 MusicPlayerViewPager.setCurrentItem(Num_FindMusic, true);
-                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.pic5));
+                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.White));
                 break;
             case R.id.find_vedio:
                 Log.d("hezhao", "FINDVEDIO");
                 MusicPlayerViewPager.setCurrentItem(Num_FindVedio, true);
-                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.GRAY));
+                mymusic_head_pic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.color.White));
                 break;
             default:
                 break;

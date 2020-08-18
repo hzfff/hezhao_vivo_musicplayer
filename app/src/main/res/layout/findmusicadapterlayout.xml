@@ -19,7 +19,7 @@
         android:layout_toRightOf="@+id/left">
 
         <com.example.musicplayer_hezhao.util.RoundImageView
-            android:id="@+id/image"
+            android:id="@+id/imagess"
             android:layout_width="120dp"
             android:layout_height="120dp" />
 
@@ -50,7 +50,7 @@
             android:id="@+id/text"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:layout_below="@+id/image"
+            android:layout_below="@+id/imagess"
             android:textColor="@color/drak"
             android:textSize="12dp"
             android:textStyle="normal" />
