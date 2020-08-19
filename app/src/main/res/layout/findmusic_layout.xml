@@ -184,7 +184,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_below="@+id/text4"
                                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
                                 <RelativeLayout
                                     android:id="@+id/second"
                                     android:layout_width="match_parent"
@@ -222,7 +221,15 @@
                                         android:text="推荐MV"
                                         android:textColor="@color/drak"
                                         android:textStyle="bold" />
-
+                                    <com.wang.avi.AVLoadingIndicatorView
+                                        android:id="@+id/avi"
+                                        style="@style/AVLoadingIndicatorView"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:visibility="visible"
+                                        android:layout_centerHorizontal="true"
+                                        app:indicatorColor="@color/Red"
+                                        app:indicatorName="LineScalePartyIndicator" />
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/recyclerview_second"
                                         android:layout_width="match_parent"

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/14 11:46
  */
-public class downmusic_downloading extends Fragment  implements AppBarLayout.OnOffsetChangedListener, View.OnClickListener{
+public class downmusic_downloading extends BaseFragment  implements AppBarLayout.OnOffsetChangedListener, View.OnClickListener{
     private RecyclerView recyclerView;
     private downmusicrecycleradapter adapter;
     private View view;

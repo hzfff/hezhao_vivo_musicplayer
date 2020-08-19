@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/15 14:20
  */
-public class local_music_collect  extends Fragment {
+public class local_music_collect  extends BaseFragment {
     private RecyclerView recyclerView;
     private local_music_collect_adapter adapter;
     private View view;

@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/15 9:47
  */
-public class local_singer_fragment extends Fragment {
+public class local_singer_fragment extends BaseFragment {
     private RecyclerView recyclerView;
     private LocalMusic_Singer_Adapter adapter;
     private View view;

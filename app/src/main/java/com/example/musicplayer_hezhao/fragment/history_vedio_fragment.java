@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/15 11:17
  */
-public class history_vedio_fragment extends Fragment {
+public class history_vedio_fragment extends BaseFragment {
     private RecyclerView recyclerView;
     private history_vedio_adapter adapter;
     private View view;

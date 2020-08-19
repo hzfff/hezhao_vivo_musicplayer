@@ -29,6 +29,7 @@ import com.example.musicplayer_hezhao.model.VedioInformation;
 import com.example.musicplayer_hezhao.model.findsongs;
 import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 /**
  * Created by 11120555 on 2020/7/7 17:02
  */
-public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiTool.Callback {
+public class FindVedioFragment extends BaseFragment implements NeteaseCloudMusicApiTool.Callback {
     private static RecyclerView recyclerView;
     private static View view;
     private static NeteaseCloudMusicApiTool neteaseCloudMusicApiTool;
@@ -57,6 +58,7 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
     private static JCVideoPlayerStandard player2;
     private static JCVideoPlayerStandard player3;
     private static JCVideoPlayerStandard player4;
+    private static AVLoadingIndicatorView avLoadingIndicatorView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.findvedio_layout, null);
         try {
@@ -74,9 +76,10 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
             switch (msg.what)
             {
                 case 1:
-                    mv_adapter = new MV_Adapter(VedioDataList, mContext);
+                    mv_adapter = new MV_Adapter(VedioDataList,false, mContext);
                     recyclerView.setAdapter(mv_adapter);
                     recyclerView.setLayoutManager(linearLayoutManager);
+                    avLoadingIndicatorView.setVisibility(View.GONE);
                 break;
                 default:
                     break;
@@ -84,6 +87,7 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
         }
     };
     public void initdata() throws IOException {
+        avLoadingIndicatorView=view.findViewById(R.id.avi);
         mContext=getContext();
         player1=view.findViewById(R.id.player_list_video1);
         player2=view.findViewById(R.id.player_list_video2);
@@ -105,7 +109,8 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
         linearLayoutManager=new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         swipeRefreshLayout=view.findViewById(R.id.swiprefreshlayout);
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     //这里获取数据的逻辑
@@ -113,20 +118,6 @@ public class FindVedioFragment extends Fragment implements NeteaseCloudMusicApiT
                 }
             });
 
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
         neteaseCloudMusicApiTool.getVedioInformation(10, this);
     }
 

@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/8/6 16:05
  */
-public class HuaYuFragment extends Fragment implements NeteaseCloudMusicApiTool.Callback {
+public class HuaYuFragment extends BaseFragment implements NeteaseCloudMusicApiTool.Callback {
     private static View mView;
     private static RecyclerView recyclerView;
     private static HuaYuAdapter adapter;

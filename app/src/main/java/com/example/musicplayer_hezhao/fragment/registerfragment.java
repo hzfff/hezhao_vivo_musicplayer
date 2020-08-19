@@ -26,7 +26,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by 11120555 on 2020/7/13 11:38
  */
-public class registerfragment extends Fragment {
+public class registerfragment extends BaseFragment {
     private Button btn_register,send_phone_check;
     private EditText et_user_name, et_psw, et_psw_again, et_phone, et_phone_check;
     private String userName, psw, pswAgain, phone, emailcheck;

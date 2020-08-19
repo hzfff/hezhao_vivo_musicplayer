@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.icu.text.IDNA;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +51,7 @@ import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 import com.example.musicplayer_hezhao.util.DataTranslateService;
 import com.example.musicplayer_hezhao.util.RoundImageView;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,6 +59,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import okhttp3.ResponseBody;
@@ -69,7 +74,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by 11120555 on 2020/7/7 17:02
  */
 //播放器发现界面
-public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiTool.Callback {
+public class FindMusicFragment extends BaseFragment implements NeteaseCloudMusicApiTool.Callback {
     private View mView;
     private ViewPager viewPager;
     private List<RoundImageView> mViewList = new ArrayList<>();
@@ -92,6 +97,9 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
     private ImageView songlist;
     private ImageView mvlist;
     private int num = 1;
+    private NeteaseCloudMusicApiTool.Callback callback;
+    private boolean index = true;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.findmusic_layout, null);
@@ -105,10 +113,12 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
     }
 
     public void init() {
+        avLoadingIndicatorView = mView.findViewById(R.id.avi);
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
         CloudMusicTool.getbanner(this);
-        singer=mView.findViewById(R.id.image1);
-        mvlist=mView.findViewById(R.id.image2);
-        songlist=mView.findViewById(R.id.image3);
+        singer = mView.findViewById(R.id.image1);
+        mvlist = mView.findViewById(R.id.image2);
+        songlist = mView.findViewById(R.id.image3);
         viewPager = (ViewPager) mView.findViewById(R.id.viewpager);
         image = mView.findViewById(R.id.image);
         swipeRefreshLayout = mView.findViewById(R.id.swiprefreshlayout);
@@ -152,27 +162,29 @@ public class FindMusicFragment extends Fragment implements NeteaseCloudMusicApiT
             }
         });
     }
-public void onclick(){
-    singer.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-         Intent  intent =new Intent(getActivity(), ShowSingerActivity.class);
-         startActivity(intent);
-        }
-    });
-    mvlist.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
 
-        }
-    });
-    songlist.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    public void onclick() {
+        singer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ShowSingerActivity.class);
+                startActivity(intent);
+            }
+        });
+        mvlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        }
-    });
-}
+            }
+        });
+        songlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
     public void initpre() {
         pic_uri.add("http://p1.music.126.net/6lM5D0NG6GR3_3FcbMI_Bg==/109951165201392548.jpg");
         pic_uri.add("http://p1.music.126.net/6Ux98l5OB-P66XPuUavO2g==/109951165198121518.jpg");
@@ -189,71 +201,48 @@ public void onclick(){
         mViewList.add(view1);
         mViewList.add(view2);
         mViewList.add(view3);
-        VedioInformation vedioInformation = new VedioInformation();
-        Vedio vedio = new Vedio();
-        vedio.setArtistName("言承旭");
-        vedio.setCover("http://p1.music.126.net/6XBdGum29eF_7Nux-V2r4A==/109951165188095856.jpg");
-        vedio.setName("我好喜欢你");
-        vedio.setPublishTime("2020-08-03");
-        vedio.setPlayCount(74444);
-        vedio.setDuration(218000);
-        HashMap<String,String>map=new HashMap<>();
-        map.put("240","http://vodkgeyttp8.vod.126.net/cloudmusic/MjQ3NDQ3MjUw/89a6a279dc2acfcd068b45ce72b1f560/bf2750483ed02d4c6263dffefa5959d7.mp4?wsSecret=d63da6681eb0e3a1a18d8be7221e3f28&wsTime=1596598128");
-        map.put("480", "http://vodkgeyttp8.vod.126.net/cloudmusic/MjQ3NDQ3MjUw/89a6a279dc2acfcd068b45ce72b1f560/533e4183a709699d566180ed0cd9abe9.mp4?wsSecret=173f611f6d408720f70e5dafeb56fd1e&wsTime=1596598128");
-        vedio.setBrs(map);
-        vedioInformation.setCode(200);
-        vedioInformation.setData(vedio);
-        VedioDataList.add(vedioInformation);
-        List<Info> list = new ArrayList<>();
-        Info info = new Info();
-        info.setCoverImgUrl("http://p3.music.126.net/IZaKdskHvigujL5GZW-QtQ==/1377688069888740.jpg");
-        info.setName("电影中的钢琴曲｜最会讲故事²");
-        info.setPlayCount(6210047);
-        Info info1 = new Info();
-        info1.setCoverImgUrl("http://p3.music.126.net/D-7Dhh8trQwSwlqG7HuXYg==/109951163017662871.jpg");
-        info1.setName("欧美｜我们听过的那首歌，原来采样了它");
-        info1.setPlayCount(4326047);
-        Info info2 = new Info();
-        info2.setCoverImgUrl("http://p4.music.126.net/EuVP2n4KLtz4vXX5FBKslw==/109951165141335283.jpg");
-        info2.setName("琉球暖风伴清酒，日本岛呗艺术家大赏");
-        info2.setPlayCount(263147);
-        Info info3 = new Info();
-        info3.setCoverImgUrl("http://p4.music.126.net/NDdtSac66rpsF_jMBh1JMQ==/109951164929306650.jpg");
-        info3.setName("美国乡村乐图鉴与简史");
-        info3.setPlayCount(4350047);
-        list.add(info);
-        list.add(info1);
-        list.add(info2);
-        list.add(info3);
-        list_sings.setPlaylists(list);
         adapter = new MhealthAdater(mViewList);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem((int) (Integer.MAX_VALUE * 0.5));
-        mv_adapter = new MV_Adapter(VedioDataList, getContext());
-        findMusicAdapter = new FindMusicAdapter(list_sings.getPlaylists(), getContext());
         linearLayoutManager = new LinearLayoutManager(getContext());
         MV_LinearLayoutManager = new LinearLayoutManager(getContext());
         MV_LinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        MV_Recyclerview.setAdapter(mv_adapter);
-        MV_Recyclerview.setLayoutManager(MV_LinearLayoutManager);
-        // MV_Recyclerview.addOnScrollListener(monScrollListener);
-        recyclerView.setAdapter(findMusicAdapter);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        // MV_Recyclerview.addOnScrollListener(monScrollListener)
         //默认显示的图片
         currentItem = (int) (Integer.MAX_VALUE * 0.5);
         //定时更新UI
         mhandler.sendEmptyMessageDelayed(0, 2000);
+        callback = this;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    CloudMusicTool.getVedioInformation(50, callback);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        task.run();
     }
 
 
     public void sendMoreRequest() throws IOException {
-        num++;
-        if(num==5)
-        {
-            num=1;
+        if(VedioDataList.size()<10){
+
+        }else {
+            if (num == 10) {
+                num = 0;
+            }
+            List<VedioInformation> list = new ArrayList<>();
+            for (int i = num * 5; i < num * 5 + 5; i++) {
+                list.add(VedioDataList.get(i));
+            }
+            MV_Adapter adapter2 = new MV_Adapter(list, true, getContext());
+            MV_Recyclerview.setAdapter(adapter2);
+            num++;
         }
-        CloudMusicTool.getVedioInformation(10* num, this);
     }
 
     Handler handlers = new Handler() {
@@ -275,12 +264,15 @@ public void onclick(){
     public void initview() {
         //设置适配器
         MhealthAdater adapter1 = (MhealthAdater) viewPager.getAdapter();
-        MV_Adapter adapter2 = (MV_Adapter) MV_Recyclerview.getAdapter();
-        FindMusicAdapter adapter = new FindMusicAdapter(list_sings.getPlaylists(), getContext());
-        recyclerView.setAdapter(adapter);
+        MV_Adapter adapter2 = new MV_Adapter(VedioDataList, true, getContext());
+        MV_Recyclerview.setAdapter(adapter2);
+        MV_Recyclerview.setLayoutManager(MV_LinearLayoutManager);
+        findMusicAdapter = new FindMusicAdapter(list_sings.getPlaylists(), getContext());
+        recyclerView.setAdapter(findMusicAdapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
         adapter.notifyDataSetChanged();
         adapter1.notifyDataSetChanged();
-        adapter2.notifyDataSetChanged();
+        avLoadingIndicatorView.setVisibility(View.GONE);
         findMusicAdapter.setOnItemClickListener(new FindMusicAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -321,7 +313,7 @@ public void onclick(){
         Data<Info> li = obj;
         list_sings.setPlaylists(li.getPlaylists());
         try {
-            CloudMusicTool.getVedioInformation(10 * num, this);
+            CloudMusicTool.getVedioInformation(5, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -331,7 +323,7 @@ public void onclick(){
     public void doResult6(List<Num> obj) {
         List<Num> list = obj;
         List<Num> list1 = new ArrayList<>();
-        for (int i = 10*(num-1); i <10*(num-1)+10 ; i++) {
+        for (int i = 0; i < list.size(); i++) {
             list1.add(list.get(i));
         }
         try {
@@ -346,9 +338,12 @@ public void onclick(){
     public void doResult7(List<VedioInformation> obj) {
         VedioDataList.clear();
         VedioDataList.addAll(obj);
-        Message msg = new Message();
-        msg.what = 2;
-        handler.sendMessage(msg);
+        if (index) {
+            index = false;
+            Message msg = new Message();
+            msg.what = 2;
+            handler.sendMessage(msg);
+        }
     }
 
     @Override
@@ -393,14 +388,14 @@ public void onclick(){
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
+                    break;
+                case 2:
                     for (int i = 0; i < pic_uri.size(); i++) {
                         RoundImageView view1 = new RoundImageView(getContext());
                         Glide.with(getActivity()).load(pic_uri.get(i)).into(view1);
                         view1.setScaleType(RoundImageView.ScaleType.CENTER_CROP);
                         mViewList.add(view1);
                     }
-                    break;
-                case 2:
                     initview();
                     break;
                 default:

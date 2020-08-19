@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/15 9:46
  */
-public class local_music_fragment extends Fragment {
+public class local_music_fragment extends BaseFragment {
     private RecyclerView recyclerView;
     private MusicShowAdapter adapters;
     private View view;

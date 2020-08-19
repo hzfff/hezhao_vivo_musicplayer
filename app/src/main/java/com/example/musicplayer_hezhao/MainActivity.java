@@ -375,15 +375,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent1 = new Intent(MainActivity.this, nav_msg_activity.class);
                         startActivity(intent1);
                         break;
-                    case R.id.nav_listening:
-                        Intent intent2 = new Intent(MainActivity.this, nav_listening_activity.class);
+                    case R.id.nav_changes:
+                        Intent intent2=new Intent(MainActivity.this,nav_store_activity.class);
                         startActivity(intent2);
                         break;
-                    case R.id.nav_developer_msg:
-                        Intent intent5 = new Intent(MainActivity.this, nav_developer_msg_activity.class);
-                        startActivity(intent5);
+                    case R.id.nav_listening:
+                        Intent intent3 = new Intent(MainActivity.this, nav_listening_activity.class);
+                        startActivity(intent3);
                         break;
-
+                    case R.id.nav_developer_msg:
+                        Intent intent4 = new Intent(MainActivity.this, nav_developer_msg_activity.class);
+                        startActivity(intent4);
+                        break;
                     default:
                         break;
                 }

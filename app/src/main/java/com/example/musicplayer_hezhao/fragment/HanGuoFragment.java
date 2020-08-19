@@ -13,7 +13,7 @@ import com.example.musicplayer_hezhao.R;
 /**
  * Created by 11120555 on 2020/8/6 16:05
  */
-public class HanGuoFragment  extends Fragment {
+public class HanGuoFragment  extends BaseFragment {
     private View mView;
     @Override
     public void onCreate(Bundle bundle)

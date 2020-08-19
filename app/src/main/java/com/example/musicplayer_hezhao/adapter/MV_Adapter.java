@@ -32,8 +32,10 @@ public class MV_Adapter extends RecyclerView.Adapter {
     private static View view;
     public boolean isLoadMore = false;
     private final int view_Normal=1;
-    public MV_Adapter(List<VedioInformation> infos, Context context) {
+    private boolean index;
+    public MV_Adapter(List<VedioInformation> infos,boolean indexs, Context context) {
         List_MV = infos;
+        index=indexs;
         mContext = context;
     }
 
@@ -71,7 +73,10 @@ public class MV_Adapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return List_MV.size();
+        if(index) {
+            return 5;
+        }
+        return 10;
     }
 
     //用于监控adapter的数据变化

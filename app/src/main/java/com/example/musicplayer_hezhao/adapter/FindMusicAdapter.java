@@ -69,7 +69,7 @@ public class FindMusicAdapter extends RecyclerView.Adapter<FindMusicAdapter.Find
 
     @Override
     public int getItemCount() {
-        return List_Sings.size();
+        return 10;
     }
 
     static class FindMusicViewHolder extends RecyclerView.ViewHolder {

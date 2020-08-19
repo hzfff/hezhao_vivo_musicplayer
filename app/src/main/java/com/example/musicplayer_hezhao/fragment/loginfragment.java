@@ -24,7 +24,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by 11120555 on 2020/7/13 11:38
  */
-public class loginfragment   extends Fragment {
+public class loginfragment   extends BaseFragment {
     private Button submit_button;
     private Button forget_name_button;
     private String username, psw, spPsw;

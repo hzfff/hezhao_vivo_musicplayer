@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by 11120555 on 2020/7/14 11:46
  */
-public class downmusic_downloaded  extends Fragment {
+public class downmusic_downloaded  extends BaseFragment {
     private RecyclerView recyclerView;
     private downmusicrecycleradapter adapter;
     private View view;
