@@ -60,7 +60,7 @@ public interface DataTranslateService {
     Call<HotMusic> queryhotmusic();
     @GET("search?")
     Call<SearchMusicCallback> searchmusic(@Query("keywords") String keywords);
-    @GET("list?type=1&area=8&limit=30")
+    @GET("list?type=1&area=8&limit=60")
     Call<huayu> findhuayu();
     @GET("song?")
     Call<findsongs> findsongs(@Query("id")int id);

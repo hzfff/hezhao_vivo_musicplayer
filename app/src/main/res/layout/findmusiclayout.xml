@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="183dp"
+    android:layout_height="195dp">
+    <RelativeLayout
+        android:id="@+id/left"
+        android:layout_width="13dp"
+        android:layout_height="match_parent">
+    </RelativeLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/test1"
+        android:layout_marginTop="10dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_toRightOf="@+id/left">
+
+        <com.example.musicplayer_hezhao.tool.CircleImageView
+            android:id="@+id/imagess"
+            android:layout_marginTop="5dp"
+            android:layout_width="180dp"
+            android:layout_height="175dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/test1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/drak"
+        android:textSize="12dp"
+        android:textStyle="normal" />
+
+</RelativeLayout>

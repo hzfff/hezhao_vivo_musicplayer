@@ -44,15 +44,14 @@ public class local_music_collect_adapter extends RecyclerView.Adapter<local_musi
     public void onBindViewHolder(@NonNull final LocalMusicCollectViewHolder holder, int position) {
         holder.vedio_name.setText(vedio_name.get(position));
         holder.vedio_create.setText(create_name.get(position));
-        holder.vedio_img.setImageDrawable(ContextCompat.getDrawable(context,vedio_img.get(position)));
-        if(onItemClickListener!=null)
-        {
-            holder.vedio_name.setOnClickListener(new View.OnClickListener(){
+        holder.vedio_img.setImageDrawable(ContextCompat.getDrawable(context, vedio_img.get(position)));
+        if (onItemClickListener != null) {
+            holder.vedio_name.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    int position=holder.getLayoutPosition();
-                    onItemClickListener.onItemClick(holder.vedio_name,position);
+                    int position = holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(holder.vedio_name, position);
                 }
             });
         }
@@ -65,13 +64,14 @@ public class local_music_collect_adapter extends RecyclerView.Adapter<local_musi
 
     class LocalMusicCollectViewHolder extends RecyclerView.ViewHolder {
         private TextView vedio_name;
-        private TextView  vedio_create;
+        private TextView vedio_create;
         private ImageView vedio_img;
+
         public LocalMusicCollectViewHolder(@NonNull View itemView) {
             super(itemView);
-            vedio_name=itemView.findViewById(R.id.text1);
-            vedio_create=itemView.findViewById(R.id.text2);
-            vedio_img=itemView.findViewById(R.id.image);
+            vedio_name = itemView.findViewById(R.id.text1);
+            vedio_create = itemView.findViewById(R.id.text2);
+            vedio_img = itemView.findViewById(R.id.image);
         }
     }
 

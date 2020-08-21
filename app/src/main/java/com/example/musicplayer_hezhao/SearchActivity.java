@@ -2,6 +2,7 @@ package com.example.musicplayer_hezhao;
 
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,6 +65,7 @@ public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMu
     private static HotMusic hotMusic;
     private  NeteaseCloudMusicApiTool.Callback callback=this;
     private SearchMusicCallback SearchMusicCallback;
+    private static Context mContext;
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -90,6 +93,7 @@ public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMu
         hotMusicrecyclerview.setLayoutManager(linearLayoutManager1);
     }
     public void initview() {
+        mContext=getApplicationContext();
         search_btn=findViewById(R.id.search_music);
         mimageView=findViewById(R.id.background_pic);
         mtoolbar = findViewById(R.id.search_toolbar);
@@ -133,6 +137,8 @@ public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMu
                    hotMusicAdapter=new HotMusicAdapter(hotMusic);
                    hotMusicrecyclerview.setAdapter(hotMusicAdapter);
                    break;
+               case 2:
+                   Toast.makeText(mContext,"请检查拼写是否错误",Toast.LENGTH_SHORT).show();
                default:
                    break;
            }
@@ -192,13 +198,19 @@ public class SearchActivity extends AppCompatActivity  implements NeteaseCloudMu
     @Override
     public void doResult9(SearchMusicCallback searchMusicCallback) {
         SearchMusicCallback=searchMusicCallback;
-        Intent  intent=new Intent(this,SearchResultActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("SearchMusicCallback",SearchMusicCallback);
-        String SongName=meditText.getText().toString().trim();
-        bundle.putString("SongName",SongName);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if(SearchMusicCallback.getResult().getSongCount()==0){
+           Message msg=handler.obtainMessage();
+           msg.what=2;
+           handler.sendMessage(msg);
+        }else {
+            Intent intent = new Intent(this, SearchResultActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("SearchMusicCallback", SearchMusicCallback);
+            String SongName = meditText.getText().toString().trim();
+            bundle.putString("SongName", SongName);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
     @Override

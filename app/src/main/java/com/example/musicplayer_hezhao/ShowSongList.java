@@ -25,6 +25,7 @@ import com.example.musicplayer_hezhao.model.VedioInformation;
 import com.example.musicplayer_hezhao.model.findsongs;
 import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
     private NeteaseCloudMusicApiTool neteaseCloudMusicApiTool;
     private LinearLayoutManager linearLayoutManager;
     private List<String>Lyriclist=new ArrayList<>();
+    private AVLoadingIndicatorView avLoadingIndicatorView;
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -80,6 +82,8 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        avLoadingIndicatorView=findViewById(R.id.avi);
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
         image1 = findViewById(R.id.image1);
         image2 = findViewById(R.id.image2);
         image3 = findViewById(R.id.image3);
@@ -178,6 +182,7 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL) ;
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
+                avLoadingIndicatorView.setVisibility(View.GONE);
                 adapter.setOnItemClickListener(new ShowSongListAdapter.OnItemClickListener(){
                     @Override
                     public void onItemClick(View view, int position) {

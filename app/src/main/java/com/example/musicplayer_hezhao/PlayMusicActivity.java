@@ -110,7 +110,7 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         bundle1.putSerializable("MusicList", (Serializable) musicList);
         bundle1.putInt("position", position);
         msg.setData(bundle1);
-        MainActivity.   handler_copy.sendMessage(msg);
+        MainActivity.handler_copy.sendMessage(msg);
         music_title = findViewById(R.id.text1);
         singer_name = findViewById(R.id.text2);
         image1 = findViewById(R.id.img1);
@@ -156,7 +156,6 @@ public class PlayMusicActivity extends BaseActivity implements View.OnClickListe
         end_time.setText(times);
         singer_name.setText(musicList.get(position).getArtist());
         music_title.setText(musicList.get(position).getName());
-        System.out.println(musicList.get(position).getName());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -48,7 +48,7 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
     private List<String> listurl = new ArrayList<>();
     private List<MusicInfo> musicInfo = new ArrayList<>();
     private List<SongID> listnum = new ArrayList<>();
-
+    private int Position=0;
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -93,6 +93,7 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
                 id.setId(String.valueOf(searchMusicCallback.getResult().getSongs().get(position).getId()));
                 listnum.clear();
                 listnum.add(id);
+                Position=position;
                 neteaseCloudMusicApiTool.getSong(listnum, callback);
             }
         });
@@ -169,6 +170,7 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
         bundle.putSerializable("musicInfo", (Serializable) musicInfo);
         bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
         bundle.putInt("position",0);
+        bundle.putInt("positions",Position);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         intent.putExtras(bundle);
         startActivity(intent);

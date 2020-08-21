@@ -106,12 +106,11 @@ public class local_music_fragment extends BaseFragment {
                     MediaStore.Audio.Media.ARTIST,
                     MediaStore.Audio.Media.DURATION
             };
-            String where = MediaStore.Audio.Media.DATA + " like \"%" + "/raw" + "%\"";
             String[] keywords = null;
             String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
             ContentResolver contentResolver = getActivity().getContentResolver();
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            Cursor cursor = contentResolver.query(uri, strs, where, keywords, sortOrder);
+            Cursor cursor = contentResolver.query(uri, strs, null, keywords, sortOrder);
             if (cursor != null) {
                 while (cursor.moveToNext() && !isCancelled()) {
                     String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));

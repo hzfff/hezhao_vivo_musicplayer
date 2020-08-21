@@ -116,8 +116,9 @@ public class PlayMusicListActivity extends AppCompatActivity implements LrcView.
         animator.setDuration(10000);//动画旋转一周的时间为10秒
         animator.setInterpolator(new LinearInterpolator());//匀速
         animator.setRepeatCount(-1);
-
+        lrcRows=new LrcRows();
         List<LrcRow>list=lrcRows.BuildList(getApplicationContext(),Lyriclist.get(position));
+        lrcView.clearAnimation();
         lrcView.setLrc(list);
         lrcView.setCall(this);
         inittime();
@@ -131,25 +132,25 @@ public class PlayMusicListActivity extends AppCompatActivity implements LrcView.
         Glide.with(getApplicationContext()).load(MusicInfo.get(position).getSongs()[0].getAl().getPicUrl()).into(imageView1);
         Glide.with(getApplicationContext()).load(MusicInfo.get(position).getSongs()[0].getAl().getPicUrl()).into(imageView8);
     }
-   public void inittime(){
-       MediaPlayer player=new MediaPlayer();
-       player = MediaPlayer.create(getApplicationContext(), Uri.parse(MusicUrl.get(position)));
-       int minute = player.getDuration() / 1000 / 60;
-       int second = player.getDuration() / 1000 % 60;
-       String strMinute = null;
-       String strSecond = null;
-       if (minute < 10) {//如果歌曲的时间中的分钟小于10
-           strMinute = "0" + minute;//在分钟的前面加一个0
-       } else {
-           strMinute = minute + "";
-       }
-       if (second < 10) {//如果歌曲中的秒钟小于10
-           strSecond = "0" + second;//在秒钟前面加一个0
-       } else {
-           strSecond = second + "";
-       }
-       textView4.setText(strMinute + ":" + strSecond);
-   }
+    public void inittime(){
+        MediaPlayer player=new MediaPlayer();
+        player = MediaPlayer.create(getApplicationContext(), Uri.parse(MusicUrl.get(position)));
+        int minute = player.getDuration() / 1000 / 60;
+        int second = player.getDuration() / 1000 % 60;
+        String strMinute = null;
+        String strSecond = null;
+        if (minute < 10) {//如果歌曲的时间中的分钟小于10
+            strMinute = "0" + minute;//在分钟的前面加一个0
+        } else {
+            strMinute = minute + "";
+        }
+        if (second < 10) {//如果歌曲中的秒钟小于10
+            strSecond = "0" + second;//在秒钟前面加一个0
+        } else {
+            strSecond = second + "";
+        }
+        textView4.setText(strMinute + ":" + strSecond);
+    }
     public void initListener() {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

@@ -379,6 +379,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent2=new Intent(MainActivity.this,nav_store_activity.class);
                         startActivity(intent2);
                         break;
+                    case R.id.nav_changess:
+                        Intent intent5=new Intent(MainActivity.this,nav_price_activity.class);
+                        startActivity(intent5);
+                        break;
                     case R.id.nav_listening:
                         Intent intent3 = new Intent(MainActivity.this, nav_listening_activity.class);
                         startActivity(intent3);
@@ -407,12 +411,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     MediaStore.Audio.Media.ARTIST,
                     MediaStore.Audio.Media.DURATION
             };
-            String where = MediaStore.Audio.Media.DATA + " like \"%" + "/raw" + "%\"";
+          // String where = MediaStore.Audio.Media.DATA ;
+
             String[] keywords = null;
             String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
             ContentResolver contentResolver = getContentResolver();
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            Cursor cursor = contentResolver.query(uri, strs, where, keywords, sortOrder);
+            Cursor cursor = contentResolver.query(uri, strs, null, keywords, sortOrder);
+            System.out.println(cursor);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));

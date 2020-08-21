@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -75,7 +76,7 @@ public class MyMusicFragment extends BaseFragment implements View.OnClickListene
     private TextView local_music;
     private TextView recent_listen;
     private TextView My_favorite_music;
-    private ImageView imageView;
+    private static ImageView imageView;
     private ImageView detail_img;
     private final String TAG = "HeZhao";
     private static SwipeRefreshLayout swipeRefreshLayout;
@@ -112,7 +113,7 @@ public class MyMusicFragment extends BaseFragment implements View.OnClickListene
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         swipeRefreshLayout = view.findViewById(R.id.swiprefreshlayout);
-        imageView = view.findViewById(R.id.image2);
+        imageView = view.findViewById(R.id.image);
         detail_img = view.findViewById(R.id.image_title);
       //  My_favorite_music = view.findViewById(R.id.text1);
         loadmusic = view.findViewById(R.id.downloadmusic_text);
@@ -198,6 +199,21 @@ public class MyMusicFragment extends BaseFragment implements View.OnClickListene
         });
 
     }
+
+   public static Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case 1:
+                    Bundle bundle=msg.getData();
+                    int pic=bundle.getInt("ListInteger");
+                    imageView.setImageResource(pic);
+            }
+        }
+    };
+
 public static  void refresh(){
     fragmentTransaction = fragmentManager.beginTransaction();
     fragmentTransaction.replace(R.id.fragment_container, new MySelectFragment());

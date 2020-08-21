@@ -135,7 +135,7 @@ public class NeteaseCloudMusicApiTool {
                     Call<klyic> dataCall = api.findlyric(songIDList.get(i).getId());
                     try {
                         Response<klyic> data = dataCall.execute();
-                        if(data.body().getQfy()){
+                        if(data.body().getQfy()||data.body().getLrc()==null){
                             list.add("");
                         }else {
                             list.add(data.body().getLrc().getLyric());

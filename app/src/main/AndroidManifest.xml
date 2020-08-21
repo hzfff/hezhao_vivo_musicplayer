@@ -78,6 +78,10 @@
 
         <activity android:name=".ShowArtistActivity" />
 
+        <activity android:name=".ShowVedioActivity" />
+
+        <activity android:name=".ShowListActivity" />
+
         <provider
             android:name=".ContentProvider.PlayListProvider"
             android:authorities="com.example.musicplayer_hezhao.ContentProvider.PlayListProviders"

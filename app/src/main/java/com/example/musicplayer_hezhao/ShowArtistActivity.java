@@ -29,6 +29,7 @@ import com.example.musicplayer_hezhao.model.findsongs;
 import com.example.musicplayer_hezhao.model.huayu;
 import com.example.musicplayer_hezhao.tool.NeteaseCloudMusicApiTool;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +49,15 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
     private static ShowArtistAdapter adapter;
     private static ImageView image1;
     private static ImageView image2;
+    private static ImageView image3;
     private static TextView textView;
     private static Context context;
     private static String id;
-    private static List<MusicInfo>music_Info=new ArrayList<>();
+    private static List<MusicInfo> music_Info = new ArrayList<>();
     private static List<String> listurl = new ArrayList<>();
     private static NeteaseCloudMusicApiTool.Callback callback;
-    private static List<SongID>song_ID=new ArrayList<>();
+    private static List<SongID> song_ID = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -66,13 +69,14 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
     public void initview() {
         image1 = findViewById(R.id.image);
         image2 = findViewById(R.id.image2);
+        image3 = findViewById(R.id.image3);
         textView = findViewById(R.id.text);
         toolbar = findViewById(R.id.title_toolbar);
         recyclerView = findViewById(R.id.recyclerview);
     }
 
     public void initdata() {
-        callback=this;
+        callback = this;
         context = getApplicationContext();
         intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -101,6 +105,7 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
                     recyclerView.setLayoutManager(linearLayoutManager);
                     recyclerView.setAdapter(adapter);
                     Glide.with(context).load(Songs.getSongs().get(position).getAl().getPicUrl()).into(image1);
+                    Glide.with(context).load(Songs.getSongs().get(position).getAl().getPicUrl()).into(image3);
                     Glide.with(context).load(Songs.getSongs().get(position).getAl().getPicUrl()).into(image2);
                     break;
                 default:
@@ -116,21 +121,18 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
 
     @Override
     public void doResult2(List<String> obj) {
-        listurl=obj;
+        listurl = obj;
         neteaseCloudMusicApiTool.getMusicInfo(song_ID, this);
     }
 
     @Override
     public void doResult3(List<MusicInfo> obj) {
-        music_Info=obj;
-        Intent intent =new Intent(getApplicationContext(),PlayMusicListActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("musicUrl", (Serializable) listurl);
-        bundle.putSerializable("musicInfo", (Serializable) music_Info);
-        bundle.putInt("position",position);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        music_Info = obj;
+        try {
+            neteaseCloudMusicApiTool.getmusiclyric(this,song_ID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -179,13 +181,11 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
         adapter.setOnItemClickListener(new ShowArtistAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                for(int i=0;i<Songs.getSongs().size();i++)
-                {
-                    id = String.valueOf(Songs.getSongs().get(i).getId());
-                    SongID songID=new SongID();
-                    songID.setId(id);
-                    song_ID.add(songID);
-                }
+                id = String.valueOf(Songs.getSongs().get(position).getId());
+                SongID songID = new SongID();
+                songID.setId(id);
+                song_ID.clear();
+                song_ID.add(songID);
                 neteaseCloudMusicApiTool.getSong(song_ID, callback);
             }
         });
@@ -194,6 +194,16 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
 
     @Override
     public void doResult12(List<String> lyrclist) {
+        Intent intent = new Intent(getApplicationContext(), PlayMusicListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("musicUrl", (Serializable) listurl);
+        bundle.putSerializable("musicInfo", (Serializable) music_Info);
+        bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
+        bundle.putInt("position", 0);
+        bundle.putInt("positions", position);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtras(bundle);
+        startActivity(intent);
 
     }
 }

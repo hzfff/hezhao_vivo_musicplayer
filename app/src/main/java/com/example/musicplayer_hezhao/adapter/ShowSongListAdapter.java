@@ -61,6 +61,7 @@ public class ShowSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bundle.putSerializable("musicInfo", (Serializable) Music_Info);
                     bundle.putSerializable("Lyriclist", (Serializable) Lyriclist);
                     bundle.putInt("position",position);
+                    bundle.putInt("positions",position);
                     Intent intent=new Intent(mContext, PlayMusicListActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                     intent.putExtras(bundle);

@@ -30,7 +30,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer_hezhao.R;
+import com.example.musicplayer_hezhao.ShowListActivity;
 import com.example.musicplayer_hezhao.ShowSingerActivity;
+import com.example.musicplayer_hezhao.ShowVedioActivity;
 import com.example.musicplayer_hezhao.Util;
 import com.example.musicplayer_hezhao.adapter.FindMusicAdapter;
 //import com.example.musicplayer_hezhao.adapter.MV_Adapter;
@@ -174,13 +176,15 @@ public class FindMusicFragment extends BaseFragment implements NeteaseCloudMusic
         mvlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), ShowVedioActivity.class);
+                startActivity(intent);
             }
         });
         songlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), ShowListActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -229,9 +233,9 @@ public class FindMusicFragment extends BaseFragment implements NeteaseCloudMusic
 
 
     public void sendMoreRequest() throws IOException {
-        if(VedioDataList.size()<10){
+        if (VedioDataList.size() < 10) {
 
-        }else {
+        } else {
             if (num == 10) {
                 num = 0;
             }
@@ -267,7 +271,7 @@ public class FindMusicFragment extends BaseFragment implements NeteaseCloudMusic
         MV_Adapter adapter2 = new MV_Adapter(VedioDataList, true, getContext());
         MV_Recyclerview.setAdapter(adapter2);
         MV_Recyclerview.setLayoutManager(MV_LinearLayoutManager);
-        findMusicAdapter = new FindMusicAdapter(list_sings.getPlaylists(), getContext());
+        findMusicAdapter = new FindMusicAdapter(list_sings.getPlaylists(), getContext(),false);
         recyclerView.setAdapter(findMusicAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter.notifyDataSetChanged();

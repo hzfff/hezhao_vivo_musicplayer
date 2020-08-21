@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="140dp"
-    android:layout_height="150dp">
+    android:layout_height="155dp">
 
     <RelativeLayout
         android:id="@+id/left"
@@ -15,11 +15,12 @@
 
     <RelativeLayout
         android:layout_width="120dp"
-        android:layout_height="150dp"
+        android:layout_height="155dp"
         android:layout_toRightOf="@+id/left">
 
         <com.example.musicplayer_hezhao.util.RoundImageView
             android:id="@+id/imagess"
+            android:layout_marginTop="5dp"
             android:layout_width="120dp"
             android:layout_height="120dp" />
 

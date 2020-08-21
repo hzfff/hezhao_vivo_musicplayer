@@ -30,12 +30,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
-
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
                 <ImageView
                     android:id="@+id/image1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0.75"
+                    android:alpha="0.45"
                     android:background="@color/drak"
                     android:scaleType="centerCrop" />
 
