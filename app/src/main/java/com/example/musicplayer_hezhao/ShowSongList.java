@@ -107,11 +107,8 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
 
     @Override
     public void doResult1(List<SongID> obj) {
-
         song_ID =  obj;
         neteaseCloudMusicApiTool.getSong(song_ID, this);
-
-
     }
 
     @Override
@@ -122,7 +119,6 @@ public class ShowSongList extends AppCompatActivity implements NeteaseCloudMusic
 
     @Override
     public void doResult3(List<MusicInfo> obj)  {
-
         music_Info = obj;
         try {
             neteaseCloudMusicApiTool.getmusiclyric(this,song_ID);

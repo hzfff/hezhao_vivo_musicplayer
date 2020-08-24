@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -97,7 +98,6 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
                 neteaseCloudMusicApiTool.getSong(listnum, callback);
             }
         });
-
     }
 
     @Override
@@ -163,16 +163,19 @@ public class SearchResultActivity extends AppCompatActivity implements NeteaseCl
 
     @Override
     public void doResult12(List<String> lyrclist) {
-
-        Intent intent = new Intent(getApplicationContext(), PlayMusicListActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("musicUrl", (Serializable) listurl);
-        bundle.putSerializable("musicInfo", (Serializable) musicInfo);
-        bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
-        bundle.putInt("position",0);
-        bundle.putInt("positions",Position);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if(listurl.get(Position)==null||listurl.get(Position).length()==0){
+            Toast.makeText(getApplicationContext(),"版权限制，暂时无法播放",Toast.LENGTH_SHORT).show();
+        }else {
+            Intent intent = new Intent(getApplicationContext(), PlayMusicListActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("musicUrl", (Serializable) listurl);
+            bundle.putSerializable("musicInfo", (Serializable) musicInfo);
+            bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
+            bundle.putInt("position", 0);
+            bundle.putInt("positions", Position);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

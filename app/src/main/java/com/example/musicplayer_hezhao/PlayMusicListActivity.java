@@ -134,6 +134,7 @@ public class PlayMusicListActivity extends AppCompatActivity implements LrcView.
     }
     public void inittime(){
         MediaPlayer player=new MediaPlayer();
+        String strs=MusicUrl.get(position) ;
         player = MediaPlayer.create(getApplicationContext(), Uri.parse(MusicUrl.get(position)));
         int minute = player.getDuration() / 1000 / 60;
         int second = player.getDuration() / 1000 % 60;

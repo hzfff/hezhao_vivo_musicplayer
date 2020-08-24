@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,12 +61,17 @@ public class ShowSongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bundle.putSerializable("musicUrl", (Serializable) Song_List);
                     bundle.putSerializable("musicInfo", (Serializable) Music_Info);
                     bundle.putSerializable("Lyriclist", (Serializable) Lyriclist);
+                    System.out.println(Song_List);
                     bundle.putInt("position",position);
                     bundle.putInt("positions",position);
-                    Intent intent=new Intent(mContext, PlayMusicListActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                    intent.putExtras(bundle);
-                    mContext.startActivity(intent);
+                    if(Song_List.get(position)==null||Song_List.get(position).length()==0){
+                        Toast.makeText(mContext,"版权限制，暂时无法播放",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent intent = new Intent(mContext, PlayMusicListActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
         }

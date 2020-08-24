@@ -34,8 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by 11120555 on 2020/7/31 10:20
  */
 public class NeteaseCloudMusicApiTool {
-    //获取网易云头部的banner的uri地址
 
+    //获取网易云头部的banner的uri地址
     public void getbanner(Callback callback) {
         new Thread(new Runnable() {
             @Override
@@ -273,8 +273,6 @@ public class NeteaseCloudMusicApiTool {
 
             }
         }).start();
-
-
     }
 
     public int isExistPhone(String phone) throws IOException {
@@ -409,6 +407,7 @@ public class NeteaseCloudMusicApiTool {
             }
         }).start();
     }
+
 
     public interface Callback {
         void doResult1(List<SongID> obj);

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -196,14 +197,18 @@ public class ShowArtistActivity extends AppCompatActivity implements NeteaseClou
     public void doResult12(List<String> lyrclist) {
         Intent intent = new Intent(getApplicationContext(), PlayMusicListActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("musicUrl", (Serializable) listurl);
-        bundle.putSerializable("musicInfo", (Serializable) music_Info);
-        bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
-        bundle.putInt("position", 0);
-        bundle.putInt("positions", position);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if(listurl.get(position)==null||listurl.get(position).length()==0){
+            Toast.makeText(getApplicationContext(),"版权限制，暂时无法播放",Toast.LENGTH_SHORT).show();
+        }else {
+            bundle.putSerializable("musicUrl", (Serializable) listurl);
+            bundle.putSerializable("musicInfo", (Serializable) music_Info);
+            bundle.putSerializable("Lyriclist", (Serializable) lyrclist);
+            bundle.putInt("position", 0);
+            bundle.putInt("positions", position);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
 
     }
 }
